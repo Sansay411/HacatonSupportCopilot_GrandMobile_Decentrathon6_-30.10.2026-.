@@ -1,0 +1,10 @@
+data/
+models/
+*.pkl
+__pycache__/
+.venv/
+.env
+reports/private/
+*.jsonl
+*.jsonl.gz
+.pytest_cache/

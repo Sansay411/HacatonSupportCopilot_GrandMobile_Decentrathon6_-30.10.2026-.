@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Support Copilot</title>
+<style>
+:root{
+  --bg:#f4f2ee; --panel:#fffdf9; --ink:#1d1b18; --muted:#6f6a62; --line:#e2ddd4;
+  --p0:#c2361f; --p1:#d9822b; --p2:#3d6f9e; --p3:#8a8f94; --ok:#2f7d4f; --accent:#1d1b18;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#16150f; --panel:#1f1d18; --ink:#ece8df; --muted:#a39d91; --line:#34312a; --accent:#ece8df; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+header{display:flex;align-items:baseline;gap:16px;padding:18px 24px;border-bottom:1px solid var(--line)}
+header h1{font-size:18px;margin:0;letter-spacing:.2px}
+header span{color:var(--muted);font-size:13px}
+main{display:grid;grid-template-columns:minmax(280px,380px) 1fr;min-height:calc(100vh - 60px)}
+@media (max-width:860px){main{grid-template-columns:1fr}}
+aside{border-right:1px solid var(--line);padding:16px;display:flex;flex-direction:column;gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
+label{font-size:12px;color:var(--muted);display:block;margin:0 0 4px}
+textarea,select,input{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px}
+textarea{resize:vertical}
+.row{display:flex;gap:8px}
+button{font:inherit;border:1px solid var(--accent);background:var(--accent);color:var(--bg);border-radius:8px;padding:8px 14px;cursor:pointer}
+button.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+button.warn{background:var(--p0);border-color:var(--p0);color:#fff}
+.queue{display:flex;flex-direction:column;gap:6px;overflow:auto}
+.qi{padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);cursor:pointer}
+.qi.sel{outline:2px solid var(--accent)}
+.qi small{color:var(--muted)}
+.pill{display:inline-block;font:600 11px/1 var(--mono);padding:4px 6px;border-radius:5px;color:#fff;margin-right:6px}
+.p0{background:var(--p0)}.p1{background:var(--p1)}.p2{background:var(--p2)}.p3{background:var(--p3)}
+.tag{font:12px var(--mono);color:var(--muted)}
+section{padding:20px 24px;display:flex;flex-direction:column;gap:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.kv b{display:block;font-size:12px;color:var(--muted);font-weight:500}
+.reasons li{margin:2px 0}
+.rule{font-size:13px;border-left:3px solid var(--line);padding:4px 10px;margin:6px 0;color:var(--muted)}
+.human{color:var(--p0);font-weight:600}.auto{color:var(--ok);font-weight:600}
+.empty{color:var(--muted);padding:40px;text-align:center}
+.alts button{margin-right:6px;margin-top:4px}
+</style>
+</head>
+<body>
+<header><h1>Support Copilot</h1><span>очередь обращений Grand Mobile: черновик, правила, решение</span></header>
+<main>
+  <aside>
+    <div class="card">
+      <label>Новое обращение</label>
+      <div class="row" style="margin-bottom:8px">
+        <select id="kind"><option value="complaint">жалоба</option><option value="report">репорт</option></select>
+        <input id="att" type="number" min="0" value="1" title="вложений" style="max-width:90px">
+      </div>
+      <textarea id="text" rows="3" placeholder="Arman_Petrov оскорблял меня и мою семью в чате, скрины есть, 2.1 ОП"></textarea>
+      <div class="row" style="margin-top:8px"><button id="send">Разобрать</button></div>
+    </div>
+    <div class="queue" id="queue"></div>
+  </aside>
+  <section id="detail"><div class="empty">Выберите обращение в очереди или отправьте новое.</div></section>
+</main>
+<script>
+const $ = s => document.querySelector(s);
+let items = [], current = null;
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+async function load(){
+  try { items = await (await fetch('/queue')).json(); } catch(e){ items = []; }
+  $('#queue').innerHTML = items.map(q => `
+    <div class="qi ${current===q.queue_id?'sel':''}" data-id="${q.queue_id}">
+      <span class="pill ${q.response.priority}">${q.response.priority}</span>
+      <span class="tag">${esc(q.response.category)}</span>
+      <div>${esc((q.request.messages[0]||{}).text).slice(0,90)}</div>
+      <small>${q.status} · ${q.response.needs_human?'нужен человек':'автоответ'}</small>
+    </div>`).join('') || '<div class="empty">Очередь пуста</div>';
+  document.querySelectorAll('.qi').forEach(el => el.onclick = () => show(el.dataset.id));
+}
+
+async function show(id){
+  current = id; const q = items.find(x => x.queue_id === id); if(!q) return;
+  const r = q.response, m = r._meta || {};
+  const cites = r.draft_reply.cited;
+  let rules = {};
+  if (cites.length){ rules = await (await fetch('/rules?' + cites.map(c => 'cite=' + encodeURIComponent(c)).join('&'))).json(); }
+  const alts = [{intent:m.intent, text:r.draft_reply.text, cited:cites}].concat(m.alternatives||[]);
+  $('#detail').innerHTML = `
+    <div class="card"><label>Сообщение игрока</label><div>${esc(q.request.messages.map(x=>x.text).join('\n'))}</div></div>
+    <div class="grid">
+      <div class="card kv"><b>Категория</b>${esc(r.category)}</div>
+      <div class="card kv"><b>Приоритет</b><span class="pill ${r.priority}">${r.priority}</span></div>
+      <div class="card kv"><b>Язык</b>${esc(r.lang)} → ответ ${esc(r.draft_reply.lang)}</div>
+      <div class="card kv"><b>Решение</b><span class="${r.needs_human?'human':'auto'}">${r.needs_human?'нужен человек':'можно автоответ'}</span> · ${r.confidence}</div>
+      <div class="card kv"><b>Ник</b>${esc(r.extracted.nickname||'—')}</div>
+      <div class="card kv"><b>Пункты игрока</b>${esc(r.extracted.rule_refs.join(', ')||'—')}</div>
+    </div>
+    <div class="card">
+      <label>Черновик (${esc(m.intent||'')})</label>
+      <textarea id="draft" rows="6">${esc(r.draft_reply.text)}</textarea>
+      <div class="alts">${alts.length>1 ? alts.map((a,i)=>`<button class="ghost" data-i="${i}">${esc(a.intent)}</button>`).join('') : ''}</div>
+      <div class="row" style="margin-top:10px">
+        <button id="b-send">Отправить</button>
+        <button class="ghost" id="b-edit">Сохранить правку и отправить</button>
+        <button class="warn" id="b-esc">Эскалировать</button>
+      </div>
+    </div>
+    <div class="card"><label>Почему</label><ul class="reasons">${r.reasons.map(x=>`<li>${esc(x)}</li>`).join('')||'<li>—</li>'}</ul></div>
+    <div class="card"><label>Цитируемые пункты (из rules.json)</label>
+      ${cites.map(c => `<div class="rule"><b>${esc(c)}</b> · ${esc((rules[c]||{}).section||'')}<br>${esc((rules[c]||{}).text||'')}</div>`).join('') || '<div class="tag">без цитат</div>'}
+    </div>`;
+  document.querySelectorAll('.alts button').forEach(b => b.onclick = () => { $('#draft').value = alts[+b.dataset.i].text; });
+  const fb = async (action) => {
+    const final = $('#draft').value;
+    await fetch('/feedback', {method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({queue_id:id, action, final_text: action==='escalate'?null:final})});
+    await load(); show(id);
+  };
+  $('#b-send').onclick = () => fb('send');
+  $('#b-edit').onclick = () => fb('edit');
+  $('#b-esc').onclick = () => fb('escalate');
+  load();
+}
+
+$('#send').onclick = async () => {
+  const text = $('#text').value.trim(); if(!text) return;
+  const body = {kind: $('#kind').value, messages:[{role:'player', text, attachments: +$('#att').value||0}]};
+  const r = await (await fetch('/triage?enqueue=true&debug=true', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)})).json();
+  $('#text').value = ''; await load(); if (r.queue_id) show(r.queue_id);
+};
+load(); setInterval(load, 5000);
+</script>
+</body>
+</html>
