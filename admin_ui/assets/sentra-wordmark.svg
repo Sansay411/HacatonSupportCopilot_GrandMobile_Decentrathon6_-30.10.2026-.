@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 12 174 40" width="174" height="40" role="img" aria-label="Sentra">
+  <title>Sentra</title>
+  <g fill="none" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round" stroke="#EDF3F1">
+    <path d="M28.2 17H8.2a6 6 0 0 0-6 6v3a6 6 0 0 0 6 6H22.2a6 6 0 0 1 6 6v3a6 6 0 0 1-6 6H2.2"/>
+    <path d="M39.6 36.5H60.6A10.5 10.5 0 1 0 57.52 43.92"/>
+    <path d="M72 26V47M72 36.5A9.5 10.5 0 0 1 91 36.5V47"/>
+    <path d="M108.4 18V40a7 7 0 0 0 7 7H117.4M102.4 26H118"/>
+    <path d="M128.4 26V47M128.4 36.5A9 10.5 0 0 1 137.4 26"/>
+    <path d="M146.3 36.5a10.5 10.5 0 1 0 21 0a10.5 10.5 0 1 0-21 0M167.3 26V47"/>
+  </g>
+  <circle cx="28.2" cy="17" r="2.2" fill="#2FD9B5"/>
+</svg>

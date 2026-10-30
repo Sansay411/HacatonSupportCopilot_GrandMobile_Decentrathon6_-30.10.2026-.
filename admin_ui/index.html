@@ -3,173 +3,107 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Support Copilot</title>
-<style>
-:root{
-  --bg:#f4f2ee; --panel:#fffdf9; --ink:#1d1b18; --muted:#6f6a62; --line:#e2ddd4;
-  --p0:#c2361f; --p1:#d9822b; --p2:#3d6f9e; --p3:#8a8f94; --ok:#2f7d4f; --accent:#1d1b18;
-  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-}
-@media (prefers-color-scheme: dark){
-  :root{ --bg:#16150f; --panel:#1f1d18; --ink:#ece8df; --muted:#a39d91; --line:#34312a; --accent:#ece8df; }
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
-header{display:flex;align-items:baseline;gap:16px;padding:18px 24px;border-bottom:1px solid var(--line)}
-header h1{font-size:18px;margin:0;letter-spacing:.2px}
-header span{color:var(--muted);font-size:13px}
-main{display:grid;grid-template-columns:minmax(280px,380px) 1fr;min-height:calc(100vh - 60px)}
-@media (max-width:860px){main{grid-template-columns:1fr}}
-aside{border-right:1px solid var(--line);padding:16px;display:flex;flex-direction:column;gap:14px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
-label{font-size:12px;color:var(--muted);display:block;margin:0 0 4px}
-textarea,select,input{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px}
-textarea{resize:vertical}
-.row{display:flex;gap:8px}
-button{font:inherit;border:1px solid var(--accent);background:var(--accent);color:var(--bg);border-radius:8px;padding:8px 14px;cursor:pointer}
-button.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
-button.warn{background:var(--p0);border-color:var(--p0);color:#fff}
-.queue{display:flex;flex-direction:column;gap:6px;overflow:auto}
-.qi{padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);cursor:pointer}
-.qi.sel{outline:2px solid var(--accent)}
-.qi small{color:var(--muted)}
-.pill{display:inline-block;font:600 11px/1 var(--mono);padding:4px 6px;border-radius:5px;color:#fff;margin-right:6px}
-.p0{background:var(--p0)}.p1{background:var(--p1)}.p2{background:var(--p2)}.p3{background:var(--p3)}
-.tag{font:12px var(--mono);color:var(--muted)}
-section{padding:20px 24px;display:flex;flex-direction:column;gap:14px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
-.kv b{display:block;font-size:12px;color:var(--muted);font-weight:500}
-.reasons li{margin:2px 0}
-.rule{font-size:13px;border-left:3px solid var(--line);padding:4px 10px;margin:6px 0;color:var(--muted)}
-.human{color:var(--p0);font-weight:600}.auto{color:var(--ok);font-weight:600}
-.empty{color:var(--muted);padding:40px;text-align:center}
-.alts button{margin-right:6px;margin-top:4px}
-nav.tabs{display:flex;gap:6px;padding:10px 24px 0;border-bottom:1px solid var(--line)}
-nav.tabs button{background:transparent;color:var(--muted);border:1px solid transparent;border-bottom:none;border-radius:8px 8px 0 0}
-nav.tabs button.on{color:var(--ink);background:var(--panel);border-color:var(--line)}
-#tpl{display:none;padding:20px 24px;flex-direction:column;gap:14px;max-width:1000px}
-.tpl-text{white-space:pre-wrap;border-left:3px solid var(--accent);padding:6px 12px;margin:8px 0;background:var(--bg);border-radius:0 8px 8px 0}
-.chips span{display:inline-block;font:12px var(--mono);border:1px solid var(--line);border-radius:5px;padding:2px 6px;margin:0 6px 4px 0;color:var(--muted)}
-</style>
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#07090D">
+<title>Sentra by LGTM</title>
+<meta name="description" content="Sentra: командный центр ИИ-модерации для Grand Mobile">
+<link rel="icon" type="image/svg+xml" href="/static/assets/favicon.svg">
+<link rel="apple-touch-icon" href="/static/assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Onest:wght@400;500;600;700&display=swap&subset=cyrillic">
+<link rel="stylesheet" href="/static/sentra.css">
 </head>
 <body>
-<header><h1>Support Copilot</h1><span>очередь обращений Grand Mobile: черновик, правила, решение</span></header>
-<nav class="tabs"><button id="t-queue" class="on">Очередь</button><button id="t-tpl">Кандидаты в шаблоны</button></nav>
-<div id="tpl"></div>
-<main>
-  <aside>
-    <div class="card">
-      <label>Новое обращение</label>
-      <div class="row" style="margin-bottom:8px">
-        <select id="kind"><option value="complaint">жалоба</option><option value="report">репорт</option></select>
-        <input id="att" type="number" min="0" value="1" title="вложений" style="max-width:90px">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-center" viewBox="0 0 24 24"><path d="M4 4h7v9H4zM13 4h7v5h-7zM13 12h7v8h-7zM4 16h7v4H4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+    <symbol id="i-queue" viewBox="0 0 24 24"><path d="M9.5 6H20M9.5 12H20M9.5 18H20M4.5 6h.01M4.5 12h.01M4.5 18h.01" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-dupe" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M15 9V7.5A2.5 2.5 0 0 0 12.5 5h-6A2.5 2.5 0 0 0 4 7.5v6A2.5 2.5 0 0 0 6.5 16H9"/></g></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M12 3.2l7 2.8v5.6c0 4.1-2.8 7.4-7 9.2-4.2-1.8-7-5.1-7-9.2V6z"/><path d="M9 12l2.2 2.2L15.5 10"/></g></symbol>
+    <symbol id="i-tpl" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h8M8 17h4"/></g></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"><path d="M20.5 3.5L10 14"/><path d="M20.5 3.5L14 20.5l-4-6.5-6.5-4z"/></g></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V6M6.5 11.5L12 6l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-ok" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M8.3 12.3l2.5 2.5 4.9-5"/></g></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.2l8.5 15H3.5z"/><path d="M12 10v4M12 17h.01"/></g></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M8.7 15.3l6.6-6.6"/></g></symbol>
+    <symbol id="i-dot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7.5" fill="none" stroke="currentColor" stroke-width="1.7"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3.5c.7 4.5 2.9 6.8 7.5 7.5-4.6.7-6.8 3-7.5 7.5-.7-4.5-2.9-6.8-7.5-7.5 4.6-.7 6.8-3 7.5-7.5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></g></symbol>
+    <symbol id="i-flask" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 4h5M10.5 4v5.2L5.4 18a1.6 1.6 0 0 0 1.4 2.4h10.4a1.6 1.6 0 0 0 1.4-2.4l-5.1-8.8V4"/><path d="M8 14.5h8"/></g></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M14.5 6L8.5 12l6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-inbox" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 13l2.7-7.2A2 2 0 0 1 8 4.5h8a2 2 0 0 1 1.8 1.3L20.5 13v4.5a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/><path d="M3.5 13H8.2l1 2.4h5.6l1-2.4h4.7"/></g></symbol>
+  </defs>
+</svg>
+
+<div class="app">
+  <aside class="rail" aria-label="Навигация">
+    <a class="brand" href="#/center" aria-label="Sentra by LGTM, командный центр">
+      <span class="brand-row">
+        <img class="brand-mark" src="/static/assets/sentra-mark.svg" alt="">
+        <img class="brand-word" src="/static/assets/sentra-wordmark.svg" alt="Sentra">
+      </span>
+      <span class="brand-by">by <b>LGTM</b></span>
+    </a>
+
+    <nav class="nav" id="nav">
+      <div class="nav-group">
+        <div class="nav-label">Операции</div>
+        <a href="#/center" data-v="center"><svg><use href="#i-center"/></svg><span>Командный центр</span></a>
+        <a href="#/queue" data-v="queue"><svg><use href="#i-queue"/></svg><span>Очередь</span><b class="count" id="c-queue">0</b></a>
+        <a href="#/duplicates" data-v="duplicates"><svg><use href="#i-dupe"/></svg><span>Дубли и спам</span><b class="count" id="c-dupes">0</b></a>
       </div>
-      <textarea id="text" rows="3" placeholder="Arman_Petrov оскорблял меня и мою семью в чате, скрины есть, 2.1 ОП"></textarea>
-      <div class="row" style="margin-top:8px"><button id="send">Разобрать</button></div>
+      <div class="nav-group">
+        <div class="nav-label">Контроль и знания</div>
+        <a href="#/quality" data-v="quality"><svg><use href="#i-shield"/></svg><span>Качество и безопасность</span></a>
+        <a href="#/templates" data-v="templates"><svg><use href="#i-tpl"/></svg><span>Шаблоны</span><b class="count" id="c-tpl">·</b></a>
+      </div>
+    </nav>
+
+    <div class="rail-foot">
+      <div class="sys" id="sys" aria-live="polite"></div>
+      <div class="tenant"><i id="tenant-dot"></i><span>Grand Mobile · поддержка</span></div>
     </div>
-    <div class="queue" id="queue"></div>
   </aside>
-  <section id="detail"><div class="empty">Выберите обращение в очереди или отправьте новое.</div></section>
-</main>
-<script>
-const $ = s => document.querySelector(s);
-let items = [], current = null;
-const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
-async function load(){
-  try { items = await (await fetch('/queue')).json(); } catch(e){ items = []; }
-  $('#queue').innerHTML = items.map(q => `
-    <div class="qi ${current===q.queue_id?'sel':''}" data-id="${q.queue_id}">
-      <span class="pill ${q.response.priority}">${q.response.priority}</span>
-      <span class="tag">${esc(q.response.category)}</span>
-      <div>${esc((q.request.messages[0]||{}).text).slice(0,90)}</div>
-      <small>${q.status} · ${q.response.needs_human?'нужен человек':'автоответ'}</small>
-    </div>`).join('') || '<div class="empty">Очередь пуста</div>';
-  document.querySelectorAll('.qi').forEach(el => el.onclick = () => show(el.dataset.id));
-}
-
-async function show(id){
-  current = id; const q = items.find(x => x.queue_id === id); if(!q) return;
-  const r = q.response, m = r._meta || {};
-  const cites = r.draft_reply.cited;
-  let rules = {};
-  if (cites.length){ rules = await (await fetch('/rules?' + cites.map(c => 'cite=' + encodeURIComponent(c)).join('&'))).json(); }
-  const alts = [{intent:m.intent, text:r.draft_reply.text, cited:cites}].concat(m.alternatives||[]);
-  $('#detail').innerHTML = `
-    <div class="card"><label>Сообщение игрока</label><div>${esc(q.request.messages.map(x=>x.text).join('\n'))}</div></div>
-    <div class="grid">
-      <div class="card kv"><b>Категория</b>${esc(r.category)}</div>
-      <div class="card kv"><b>Приоритет</b><span class="pill ${r.priority}">${r.priority}</span></div>
-      <div class="card kv"><b>Язык</b>${esc(r.lang)} → ответ ${esc(r.draft_reply.lang)}</div>
-      <div class="card kv"><b>Решение</b><span class="${r.needs_human?'human':'auto'}">${r.needs_human?'нужен человек':'можно автоответ'}</span> · ${r.confidence}</div>
-      <div class="card kv"><b>Ник</b>${esc(r.extracted.nickname||'—')}</div>
-      <div class="card kv"><b>Пункты игрока</b>${esc(r.extracted.rule_refs.join(', ')||'—')}</div>
-    </div>
-    <div class="card">
-      <label>Черновик (${esc(m.intent||'')})</label>
-      <textarea id="draft" rows="6">${esc(r.draft_reply.text)}</textarea>
-      <div class="alts">${alts.length>1 ? alts.map((a,i)=>`<button class="ghost" data-i="${i}">${esc(a.intent)}</button>`).join('') : ''}</div>
-      <div class="row" style="margin-top:10px">
-        <button id="b-send">Отправить</button>
-        <button class="ghost" id="b-edit">Сохранить правку и отправить</button>
-        <button class="warn" id="b-esc">Эскалировать</button>
+  <div class="main">
+    <header class="topbar">
+      <div class="grow"><h1 id="title">Командный центр</h1><div class="sub" id="subtitle"></div></div>
+      <div class="actions">
+        <span class="demo-badge" id="demo" hidden title="Данные синтетические: сервис работает на тестовых правилах"><svg width="14" height="14"><use href="#i-flask"/></svg>Демо-режим</span>
+        <span class="live hide-sm" id="live"><i></i><span>Сервис</span></span>
+        <button class="btn primary" id="new-btn" type="button"><svg><use href="#i-plus"/></svg><span class="hide-sm">Новое обращение</span><span class="kbd hide-sm">N</span></button>
       </div>
-    </div>
-    <div class="card"><label>Почему</label><ul class="reasons">${r.reasons.map(x=>`<li>${esc(x)}</li>`).join('')||'<li>—</li>'}</ul></div>
-    <div class="card"><label>Цитируемые пункты (из rules.json)</label>
-      ${cites.map(c => `<div class="rule"><b>${esc(c)}</b> · ${esc((rules[c]||{}).section||'')}<br>${esc((rules[c]||{}).text||'')}</div>`).join('') || '<div class="tag">без цитат</div>'}
-    </div>`;
-  document.querySelectorAll('.alts button').forEach(b => b.onclick = () => { $('#draft').value = alts[+b.dataset.i].text; });
-  const fb = async (action) => {
-    const final = $('#draft').value;
-    await fetch('/feedback', {method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({queue_id:id, action, final_text: action==='escalate'?null:final})});
-    await load(); show(id);
-  };
-  $('#b-send').onclick = () => fb('send');
-  $('#b-edit').onclick = () => fb('edit');
-  $('#b-esc').onclick = () => fb('escalate');
-  load();
-}
+    </header>
+    <main class="view" id="view" tabindex="-1"></main>
+  </div>
+</div>
 
-$('#send').onclick = async () => {
-  const text = $('#text').value.trim(); if(!text) return;
-  const body = {kind: $('#kind').value, messages:[{role:'player', text, attachments: +$('#att').value||0}]};
-  const r = await (await fetch('/triage?enqueue=true&debug=true', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)})).json();
-  $('#text').value = ''; await load(); if (r.queue_id) show(r.queue_id);
-};
-function tab(name){
-  const t = name === 'tpl';
-  $('#tpl').style.display = t ? 'flex' : 'none';
-  document.querySelector('main').style.display = t ? 'none' : '';
-  $('#t-tpl').classList.toggle('on', t); $('#t-queue').classList.toggle('on', !t);
-  if (t) loadTemplates();
-}
-async function loadTemplates(){
-  let d;
-  try { d = await (await fetch('/templates')).json(); } catch(e){ d = {available:false, hint:'сервис недоступен'}; }
-  if (!d.available){ $('#tpl').innerHTML = `<div class="empty">${esc(d.hint||'нет данных')}</div>`; return; }
-  const t = d.totals || {};
-  $('#tpl').innerHTML = `
-    <div class="card">Кластеров: <b>${t.clusters}</b>, кандидатов в шаблоны: <b>${t.candidates}</b>
-      (охват ${t.tickets_in_candidates} тикетов). Это предложения из повторяющихся ответов админов:
-      перед использованием их проверяет человек. Тексты игроков здесь не показываются.</div>` +
-    (d.clusters.map(c => `
-    <div class="card">
-      <span class="tag">${esc(c.category)} · кластер ${c.cluster}</span>
-      <div class="chips" style="margin-top:6px">
-        <span>размер ${c.size}</span><span>главный ответ ${Math.round(c.top_reply_share*100)}%</span>
-        <span>сценарий ${esc(c.intent)} ${Math.round(c.intent_share*100)}%</span>
-        <span>близость черновика ${c.draft_sim ?? '—'}</span>
-        ${(c.terms||[]).map(w=>`<span>${esc(w)}</span>`).join('')}
+<dialog id="intake" aria-labelledby="intake-t">
+  <form method="dialog" id="intake-form">
+    <div class="dlg-h"><h2 id="intake-t">Новое обращение</h2></div>
+    <div class="dlg-b">
+      <div class="two">
+        <div><label class="lbl" for="in-kind">Тип</label>
+          <select id="in-kind"><option value="complaint">Жалоба</option><option value="report">Репорт</option></select></div>
+        <div><label class="lbl" for="in-att">Вложений</label><input id="in-att" type="number" min="0" max="20" value="1"></div>
       </div>
-      <div class="tpl-text">${esc(c.template)}</div>
-      <div class="tag">пункты: ${esc((c.refs||[]).join(', ') || 'нет')}${(c.guard||[]).length ? ' · guard: ' + esc(c.guard.join('; ')) : ''}</div>
-      <div class="tag">почему кандидат: ${esc((c.gap_reasons||[]).join('; '))}</div>
-    </div>`).join('') || '<div class="empty">Кандидатов нет при текущих порогах.</div>');
-}
-$('#t-queue').onclick = () => tab('queue'); $('#t-tpl').onclick = () => tab('tpl');
-load(); setInterval(load, 5000);
-</script>
+      <div><label class="lbl" for="in-text">Текст игрока</label>
+        <textarea id="in-text" rows="5" placeholder="Arman_Petrov оскорблял меня и мою семью в чате, скрины есть, 2.1 ОП"></textarea></div>
+      <div><label class="lbl" for="in-rep">ID заявителя (необязательно, нужен для проверки дублей)</label>
+        <input id="in-rep" type="text" placeholder="например, p-1042" autocomplete="off"></div>
+    </div>
+    <div class="dlg-f">
+      <button class="btn ghost" type="button" id="in-cancel">Отмена</button>
+      <button class="btn primary" type="submit" id="in-go"><span>Разобрать</span><span class="kbd">Ctrl ⏎</span></button>
+    </div>
+  </form>
+</dialog>
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+<script src="/static/app.js"></script>
 </body>
 </html>

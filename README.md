@@ -43,7 +43,7 @@ make install                 # зависимости: fastapi, scikit-learn, ht
 make train                   # обучение двух моделей на train, около 3 минут на 2 CPU
 make predict IN=tickets.jsonl OUT=pred.jsonl
 make serve                   # HTTP на :8000, интерфейс админа на http://localhost:8000/
-make test                    # 60 тестов на синтетике работают без data/ и models/; ещё 7 сквозных включаются при их наличии
+make test                    # 65 тестов на синтетике работают без data/ и models/; ещё 7 сквозных включаются при их наличии
 make gold && make eval       # dev-разметка valid и метрики -> reports/metrics.json
 make eval-drafts             # качество черновиков: инварианты на синтетике (язык, пункты, обещания, эскалации)
 make eval-drafts-real        # то же на data/tickets_valid.jsonl + выборка для ручной проверки в reports/private/
@@ -125,13 +125,18 @@ curl -s localhost:8000/triage -H 'Content-Type: application/json' -d '{
 заявитель с почти тем же текстом (4-граммы, Жаккар). Спам определяется по повторам слов и
 бессвязным строкам. `make predict` обрабатывает тикеты по `created_at`.
 
-### Интерфейс админа
+### Интерфейс админа: Sentra by LGTM
 
-`make serve` → `http://localhost:8000/`. Очередь сортируется по приоритету. Для каждого обращения
-показаны черновик и альтернативный сценарий (например «предложить наказание» или «запросить
-видео»), тексты цитируемых пунктов из rules.json и причины решения. Кнопки «Отправить»,
-«Сохранить правку», «Эскалировать». Правки пишутся в `reports/private/feedback.jsonl` как
-обучающий сигнал.
+`make serve` → `http://localhost:8000/`. Пять экранов: командный центр (поток обращений, соты нагрузки), очередь с
+рабочим местом по обращению, дубли и спам, качество и безопасность, шаблоны. В рабочем месте: черновик и
+альтернативные сценарии, тексты цитируемых пунктов из rules.json, трасса решения, проверки на выходе. Кнопки
+«Отправить» (или «Отправить с правкой», Ctrl+Enter) и «Эскалировать»; администратор может поправить категорию и
+приоритет. Всё пишется в `reports/private/feedback.jsonl` как обучающий сигнал.
+
+Без данных кейса интерфейс работает в демо-режиме на синтетических правилах (`tests/fixtures/rules_mini.json`):
+бейдж «Демо-режим» и кнопка «Загрузить демо-очередь». Бренд, палитра, логотип и скриншоты:
+[docs/brand/BRAND.md](docs/brand/BRAND.md). Дополнительные эндпоинты: `GET /metrics` (метрики валидации из
+`reports/metrics.json`), `GET /health` теперь отдаёт флаг `demo`.
 
 ### Бонус: кандидаты в новые шаблоны
 
@@ -187,7 +192,8 @@ copilot/       textnorm, lang, signals, rules (RAG), taxonomy, classifier, sanct
                i18n (шаблоны 6 языков), drafts, guard, dedup, llm, pipeline, api
 scripts/       train.py, train_verdict.py, predict.py, evaluate.py, make_gold.py, eval_classifier.py, eval_drafts.py,
                suggest_templates.py (бонус: кандидаты в шаблоны, логика в copilot/template_suggest.py)
-admin_ui/      интерфейс админа (один HTML-файл)
+admin_ui/      интерфейс Sentra: index.html, sentra.css, app.js, assets/ (логотип, фавикон)
+docs/brand/    бренд: BRAND.md, доска бренда, скриншоты экранов
 tests/         pytest, синтетические правила в tests/fixtures
 ```
 

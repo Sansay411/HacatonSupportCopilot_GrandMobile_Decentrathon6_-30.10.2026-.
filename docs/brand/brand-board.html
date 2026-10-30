@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Sentra by LGTM: доска бренда</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Onest:wght@300;400;500;600&display=swap&subset=cyrillic">
+<style>
+*{box-sizing:border-box}
+body{margin:0;width:1600px;background:#0C0F0E;color:#EDF3F1;font:14px/1.5 Onest,"Segoe UI",sans-serif;
+  background-image:radial-gradient(1200px 500px at 70% -100px,rgba(47,217,181,.12),transparent 70%),radial-gradient(circle at 1px 1px,rgba(190,230,220,.05) 1px,transparent 0);background-size:auto,24px 24px}
+.wrap{padding:56px 64px 64px;display:grid;gap:28px}
+.row{display:grid;gap:28px}
+.card{position:relative;background:linear-gradient(180deg,rgba(255,255,255,.03),transparent 160px),#121615;border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:28px;box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
+.t{color:#76847F;font-size:13px;margin-bottom:16px}
+h2{margin:0 0 4px;font-size:15px;font-weight:600}
+.hero{display:grid;grid-template-columns:1.25fr 1fr;gap:28px}
+.hero .card{min-height:330px;display:flex;flex-direction:column;justify-content:center}
+.big{font-weight:300;font-size:30px;letter-spacing:-.03em;line-height:1.2;max-width:22ch;margin:0 0 14px}
+.muted{color:#A5B2AE}
+.sw{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.sw div{border-radius:10px;height:92px;padding:10px 12px;display:flex;flex-direction:column;justify-content:flex-end;font-size:12px;border:1px solid rgba(255,255,255,.08)}
+.sw b{font-weight:600;font-size:12.5px} .sw span{font-family:"JetBrains Mono",monospace;font-size:11px;opacity:.85}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.pri{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 9px;border-radius:99px;font:600 12px "JetBrains Mono",monospace;color:var(--c);background:color-mix(in srgb,var(--c) 13%,transparent);border:1px solid color-mix(in srgb,var(--c) 30%,transparent)}
+.pri::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--c);box-shadow:0 0 8px var(--c)}
+.btn{display:inline-flex;align-items:center;height:34px;padding:0 16px;border-radius:8px;font-weight:600;border:1px solid rgba(255,255,255,.15);background:#181D1C;color:#EDF3F1}
+.btn.p{background:#2FD9B5;border-color:#2FD9B5;color:#03130F}
+.btn.f{background:#8CF2DC;border-color:#8CF2DC;color:#03130F;box-shadow:0 0 0 4px rgba(47,217,181,.14)}
+.btn.d{background:transparent;border-color:rgba(255,94,87,.55);color:#FF5E57}
+.sizes{display:flex;align-items:flex-end;gap:26px}
+.sizes figure{margin:0;display:grid;gap:8px;justify-items:center;font-size:12px;color:#76847F}
+.light{background:#EEF3F1;border-radius:14px;padding:26px;display:grid;place-items:center}
+.type{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.type .a{font-size:54px;font-weight:300;letter-spacing:-.04em;line-height:1.05}
+.type .m{font:600 22px "JetBrains Mono",monospace;color:#8CF2DC;white-space:nowrap}
+.app{display:grid;grid-template-columns:190px 1fr;border:1px solid rgba(255,255,255,.09);border-radius:12px;overflow:hidden;background:#0C0F0E}
+.app aside{background:#080A09;padding:16px 12px;border-right:1px solid rgba(255,255,255,.06);display:grid;gap:8px;align-content:start}
+.app aside i{display:block;height:26px;border-radius:7px;background:rgba(255,255,255,.04)}
+.app aside i.on{background:#181D1C;box-shadow:-12px 0 0 -9px #2FD9B5,inset 0 0 0 1px rgba(255,255,255,.04)}
+.app main{padding:18px;display:grid;gap:12px}
+.app .bar{white-space:nowrap;height:42px;border-radius:10px;border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:14px;padding:0 14px;color:#A5B2AE;font-size:12px}
+.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+ul{margin:0;padding-left:18px;color:#A5B2AE} li{margin:4px 0}
+.ok{color:#2FD9B5} .no{color:#FF5E57}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <div class="card" style="align-items:flex-start;gap:6px">
+      <div class="t">Продукт и команда</div>
+      <img src="../../admin_ui/assets/sentra-lockup.svg" width="560" alt="Sentra by LGTM">
+      <p class="muted" style="margin:18px 0 0;max-width:52ch">Sentra: командный центр ИИ-модерации для Grand Mobile. LGTM — авторы: подпись «by LGTM» стоит в лок-апе и в футере, а интерфейс говорит от лица продукта.</p>
+    </div>
+    <div class="card">
+      <div class="t">Идея знака</div>
+      <p class="big">Обращение входит сигналом и проходит маршрут до решения.</p>
+      <p class="muted" style="margin:0;max-width:44ch">Ступенчатая S — маршрут триажа. Срез углов плитки — бейдж и тикет. Бирюзовый кончик — точка входа сигнала, он же единственный акцент бренда.</p>
+    </div>
+  </div>
+
+  <div class="row" style="grid-template-columns:1fr 1fr 1fr">
+    <div class="card"><div class="t">Знак в размерах</div>
+      <div class="sizes">
+        <figure><img src="../../admin_ui/assets/sentra-mark.svg" width="128"><span>128</span></figure>
+        <figure><img src="../../admin_ui/assets/sentra-mark.svg" width="64"><span>64</span></figure>
+        <figure><img src="../../admin_ui/assets/favicon.svg" width="32"><span>32</span></figure>
+        <figure><img src="../../admin_ui/assets/favicon.svg" width="16"><span>16 фавикон</span></figure>
+        <figure><img src="../../admin_ui/assets/apple-touch-icon.svg" width="64" style="border-radius:14px"><span>iOS</span></figure>
+      </div></div>
+    <div class="card"><div class="t">Вордмарк</div>
+      <img src="../../admin_ui/assets/sentra-wordmark.svg" width="260" style="display:block;margin-bottom:24px">
+      <div class="light" style="padding:18px"><img src="../../admin_ui/assets/sentra-wordmark-dark.svg" width="220"></div></div>
+    <div class="card"><div class="t">На светлом фоне</div>
+      <img src="../../admin_ui/assets/sentra-lockup-light.svg" width="380" style="border-radius:12px;display:block"></div>
+  </div>
+
+  <div class="card"><div class="t">Палитра: графит с зелёным подтоном, один холодный акцент, тёплая тревога</div>
+    <div class="sw">
+      <div style="background:#080A09"><b>Rail</b><span>#080A09</span></div>
+      <div style="background:#0C0F0E"><b>Canvas</b><span>#0C0F0E</span></div>
+      <div style="background:#121615"><b>Panel</b><span>#121615</span></div>
+      <div style="background:#181D1C"><b>Raised</b><span>#181D1C</span></div>
+      <div style="background:#202625"><b>Hover</b><span>#202625</span></div>
+      <div style="background:#2A3231"><b>Active</b><span>#2A3231</span></div>
+    </div>
+    <div class="sw" style="margin-top:10px">
+      <div style="background:#2FD9B5;color:#03130F"><b>Signal</b><span>#2FD9B5</span></div>
+      <div style="background:#8CF2DC;color:#03130F"><b>Signal hi</b><span>#8CF2DC</span></div>
+      <div style="background:#13967C;color:#fff"><b>Signal lo</b><span>#13967C</span></div>
+      <div style="background:#FFA24A;color:#2b1500"><b>P1, внимание</b><span>#FFA24A</span></div>
+      <div style="background:#FF5E57;color:#2b0705"><b>P0, риск</b><span>#FF5E57</span></div>
+      <div style="background:#EDF3F1;color:#0C0F0E"><b>Text</b><span>#EDF3F1</span></div>
+    </div>
+    <div class="chips"><span class="pri" style="--c:#FF5E57">p0 критичный</span><span class="pri" style="--c:#FFA24A">p1 высокий</span><span class="pri" style="--c:#8FD3C2">p2 средний</span><span class="pri" style="--c:#82908B">p3 низкий</span>
+      <span style="flex:1"></span><span class="btn">Кнопка</span><span class="btn f">Hover</span><span class="btn p">Отправить</span><span class="btn d">Эскалировать</span></div>
+  </div>
+
+  <div class="row" style="grid-template-columns:1.1fr 1fr">
+    <div class="card"><div class="t">Типографика</div>
+      <div class="type"><div><div class="a">Onest</div><p class="muted" style="margin:10px 0 0">Интерфейс и числа. Крупные показатели набираются весом 300 с плотным трекингом, подписи весом 400–500. Кириллица рисована под язык продукта.</p></div>
+      <div><div class="m">п. 2.1 · p95 6,0 мс</div><p class="muted" style="margin:10px 0 0">JetBrains Mono только для машинных данных: ID обращений, пункты правил, ники, задержки.</p></div></div></div>
+    <div class="card"><div class="t">Применение: оболочка продукта</div>
+      <div class="app"><aside><img src="../../admin_ui/assets/sentra-lockup.svg" width="170" style="margin:-10px 0 4px -8px"><i class="on"></i><i></i><i></i><i></i><i></i></aside>
+        <main><div class="bar"><b style="color:#EDF3F1;font-weight:500">Командный центр</b><span style="flex:1"></span><span class="pri" style="--c:#FFA24A;height:22px;white-space:nowrap">Демо</span><span class="btn p" style="height:28px;font-size:12px;white-space:nowrap">+ Обращение</span></div>
+        <div class="bar" style="height:70px;background:radial-gradient(300px 90px at 30% 0,rgba(47,217,181,.14),transparent 70%)">Поток обращений: тип → категория → решение</div></main></div></div>
+  </div>
+
+  <div class="card"><div class="t">Правила использования</div>
+    <div class="rules">
+      <div><h2>Охранная зона</h2><ul><li>Свободное поле вокруг знака не меньше высоты S (30 единиц сетки).</li><li>Минимум: знак 16 px, вордмарк 80 px по ширине.</li><li>«by LGTM» только в лок-апе, шапке и футере, не в навигации.</li></ul></div>
+      <div><h2><span class="ok">Можно</span></h2><ul><li>Знак на тёмной плитке на любом фоне.</li><li>Вордмарк светлый на графите, тёмный на светлом.</li><li>Один бирюзовый акцент на экран: действие или поток.</li></ul></div>
+      <div><h2><span class="no">Нельзя</span></h2><ul><li>Растягивать, вращать, добавлять тень или градиент знаку.</li><li>Красить кончик сигнала в тревожные цвета.</li><li>Ставить логотип Grand Mobile рядом с Sentra как единый знак.</li></ul></div>
+    </div></div>
+</div>
+</body>
+</html>

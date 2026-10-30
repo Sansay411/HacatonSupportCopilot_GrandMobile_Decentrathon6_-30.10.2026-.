@@ -14,6 +14,7 @@ from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from .llm import from_env as llm_from_env
@@ -24,6 +25,20 @@ ROOT = Path(__file__).resolve().parents[1]
 FEEDBACK_PATH = Path(os.environ.get("COPILOT_FEEDBACK", ROOT / "reports/private/feedback.jsonl"))
 TEMPLATES_JSON = Path(os.environ.get("COPILOT_TEMPLATES", ROOT / "reports/template_suggestions_summary.json"))
 TEMPLATES_MD = TEMPLATES_JSON.with_suffix(".md")
+METRICS_JSON = Path(os.environ.get("COPILOT_METRICS", ROOT / "reports/metrics.json"))
+UI_DIR = ROOT / "admin_ui"
+
+
+def _is_demo() -> bool:
+    """Демо-режим: явный COPILOT_DEMO=1 или синтетические правила (tests/fixtures) вместо выдачи кейса."""
+    if os.environ.get("COPILOT_DEMO") == "1":
+        return True
+    rules = Path(os.environ.get("COPILOT_DATA", ROOT / "data")) / "rules.json"
+    try:
+        with open(rules, encoding="utf-8") as f:
+            return "synthetic" in f.read(400)
+    except OSError:
+        return False
 
 
 class Message(BaseModel):
@@ -59,8 +74,10 @@ class Feedback(BaseModel):
 
 app = FastAPI(title="Grand Mobile Support Copilot", version="1.0")
 copilot = Copilot(llm=llm_from_env())
+DEMO = _is_demo()
 QUEUE: deque = deque(maxlen=500)
 _lock = threading.Lock()
+app.mount("/static", StaticFiles(directory=UI_DIR), name="static")
 
 
 def _public(resp: dict, debug: bool) -> dict:
@@ -73,7 +90,15 @@ def _public(resp: dict, debug: bool) -> dict:
 def health():
     return {"status": "ok", "model_loaded": copilot.category_model.loaded,
             "verdict_model_loaded": copilot.verdict_model is not None, "llm": copilot.llm is not None,
-            "rules": len(copilot.rules.points)}
+            "rules": len(copilot.rules.points), "demo": DEMO}
+
+
+@app.get("/metrics")
+def metrics():
+    """Метрики последней оценки на валидации (reports/metrics.json) для панели качества."""
+    if not METRICS_JSON.exists():
+        return {"available": False, "hint": "метрик нет: выполните make eval"}
+    return dict(json.loads(METRICS_JSON.read_text(encoding="utf-8")), available=True)
 
 
 @app.post("/triage")
@@ -145,4 +170,9 @@ def templates(only_candidates: bool = True):
 
 @app.get("/")
 def admin_ui():
-    return FileResponse(ROOT / "admin_ui/index.html")
+    return FileResponse(UI_DIR / "index.html")
+
+
+@app.get("/favicon.ico", include_in_schema=False)
+def favicon():
+    return FileResponse(UI_DIR / "assets/favicon.svg", media_type="image/svg+xml")
