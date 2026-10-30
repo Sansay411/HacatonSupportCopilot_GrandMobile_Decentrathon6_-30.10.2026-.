@@ -1,0 +1,1 @@
+# HacatonSupportCopilot_GrandMobile_Decentrathon6_-30.10.2026-.
