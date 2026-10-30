@@ -1,0 +1,119 @@
+{
+  "category_accuracy": 0.876,
+  "category_macro_f1": 0.764,
+  "priority_macro_f1": 0.88,
+  "priority_accuracy": 0.942,
+  "draft_scenario_matches_admin_verdict": 0.639,
+  "draft_scenario_n": 518,
+  "citations_total": 1071,
+  "citations_nonexistent": 0,
+  "drafts_with_citation_share": 0.814,
+  "needs_human_share": 0.828,
+  "needs_human_share_by_kind": {
+    "complaint": 0.95,
+    "report": 0.284
+  },
+  "spam_or_duplicate_share": 0.006,
+  "duplicate_recall_vs_admin": 0.0,
+  "draft_lang_equals_admin_reply_lang": 0.984,
+  "draft_lang_distribution": {
+    "ru": 857,
+    "uz": 132,
+    "kk": 7,
+    "en": 4
+  },
+  "latency_ms_p50": 2.5,
+  "latency_ms_p95": 4.9,
+  "cost_usd_per_ticket": 0.0,
+  "intents": {
+    "approve": 326,
+    "need_evidence": 257,
+    "appeal_reject": 161,
+    "not_complaint": 11,
+    "no_description": 35,
+    "toxic": 8,
+    "admin_complaint": 16,
+    "duplicate": 3,
+    "clarify": 71,
+    "offtopic_flood": 17,
+    "question_unknown": 18,
+    "help_generic": 13,
+    "help_vehicle": 14,
+    "report_watch": 27,
+    "help_service": 4,
+    "report_need_id": 12,
+    "report_rp": 2,
+    "report_appeal": 2,
+    "question_howto": 2,
+    "question_tech": 1
+  },
+  "intent_vs_admin_verdict": {
+    "approve": {
+      "approved": 140,
+      "other": 135,
+      "need_evidence": 17,
+      "already_punished": 5,
+      "rejected": 10,
+      "invalid_format": 9,
+      "duplicate": 6,
+      "closed": 1,
+      "appeal_rejected": 3
+    },
+    "need_evidence": {
+      "need_evidence": 100,
+      "approved": 26,
+      "other": 72,
+      "rejected": 39,
+      "invalid_format": 9,
+      "appeal_rejected": 6,
+      "duplicate": 3,
+      "appeal_approved": 1,
+      "already_punished": 1
+    },
+    "appeal_reject": {
+      "other": 58,
+      "duplicate": 5,
+      "appeal_rejected": 60,
+      "rejected": 7,
+      "approved": 5,
+      "appeal_approved": 10,
+      "invalid_format": 10,
+      "need_evidence": 5,
+      "closed": 1
+    },
+    "not_complaint": {
+      "duplicate": 1,
+      "other": 6,
+      "appeal_rejected": 1,
+      "appeal_approved": 2,
+      "rejected": 1
+    },
+    "no_description": {
+      "rejected": 5,
+      "other": 16,
+      "approved": 3,
+      "invalid_format": 3,
+      "need_evidence": 4,
+      "appeal_rejected": 2,
+      "appeal_approved": 1,
+      "duplicate": 1
+    },
+    "toxic": {
+      "rejected": 3,
+      "invalid_format": 4,
+      "other": 1
+    },
+    "admin_complaint": {
+      "other": 7,
+      "appeal_rejected": 3,
+      "approved": 3,
+      "duplicate": 2,
+      "rejected": 1
+    },
+    "duplicate": {
+      "closed": 1,
+      "other": 1,
+      "need_evidence": 1
+    }
+  }
+}
