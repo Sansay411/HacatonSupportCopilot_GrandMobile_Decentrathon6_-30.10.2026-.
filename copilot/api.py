@@ -21,6 +21,8 @@ from .pipeline import Copilot
 
 ROOT = Path(__file__).resolve().parents[1]
 FEEDBACK_PATH = Path(os.environ.get("COPILOT_FEEDBACK", ROOT / "reports/private/feedback.jsonl"))
+TEMPLATES_JSON = Path(os.environ.get("COPILOT_TEMPLATES", ROOT / "reports/template_suggestions_summary.json"))
+TEMPLATES_MD = TEMPLATES_JSON.with_suffix(".md")
 
 
 class Message(BaseModel):
@@ -125,6 +127,20 @@ def rules_lookup(cite: list[str] = Query(default=[])):
         if p:
             out[c] = {"section": p.section_name, "ref": p.ref, "text": p.text}
     return out
+
+
+@app.get("/templates")
+def templates(only_candidates: bool = True):
+    """Бонус: кандидаты в новые шаблоны (сводка scripts/suggest_templates.py, без текстов игроков)."""
+    if not TEMPLATES_JSON.exists():
+        return {"available": False, "hint": "сводки нет: выполните make suggest-templates",
+                "totals": {}, "clusters": [], "markdown": ""}
+    summary = json.loads(TEMPLATES_JSON.read_text(encoding="utf-8"))
+    if only_candidates:
+        summary["clusters"] = [c for c in summary["clusters"] if c.get("gap")]
+    summary["available"] = True
+    summary["markdown"] = TEMPLATES_MD.read_text(encoding="utf-8") if TEMPLATES_MD.exists() else ""
+    return summary
 
 
 @app.get("/")
