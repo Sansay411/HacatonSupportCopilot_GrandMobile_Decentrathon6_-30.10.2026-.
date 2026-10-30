@@ -3,7 +3,7 @@ IN ?= data/tickets_valid.jsonl
 OUT ?= pred.jsonl
 PORT ?= 8000
 
-.PHONY: install train predict serve eval test gold check-data suggest-templates eval-drafts eval-drafts-real
+.PHONY: install train predict serve serve-fixture eval test e2e bench data-status gold check-data suggest-templates eval-drafts eval-drafts-real
 
 install:
 	$(PY) -m pip install -r requirements.txt
@@ -19,6 +19,18 @@ predict:
 serve:
 	$(PY) -m uvicorn copilot.api:app --host 0.0.0.0 --port $(PORT)
 
+# явный режим на ТЕСТОВЫХ правилах (tests/fixtures), когда данных кейса нет; интерфейс постоянно об этом предупреждает
+serve-fixture:
+	$(PY) scripts/serve.py --fixture --port $(PORT)
+
+# какие файлы кейса и модели на месте, пригоден ли rules.json (ничего не создаёт и не подменяет)
+data-status:
+	$(PY) scripts/check_data.py
+
+# замер p50/p95 и стоимости на настоящих вызовах POST /triage (reports/bench_local.json)
+bench:
+	$(PY) scripts/bench.py --http --n 1000
+
 # dev-разметка valid (нужна только для метрик категории и приоритета)
 gold:
 	$(PY) scripts/make_gold.py
@@ -28,6 +40,10 @@ eval:
 
 test:
 	$(PY) -m pytest -q tests
+
+# сквозные тесты в настоящем браузере (нужны playwright и Edge, Chrome или Chromium; без них пропускаются)
+e2e:
+	$(PY) -m pytest -q tests/e2e
 
 # качество черновиков: инварианты (язык, пункты в тексте, обещания, эскалации) на синтетике, без data/ и models/
 eval-drafts:

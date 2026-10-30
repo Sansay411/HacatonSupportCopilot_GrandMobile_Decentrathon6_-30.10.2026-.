@@ -9,7 +9,7 @@ import sys
 import httpx
 import pytest
 
-from conftest import FIXTURE_RULES, ROOT
+from support import FIXTURE_RULES, ROOT
 from copilot.dedup import is_spam
 from copilot.drafts import Draft
 from copilot.llm import LLMPolisher

@@ -20,6 +20,14 @@ REPORT_CATS = [
 ]
 ALL_CATS = COMPLAINT_CATS + REPORT_CATS
 PRIORITIES = ["p0", "p1", "p2", "p3"]
+# названия категорий для интерфейса и поиска по названию
+CATEGORY_LABELS = {
+    "complaint.insult": "Оскорбление", "complaint.cheat": "Читы и сторонний софт", "complaint.dm": "Убийство без причины",
+    "complaint.scam": "Мошенничество", "complaint.rmt_ads": "Реклама и продажа за реальные деньги",
+    "complaint.admin": "Жалоба на администратора", "complaint.invalid": "Некорректная жалоба", "complaint.other": "Другое",
+    "report.account": "Аккаунт и взлом", "report.complaint": "Жалоба в репорте", "report.help": "Просьба о помощи",
+    "report.offtopic": "Оффтоп", "report.payment": "Платёж и донат", "report.question": "Вопрос игрока",
+}
 
 # пункт правил -> категория жалобы
 _REF_TO_CAT = {

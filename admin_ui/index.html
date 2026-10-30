@@ -36,6 +36,8 @@
     <symbol id="i-flask" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 4h5M10.5 4v5.2L5.4 18a1.6 1.6 0 0 0 1.4 2.4h10.4a1.6 1.6 0 0 0 1.4-2.4l-5.1-8.8V4"/><path d="M8 14.5h8"/></g></symbol>
     <symbol id="i-back" viewBox="0 0 24 24"><path d="M14.5 6L8.5 12l6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-inbox" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 13l2.7-7.2A2 2 0 0 1 8 4.5h8a2 2 0 0 1 1.8 1.3L20.5 13v4.5a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/><path d="M3.5 13H8.2l1 2.4h5.6l1-2.4h4.7"/></g></symbol>
+    <symbol id="i-db" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/></g></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M15 9V6.5A2.5 2.5 0 0 0 12.5 4h-6A2.5 2.5 0 0 0 4 6.5v6A2.5 2.5 0 0 0 6.5 15H9"/></g></symbol>
   </defs>
 </svg>
 
@@ -65,7 +67,6 @@
 
     <div class="rail-foot">
       <div class="sys" id="sys" aria-live="polite"></div>
-      <div class="tenant"><i id="tenant-dot"></i><span>Grand Mobile · поддержка</span></div>
     </div>
   </aside>
 
@@ -73,28 +74,45 @@
     <header class="topbar">
       <div class="grow"><h1 id="title">Командный центр</h1><div class="sub" id="subtitle"></div></div>
       <div class="actions">
-        <span class="demo-badge" id="demo" hidden title="Данные синтетические: сервис работает на тестовых правилах"><svg width="14" height="14"><use href="#i-flask"/></svg>Демо-режим</span>
         <span class="live hide-sm" id="live"><i></i><span>Сервис</span></span>
+        <button class="btn" id="imp-btn" type="button"><svg><use href="#i-inbox"/></svg><span class="hide-md">Импорт JSONL</span></button>
         <button class="btn primary" id="new-btn" type="button"><svg><use href="#i-plus"/></svg><span class="hide-sm">Новое обращение</span><span class="kbd hide-sm">N</span></button>
       </div>
     </header>
+    <div class="banner" id="banner" role="status" hidden></div>
     <main class="view" id="view" tabindex="-1"></main>
   </div>
 </div>
 
 <dialog id="intake" aria-labelledby="intake-t">
-  <form method="dialog" id="intake-form">
+  <form method="dialog" id="intake-form" autocomplete="off">
     <div class="dlg-h"><h2 id="intake-t">Новое обращение</h2></div>
     <div class="dlg-b">
       <div class="two">
         <div><label class="lbl" for="in-kind">Тип</label>
           <select id="in-kind"><option value="complaint">Жалоба</option><option value="report">Репорт</option></select></div>
-        <div><label class="lbl" for="in-att">Вложений</label><input id="in-att" type="number" min="0" max="20" value="1"></div>
+        <div><label class="lbl" for="in-server">Сервер</label><input id="in-server" type="text" maxlength="40" placeholder="например, 5"></div>
       </div>
       <div><label class="lbl" for="in-text">Текст игрока</label>
-        <textarea id="in-text" rows="5" placeholder="Arman_Petrov оскорблял меня и мою семью в чате, скрины есть, 2.1 ОП"></textarea></div>
-      <div><label class="lbl" for="in-rep">ID заявителя (необязательно, нужен для проверки дублей)</label>
-        <input id="in-rep" type="text" placeholder="например, p-1042" autocomplete="off"></div>
+        <textarea id="in-text" rows="5" maxlength="8000" placeholder="Arman_Petrov оскорблял меня и мою семью в чате, скрины есть, 2.1 ОП"></textarea></div>
+      <div class="two">
+        <div><label class="lbl" for="in-rep">Заявитель: ID или ник</label>
+          <input id="in-rep" type="text" maxlength="64" placeholder="p-1042"></div>
+        <div><label class="lbl" for="in-lang">Язык сервера</label>
+          <select id="in-lang"><option value="">определить по тексту</option><option value="ru">ru</option><option value="uz">uz</option><option value="kk">kk</option></select></div>
+      </div>
+      <div class="two">
+        <div><label class="lbl" for="in-nick">Нарушитель: ник</label>
+          <input id="in-nick" type="text" maxlength="32" placeholder="Arman_Petrov"></div>
+        <div><label class="lbl" for="in-rid">Нарушитель: ID</label>
+          <input id="in-rid" type="text" maxlength="64" placeholder="необязательно"></div>
+      </div>
+      <div class="two">
+        <div><label class="lbl" for="in-att">Приложено файлов</label><input id="in-att" type="number" min="0" max="50" value="0"></div>
+        <div><label class="lbl" for="in-urls">Ссылки на доказательства</label><input id="in-urls" type="text" placeholder="https://youtu.be/..."></div>
+      </div>
+      <p class="hint">Sentra учитывает число файлов и наличие ссылок, но не открывает их и не анализирует изображения. Без ID заявителя дубли не проверяются.</p>
+      <div class="check risk" id="in-err" hidden></div>
     </div>
     <div class="dlg-f">
       <button class="btn ghost" type="button" id="in-cancel">Отмена</button>
@@ -102,8 +120,28 @@
     </div>
   </form>
 </dialog>
+
+<dialog id="import" aria-labelledby="import-t">
+  <form method="dialog" id="import-form">
+    <div class="dlg-h"><h2 id="import-t">Импорт обращений из JSONL</h2></div>
+    <div class="dlg-b">
+      <p class="hint">Одна строка файла: один JSON в формате tickets.jsonl (kind, messages, ticket_id, created_at, reporter_hash). Каждая строка идёт через настоящий триаж. Ответы админов в файле игнорируются, повторный импорт того же файла дублей не создаёт. Битые строки пропускаются и перечисляются с номерами.</p>
+      <div><label class="lbl" for="im-file">Файл (.jsonl, до 5 МБ и 5000 строк)</label><input id="im-file" type="file" accept=".jsonl,.json,.txt"></div>
+      <div><label class="lbl" for="im-text">или вставьте строки</label><textarea id="im-text" rows="4" placeholder='{"kind":"report","ticket_id":"T-1","messages":[{"role":"player","text":"застрял"}]}'></textarea></div>
+      <div id="im-res"></div>
+    </div>
+    <div class="dlg-f">
+      <button class="btn ghost" type="button" id="im-cancel">Закрыть</button>
+      <button class="btn primary" type="submit" id="im-go">Импортировать</button>
+    </div>
+  </form>
+</dialog>
 <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
 
+<script src="/static/core.js"></script>
+<script src="/static/viz.js"></script>
+<script src="/static/views.js"></script>
+<script src="/static/queue.js"></script>
 <script src="/static/app.js"></script>
 </body>
 </html>

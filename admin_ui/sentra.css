@@ -90,9 +90,6 @@ a:hover{text-decoration:underline}
 .sys{background:var(--s2);border:1px solid var(--line);border-radius:var(--r3);padding:11px 12px;display:grid;gap:7px;font-size:12.5px}
 .sys-row{display:flex;justify-content:space-between;gap:10px;color:var(--t3)}
 .sys-row b{color:var(--t1);font-weight:500;white-space:nowrap}
-.tenant{display:flex;align-items:center;gap:9px;padding:6px 8px;color:var(--t3);font-size:12px}
-.tenant i{width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px color-mix(in srgb,var(--ok) 20%,transparent)}
-.tenant i.off{background:var(--p1);box-shadow:0 0 0 3px color-mix(in srgb,var(--p1) 20%,transparent)}
 
 .main{min-width:0;display:flex;flex-direction:column;position:relative;
   background:
@@ -105,7 +102,7 @@ a:hover{text-decoration:underline}
   background:rgba(12,15,14,.78);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);
 }
 .topbar h1{font-size:19px;font-weight:500;letter-spacing:-.015em}
-.topbar .sub{color:var(--t3);font-size:12.5px;margin-top:1px}
+.topbar .sub{color:var(--t3);font-size:12.5px;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .topbar .grow{flex:1;min-width:0}
 .topbar .actions{display:flex;align-items:center;gap:10px}
 .view{padding:24px 28px 56px;display:flex;flex-direction:column;gap:20px;min-width:0}
@@ -148,9 +145,6 @@ a:hover{text-decoration:underline}
 .chip.risk{color:var(--p0);background:color-mix(in srgb,var(--p0) 12%,transparent);border-color:color-mix(in srgb,var(--p0) 32%,transparent)}
 .chip.sig{color:var(--signal-hi);background:var(--signal-dim);border-color:var(--signal-line)}
 .chip.mono{font-family:var(--mono);font-size:11.5px}
-.demo-badge{display:inline-flex;align-items:center;gap:7px;height:26px;padding:0 10px;border-radius:99px;font-weight:600;font-size:12px;
-  color:var(--warn);background:color-mix(in srgb,var(--warn) 11%,transparent);border:1px dashed color-mix(in srgb,var(--warn) 55%,transparent)}
-.demo-badge svg{width:14px;height:14px}
 .live{display:inline-flex;align-items:center;gap:8px;color:var(--t2);font-size:12.5px;padding:0 4px}
 .live i{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px color-mix(in srgb,var(--ok) 22%,transparent);animation:pulse 2.4s ease-in-out infinite}
 .live.off i{background:var(--p1);box-shadow:0 0 0 3px color-mix(in srgb,var(--p1) 22%,transparent);animation:none}
@@ -218,7 +212,7 @@ a:hover{text-decoration:underline}
 .route-split .seg{height:8px}
 
 /* ---------- очередь ---------- */
-.q-layout{display:grid;grid-template-columns:minmax(330px,390px) minmax(0,1fr);height:calc(100vh - 62px);min-height:0}
+.q-layout{display:grid;grid-template-columns:minmax(330px,390px) minmax(0,1fr);height:calc(100vh - 62px - var(--banner-h,0px));min-height:0}
 .q-list{border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0;overflow:hidden;background:rgba(8,10,9,.45)}
 .q-tools{padding:14px 14px 10px;display:grid;gap:10px;border-bottom:1px solid var(--line)}
 .field{position:relative}
@@ -406,10 +400,9 @@ dialog[open]{animation:dlg .18s var(--ease)}
 @media (max-width:980px){
   :root{--rail:68px}
   .brand{padding:2px 0 14px;align-items:center}
-  .brand-word,.brand-by,.nav-label,.nav a span,.nav .count,.sys,.tenant span{display:none}
+  .brand-word,.brand-by,.nav-label,.nav a span,.nav .count,.sys{display:none}
   .nav a{justify-content:center;padding:0}
   .nav a[aria-current="page"]::before{left:-12px}
-  .tenant{justify-content:center}
   .q-layout{grid-template-columns:minmax(290px,340px) minmax(0,1fr)}
   .topbar{padding:0 18px} .view{padding:20px 18px 48px} .ws{padding:18px 18px 48px}
 }
@@ -520,3 +513,44 @@ dialog[open]{animation:dlg .18s var(--ease)}
   .rg{width:136px;height:136px} .rn{font-size:30px}
   .cmap-legend{padding-left:6px}
 }
+
+/* ---------- рабочее место: баннер, формы, проверки, дубли, пробы ---------- */
+.banner{display:flex;align-items:center;gap:12px;padding:10px 28px;background:color-mix(in srgb,var(--p1) 10%,var(--s1));
+  border-bottom:1px solid color-mix(in srgb,var(--p1) 30%,transparent);color:var(--t1);font-size:12.5px}
+.banner.err{background:color-mix(in srgb,var(--p0) 10%,var(--s1));border-bottom-color:color-mix(in srgb,var(--p0) 35%,transparent)}
+.banner>svg{width:18px;height:18px;color:var(--p1);flex:none}
+.banner.err>svg{color:var(--p0)}
+.banner>div{flex:1;min-width:0;display:grid;gap:2px}
+.notice{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:var(--r2);background:var(--s3);color:var(--t2);font-size:12.5px;line-height:1.5;margin:6px 0}
+.notice svg{width:16px;height:16px;flex:none;margin-top:2px;color:var(--t3)}
+.notice.warn{background:color-mix(in srgb,var(--p1) 9%,var(--s3));border:1px solid color-mix(in srgb,var(--p1) 26%,transparent)}
+.notice.warn svg{color:var(--p1)}
+.notice.ok svg{color:var(--ok)}
+.src{display:flex;align-items:center;gap:7px;color:var(--t3);font-size:12px;margin:2px 0 10px}
+.src svg{width:13px;height:13px;flex:none}
+.hint{color:var(--t3);font-size:12.5px;line-height:1.5}
+#in-err{margin:0}
+.inline-form{display:grid;gap:12px;margin-top:14px;padding:14px;border:1px solid var(--line3);border-radius:var(--r2);background:var(--s1)}
+.dup-panel{border-color:color-mix(in srgb,var(--p1) 38%,transparent)}
+.sigs{display:flex;flex-wrap:wrap;gap:6px}
+.dgroup{border-top:1px solid var(--line)}
+.dgroup:first-child{border-top:0}
+.dgroup-h{display:grid;grid-template-columns:auto 1fr;gap:6px;align-items:center;padding:8px 16px 0}
+.dgroup-h .dupe{border-bottom:0}
+.drep{margin-left:24px;border-left:2px solid var(--signal-line)}
+.drep .sigs{padding:10px 16px 0}
+.drep .dupe{border-bottom:0}
+.probes{display:grid;gap:6px;margin-top:10px}
+.probe{border:1px solid var(--line2);border-radius:var(--r2);background:var(--s1)}
+.probe.bad{border-color:color-mix(in srgb,var(--p0) 45%,transparent)}
+.probe summary{display:flex;align-items:center;gap:10px;padding:9px 12px;cursor:pointer;list-style:none}
+.probe summary::-webkit-details-marker{display:none}
+.probe summary svg{width:16px;height:16px;color:var(--ok)}
+.probe.bad summary svg{color:var(--p0)}
+.probe summary .chip{margin-left:auto}
+.probe-b{padding:0 14px 14px}
+.rev{margin-top:10px}
+.rev .proposal{margin-top:4px;font-size:13px}
+details>summary{outline-offset:3px}
+@media (max-width:760px){.banner{padding:8px 14px;font-size:12px}.banner>div>div:nth-child(n+2){display:none}.drep{margin-left:8px}}
+@media (max-width:1180px){.hide-md{display:none !important}}

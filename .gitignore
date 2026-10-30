@@ -8,3 +8,4 @@ reports/private/
 *.jsonl
 *.jsonl.gz
 .pytest_cache/
+var/

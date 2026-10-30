@@ -1,0 +1,31 @@
+{
+  "measured_at": "2026-10-30T16:20:01Z",
+  "mode": "http",
+  "n": 1000,
+  "p50_ms": 1.87,
+  "p95_ms": 3.45,
+  "p99_ms": 4.34,
+  "max_ms": 25.97,
+  "mean_ms": 2.08,
+  "throughput_per_s": 480.0,
+  "cost_usd_per_ticket": 0.0,
+  "limits": {
+    "p95_ms": 5000,
+    "cost_usd_per_ticket": 0.002
+  },
+  "p95_within_limit": true,
+  "cost_within_limit": true,
+  "config": {
+    "rules_synthetic": true,
+    "models_loaded": false,
+    "verdict_model_loaded": false,
+    "llm": false,
+    "llm_calls": 0
+  },
+  "host": {
+    "python": "3.12.10",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "cpus": 16
+  },
+  "note": "Замер на ТЕСТОВЫХ правилах и без ML-моделей: данных кейса на машине нет. Цифры ML-режима с реальными моделями не измерялись."
+}

@@ -1,6 +1,7 @@
+"""Сквозной тест на реальных data/ и models/: выполняется только когда выдача кейса и модели лежат на месте."""
 import pytest
 
-from conftest import HAS_DATA
+from support import HAS_DATA
 
 pytestmark = pytest.mark.skipif(not HAS_DATA, reason="нет data/ и models/")
 
@@ -16,6 +17,6 @@ def test_triage_endpoint():
     assert "_meta" not in body and body["draft_reply"]["cited"]
     assert c.post("/triage", json={"kind": "report", "messages": [{"role": "player", "text": " "}]}).status_code == 422
     assert c.post("/triage", json={"kind": "other", "messages": []}).status_code == 422
-    r = c.post("/triage?enqueue=true", json={"kind": "report", "messages": [{"role": "player", "text": "застрял"}]})
-    qid = r.json()["queue_id"]
-    assert c.post("/feedback", json={"queue_id": qid, "action": "send"}).json()["ok"]
+    t = c.post("/tickets", json={"kind": "report", "text": "застрял", "reporter": "real-1"}).json()["ticket"]
+    done = c.post(f"/tickets/{t['id']}/decision", json={"action": "close", "expected_rev": t["rev"], "reason": "no_action"})
+    assert done.status_code == 200 and done.json()["status"] == "closed"

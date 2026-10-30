@@ -190,7 +190,7 @@ def test_private_view_keeps_examples(clusters):
 
 # ---------------------------------------------------------------- API
 def test_templates_endpoint_without_summary(tmp_path, monkeypatch):
-    from conftest import HAS_DATA
+    from support import HAS_DATA
     if not HAS_DATA:
         pytest.skip("нет data/ и models/")
     from fastapi.testclient import TestClient
@@ -201,7 +201,7 @@ def test_templates_endpoint_without_summary(tmp_path, monkeypatch):
 
 
 def test_templates_endpoint_with_summary(tmp_path, monkeypatch, clusters):
-    from conftest import HAS_DATA
+    from support import HAS_DATA
     if not HAS_DATA:
         pytest.skip("нет data/ и models/")
     from fastapi.testclient import TestClient

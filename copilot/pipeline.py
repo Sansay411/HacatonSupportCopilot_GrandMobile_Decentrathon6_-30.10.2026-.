@@ -1,6 +1,7 @@
 """Триаж одного обращения: вход по контракту POST /triage, выход по контракту."""
 from __future__ import annotations
 
+import hashlib
 import json
 import logging
 import os
@@ -11,7 +12,7 @@ from pathlib import Path
 from scipy.sparse import csr_matrix, hstack
 
 from . import dedup as dedup_mod
-from . import drafts, guard, lang as lang_mod
+from . import drafts, guard, lang as lang_mod, verify
 from .classifier import CategoryModel
 from .features import model_text
 from .rules import load as load_rules
@@ -31,7 +32,14 @@ class Copilot:
         if not (data_dir / "rules.json").exists():
             raise FileNotFoundError(f"нет {data_dir / 'rules.json'}: положите выдачу кейса в data/ "
                                     f"(rules.json, taxonomy.json) или задайте COPILOT_DATA")
+        self.data_dir, self.models_dir = data_dir, models_dir
         self.rules = load_rules(str(data_dir / "rules.json"))
+        raw = (data_dir / "rules.json").read_bytes()
+        self.rules_fingerprint = hashlib.sha256(raw).hexdigest()[:16]
+        try:
+            self.rules_source = str(json.loads(raw.decode("utf-8")).get("source") or "")
+        except (ValueError, UnicodeDecodeError, AttributeError):
+            self.rules_source = ""
         tax_path = data_dir / "taxonomy.json"
         if tax_path.exists():
             tax = json.loads(tax_path.read_text(encoding="utf-8"))
@@ -49,6 +57,33 @@ class Copilot:
         self.llm = llm
 
     # ------------------------------------------------------------------
+    @property
+    def rules_synthetic(self) -> bool:
+        """Тестовая база правил из tests/fixtures: цитаты в ответах не относятся к правилам Grand Mobile."""
+        return "synthetic" in self.rules_source.lower()
+
+    def diagnostics(self) -> dict:
+        """Что именно загружено и чего не хватает. Используется в /health и в интерфейсе, ничего не подменяет."""
+        models = {"category.pkl": self.category_model.loaded, "verdict.pkl": self.verdict_model is not None}
+        missing = [f"models/{n}" for n, ok in models.items() if not ok]
+        if not (self.data_dir / "taxonomy.json").exists():
+            missing.append("data/taxonomy.json")
+        problems = []
+        if self.rules_synthetic:
+            problems.append({"code": "rules_synthetic", "level": "warn",
+                             "text": "Загружена тестовая база правил (synthetic): номера пунктов в ответах не относятся к правилам Grand Mobile."})
+        if not self.category_model.loaded:
+            problems.append({"code": "no_category_model", "level": "warn",
+                             "text": f"Нет {self.models_dir / 'category.pkl'}: категория определяется только правилами, качество ниже."})
+        if self.verdict_model is None:
+            problems.append({"code": "no_verdict_model", "level": "warn",
+                             "text": f"Нет {self.models_dir / 'verdict.pkl'}: исход жалобы выбирается по простой эвристике."})
+        return {"rules_path": str(self.data_dir / "rules.json"), "rules": len(self.rules.points),
+                "rules_source": self.rules_source or None, "rules_synthetic": self.rules_synthetic,
+                "rules_fingerprint": self.rules_fingerprint, "models": models, "missing": missing, "problems": problems,
+                "mode": "full" if not problems else "rules_only" if not self.category_model.loaded else "limited"}
+
+    # ------------------------------------------------------------------
     def _verdict(self, t, sig) -> tuple[str | None, float]:
         if self.verdict_model is None:
             return ("approve" if sig.rule_refs or sig.topics & {"insult", "dm", "cheat", "scam"} else "need_evidence"), 0.5
@@ -60,7 +95,7 @@ class Copilot:
         i = int(p.argmax())
         return clf.classes_[i], float(p[i])
 
-    def triage(self, payload: dict, *, use_dedup: bool = True) -> dict:
+    def triage(self, payload: dict, *, use_dedup: bool = True, ref: str | None = None) -> dict:
         t0 = time.perf_counter()
         t = from_dict(payload)
         text_lang = lang_mod.detect(t.player_text, t.server_lang)
@@ -71,10 +106,12 @@ class Copilot:
 
         spam = dedup_mod.is_spam(t.player_text)
         dup_reason = None
+        dup_match = None
         if use_dedup:
-            dup_reason = self.dedup.check_and_add(
+            dup_match = self.dedup.match_and_add(
                 reporter=t.reporter_hash or payload.get("reporter"), reported=t.reported_hash or t.reported_nick,
-                text=t.player_text, kind=t.kind, created_at=t.created_at, category=cat.category)
+                text=t.player_text, kind=t.kind, created_at=t.created_at, category=cat.category, ref=ref)
+            dup_reason = dup_match.reason if dup_match else None
 
         verdict, vconf = (None, 1.0)
         if t.kind == "complaint" and cat.category not in ("complaint.admin", "complaint.invalid"):
@@ -91,6 +128,8 @@ class Copilot:
             d = self.llm.polish(d, t, sig, cat.category, self.rules)
 
         cited, guard_reasons = guard.check(d.text, d.cited, self.rules)
+        # номер пункта прямо в тексте: тот, которого нет в rules.json или нет среди цитат, отправляет черновик человеку
+        guard_reasons += verify.text_ref_issues(d.text, cited, self.rules)
         reasons = list(d.reasons) + guard_reasons
         if dup_reason:
             reasons.append(dup_reason)
@@ -132,5 +171,7 @@ class Copilot:
             "_meta": {"intent": d.intent, "verdict_pred": verdict, "category_source": cat.source,
                       "alternatives": [dict(a, cited=[c for c in a["cited"] if self.rules.exists(c)]) for a in d.alternatives],
                       "latency_ms": round((time.perf_counter() - t0) * 1000, 2),
-                      "llm": bool(self.llm and d.intent in getattr(self.llm, "intents", ()))},
+                      "llm": bool(self.llm and d.intent in getattr(self.llm, "intents", ())),
+                      "dedup": dup_match.as_dict() if dup_match else None,
+                      "rules_fingerprint": self.rules_fingerprint},
         }
