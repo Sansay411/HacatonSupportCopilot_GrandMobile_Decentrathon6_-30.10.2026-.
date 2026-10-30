@@ -22,8 +22,8 @@
     "kk": 7,
     "en": 4
   },
-  "latency_ms_p50": 2.6,
-  "latency_ms_p95": 5.2,
+  "latency_ms_p50": 2.7,
+  "latency_ms_p95": 5.3,
   "cost_usd_per_ticket": 0.0,
   "intents": {
     "approve": 326,
