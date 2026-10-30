@@ -44,10 +44,18 @@ section{padding:20px 24px;display:flex;flex-direction:column;gap:14px}
 .human{color:var(--p0);font-weight:600}.auto{color:var(--ok);font-weight:600}
 .empty{color:var(--muted);padding:40px;text-align:center}
 .alts button{margin-right:6px;margin-top:4px}
+nav.tabs{display:flex;gap:6px;padding:10px 24px 0;border-bottom:1px solid var(--line)}
+nav.tabs button{background:transparent;color:var(--muted);border:1px solid transparent;border-bottom:none;border-radius:8px 8px 0 0}
+nav.tabs button.on{color:var(--ink);background:var(--panel);border-color:var(--line)}
+#tpl{display:none;padding:20px 24px;flex-direction:column;gap:14px;max-width:1000px}
+.tpl-text{white-space:pre-wrap;border-left:3px solid var(--accent);padding:6px 12px;margin:8px 0;background:var(--bg);border-radius:0 8px 8px 0}
+.chips span{display:inline-block;font:12px var(--mono);border:1px solid var(--line);border-radius:5px;padding:2px 6px;margin:0 6px 4px 0;color:var(--muted)}
 </style>
 </head>
 <body>
 <header><h1>Support Copilot</h1><span>очередь обращений Grand Mobile: черновик, правила, решение</span></header>
+<nav class="tabs"><button id="t-queue" class="on">Очередь</button><button id="t-tpl">Кандидаты в шаблоны</button></nav>
+<div id="tpl"></div>
 <main>
   <aside>
     <div class="card">
@@ -130,6 +138,37 @@ $('#send').onclick = async () => {
   const r = await (await fetch('/triage?enqueue=true&debug=true', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)})).json();
   $('#text').value = ''; await load(); if (r.queue_id) show(r.queue_id);
 };
+function tab(name){
+  const t = name === 'tpl';
+  $('#tpl').style.display = t ? 'flex' : 'none';
+  document.querySelector('main').style.display = t ? 'none' : '';
+  $('#t-tpl').classList.toggle('on', t); $('#t-queue').classList.toggle('on', !t);
+  if (t) loadTemplates();
+}
+async function loadTemplates(){
+  let d;
+  try { d = await (await fetch('/templates')).json(); } catch(e){ d = {available:false, hint:'сервис недоступен'}; }
+  if (!d.available){ $('#tpl').innerHTML = `<div class="empty">${esc(d.hint||'нет данных')}</div>`; return; }
+  const t = d.totals || {};
+  $('#tpl').innerHTML = `
+    <div class="card">Кластеров: <b>${t.clusters}</b>, кандидатов в шаблоны: <b>${t.candidates}</b>
+      (охват ${t.tickets_in_candidates} тикетов). Это предложения из повторяющихся ответов админов:
+      перед использованием их проверяет человек. Тексты игроков здесь не показываются.</div>` +
+    (d.clusters.map(c => `
+    <div class="card">
+      <span class="tag">${esc(c.category)} · кластер ${c.cluster}</span>
+      <div class="chips" style="margin-top:6px">
+        <span>размер ${c.size}</span><span>главный ответ ${Math.round(c.top_reply_share*100)}%</span>
+        <span>сценарий ${esc(c.intent)} ${Math.round(c.intent_share*100)}%</span>
+        <span>близость черновика ${c.draft_sim ?? '—'}</span>
+        ${(c.terms||[]).map(w=>`<span>${esc(w)}</span>`).join('')}
+      </div>
+      <div class="tpl-text">${esc(c.template)}</div>
+      <div class="tag">пункты: ${esc((c.refs||[]).join(', ') || 'нет')}${(c.guard||[]).length ? ' · guard: ' + esc(c.guard.join('; ')) : ''}</div>
+      <div class="tag">почему кандидат: ${esc((c.gap_reasons||[]).join('; '))}</div>
+    </div>`).join('') || '<div class="empty">Кандидатов нет при текущих порогах.</div>');
+}
+$('#t-queue').onclick = () => tab('queue'); $('#t-tpl').onclick = () => tab('tpl');
 load(); setInterval(load, 5000);
 </script>
 </body>

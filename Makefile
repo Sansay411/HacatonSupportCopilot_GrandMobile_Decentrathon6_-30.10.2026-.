@@ -3,7 +3,7 @@ IN ?= data/tickets_valid.jsonl
 OUT ?= pred.jsonl
 PORT ?= 8000
 
-.PHONY: install train predict serve eval test gold check-data
+.PHONY: install train predict serve eval test gold check-data suggest-templates
 
 install:
 	$(PY) -m pip install -r requirements.txt
@@ -28,6 +28,10 @@ eval:
 
 test:
 	$(PY) -m pytest -q tests
+
+# бонус: кандидаты в шаблоны по кластерам обращений (reports/template_suggestions_summary.md)
+suggest-templates:
+	$(PY) scripts/suggest_templates.py
 
 # проверка, что данные кейса не попали в git
 check-data:
