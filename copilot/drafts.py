@@ -10,7 +10,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
-from . import i18n, sanctions
+from . import i18n, kb, sanctions
 from .rules import RuleBase, SECTIONS
 from .signals import Signals
 from .taxonomy import ref_category
@@ -206,8 +206,13 @@ def build(kind: str, cat: str, sig: Signals, text: str, lang: str, rb: RuleBase,
                 return done("toxic", _fmt(L["toxic"], cite=ct(c)), [c], True, ["в тексте жалобы оскорбления (ЖБ 1.2.7)"])
             if sig.topics & {"question", "greeting_offtopic"} or sig.words >= 4:
                 c = "ЖБ 1.1.2"
-                return done("not_complaint", _fmt(L["not_complaint"], cite=ct(c), **common), [c], True,
-                            ["обращение не является жалобой"])
+                body = _fmt(L["not_complaint"], cite=ct(c), **common)
+                reasons = ["обращение не является жалобой"]
+                hit = kb.lookup(text, lang) if "question" in sig.topics else None
+                if hit:
+                    body += " " + hit[0]
+                    reasons.append(f"добавлен ответ из базы знаний «{hit[1].key}»")
+                return done("not_complaint", body, [c], True, reasons)
             c = "ЖБ 1.2.3"
             if sig.has_url:
                 return done("no_description", _fmt(L["no_description"], cite=ct(c)), [c], False,
@@ -271,12 +276,20 @@ def build(kind: str, cat: str, sig: Signals, text: str, lang: str, rb: RuleBase,
             return done("question_tech", _fmt(L["question_tech"], **common), [], True, ["технический вопрос"])
         if _HOWTO_COMPLAINT.search(t):
             return done("question_howto", L["question_complaint_howto"], [], True, ["как подать жалобу"])
-        return done("question_unknown", _fmt(L["question_unknown"], **common), [], True,
-                    ["вопрос по механике: базы знаний по механике в данных нет"])
+        hit = kb.lookup(text, lang)
+        if hit:
+            ans, entry = hit
+            return done("question_kb", ans, [], True,
+                        [f"ответ из базы знаний «{entry.key}»: так отвечали админы {entry.support} раз"])
+        return done("question_unknown", _fmt(L["question_unknown"], **common), [], False,
+                    ["вопрос по механике вне базы знаний: ответ проверяет человек"])
     # оффтоп
     if PROFANITY.search(t) or sig.topics & {"greeting_offtopic"} and not sig.topics & {"help_word"}:
         c = "3.1"
         return done("offtopic_flood", _fmt(L["offtopic_flood"], cite=ct(c)), [c], True, ["оффтоп"])
+    if "help_word" in sig.topics:
+        return done("help_ack", L["help_ack"], [], False,
+                    ["просьба о помощи без деталей: админы обычно сразу подключаются и следят за игроком"])
     return done("clarify", L["clarify"], [], True, ["нет содержания, нужно уточнение"])
 
 

@@ -74,3 +74,17 @@ def test_dedup_window():
 def test_spam():
     assert is_spam("Как дела? Как дети? Как кошка? Как собака? Как мама? Как папа? Как бабушка? Как дедушка? Как брат?")
     assert not is_spam("Игрок оскорбил мою маму в чате, скрины прилагаю")
+
+
+def test_kb_lookup():
+    from copilot.kb import lookup
+    ans, e = lookup("где получить лицензию на оружие?", "ru")
+    assert e.key == "weapon_license" and "Правительство" in ans
+    assert lookup("где оплачивать квартиру", "ru")[1].key == "taxes"
+    assert lookup("когда будет обнова?", "ru") is None
+    assert lookup("правила где почитать", "uz")[0].startswith("Loyiha")
+
+
+def test_payment_not_triggered_by_fines(rb):
+    assert "payment" not in extract("как оплатить штраф", rb).topics
+    assert "payment" in extract("оплатил гк, не пришло", rb).topics

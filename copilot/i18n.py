@@ -139,6 +139,7 @@ T = {
         "question_tech": "С техническими проблемами и вопросами по покупкам обращайтесь в техническую поддержку: {support}.",
         "question_complaint_howto": "Жалоба подаётся в лаунчере игры: укажите ник нарушителя, опишите ситуацию и приложите видео или скриншоты.",
         "clarify": "Уточните, пожалуйста, ваш вопрос или жалобу: что случилось?",
+        "help_ack": "Администратор на связи и посмотрит, что происходит. Опишите в репорте, что случилось, так помощь придёт быстрее.",
         "offtopic_flood": "Репорт предназначен для обращений к администрации. За оффтоп и флуд в репорт может последовать мут репорта ({cite}).",
         "account": "Вопросы доступа к аккаунту, взлома и пропажи имущества администрация в игре не решает. Обратитесь в "
                    "техническую поддержку: {support}. Ваше обращение также передано администратору. Напоминаем: по {cite} "
@@ -195,6 +196,7 @@ T = {
         "question_tech": "Техникалық мәселелер мен сатып алу сұрақтары бойынша техникалық қолдау қызметіне жазыңыз: {support}.",
         "question_complaint_howto": "Шағым ойын лаунчері арқылы беріледі: бұзушының никін көрсетіп, жағдайды сипаттаңыз және бейне не скриншот тіркеңіз.",
         "clarify": "Сұрағыңызды немесе шағымыңызды нақтылап жазыңызшы: не болды?",
+        "help_ack": "Әкімші байланыста, жағдайды қарап шығады. Не болғанын репортқа жазыңыз, сонда көмек тезірек келеді.",
         "offtopic_flood": "Репорт әкімшілікке жүгіну үшін арналған. Оффтоп пен флуд үшін репортқа шектеу қойылуы мүмкін ({cite}).",
         "account": "Аккаунтқа кіру, аккаунтты бұзу және мүліктің жоғалуы мәселелерін ойын ішіндегі әкімшілік шешпейді. "
                    "Техникалық қолдау қызметіне жазыңыз: {support}. Өтінішіңіз әкімшіге де берілді. Еске саламыз: {cite} бойынша "
@@ -251,6 +253,7 @@ T = {
         "question_tech": "Texnik muammolar va xaridlar bo‘yicha texnik yordamga murojaat qiling: {support}.",
         "question_complaint_howto": "Shikoyat o‘yin launcheri orqali yoziladi: qoidabuzarning nikini ko‘rsating, vaziyatni tasvirlang va video yoki skrinshot ilova qiling.",
         "clarify": "Iltimos, savolingiz yoki shikoyatingizni aniqroq yozing: nima bo‘ldi?",
+        "help_ack": "Administrator aloqada, vaziyatni ko‘rib chiqadi. Nima bo‘lganini reportga yozing, shunda yordam tezroq keladi.",
         "offtopic_flood": "Report ma’muriyatga murojaat qilish uchun mo‘ljallangan. Reportda offtop va flud uchun reportga cheklov qo‘yilishi mumkin ({cite}).",
         "account": "Akkauntga kirish, akkauntni buzib kirish va mol-mulk yo‘qolishi masalalarini o‘yin ichidagi ma’muriyat hal qilmaydi. "
                    "Texnik yordamga yozing: {support}. Murojaatingiz administratorga ham yetkazildi. Eslatma: {cite}ga ko‘ra "
@@ -303,6 +306,7 @@ T = {
         "question_tech": "For technical problems and purchases, please contact technical support: {support}.",
         "question_complaint_howto": "Complaints are filed in the game launcher: give the offender's nickname, describe the situation and attach a video or screenshots.",
         "clarify": "Please clarify your question or complaint: what happened?",
+        "help_ack": "An administrator is on it and will take a look. Describe what happened in the report so we can help faster.",
         "offtopic_flood": "Reports are for contacting administrators. Off-topic messages and flooding may lead to a report mute ({cite}).",
         "account": "Account access, hacking and lost property cannot be resolved by in-game administrators. Please contact technical "
                    "support: {support}. Your request has also been passed to an administrator. Note: under {cite}, players are "
@@ -353,6 +357,7 @@ T = {
         "question_tech": "Para problemas técnicos y compras, escribe al soporte técnico: {support}.",
         "question_complaint_howto": "Las quejas se presentan en el launcher del juego: indica el apodo del infractor, describe la situación y adjunta video o capturas.",
         "clarify": "Por favor, aclara tu pregunta o queja: ¿qué pasó?",
+        "help_ack": "Un administrador está atento y lo revisará. Describe en el reporte qué pasó para ayudarte más rápido.",
         "offtopic_flood": "Los reportes son para contactar con la administración. El offtopic y el flood pueden llevar a un silencio de reportes ({cite}).",
         "account": "Los problemas de acceso a la cuenta, hackeo y pérdida de bienes no los resuelve la administración del juego. Escribe al "
                    "soporte técnico: {support}. Tu solicitud también se pasó a un administrador. Según el {cite}, cada jugador es "
@@ -403,6 +408,7 @@ T = {
         "question_tech": "Para problemas técnicos e compras, fale com o suporte técnico: {support}.",
         "question_complaint_howto": "As denúncias são feitas no launcher do jogo: informe o apelido do infrator, descreva a situação e anexe vídeo ou capturas.",
         "clarify": "Por favor, explique melhor sua pergunta ou denúncia: o que aconteceu?",
+        "help_ack": "Um administrador está acompanhando e vai verificar. Descreva no report o que aconteceu para ajudarmos mais rápido.",
         "offtopic_flood": "Os reports servem para falar com a administração. Offtopic e flood podem levar a um silenciamento de reports ({cite}).",
         "account": "Problemas de acesso à conta, invasão e perda de bens não são resolvidos pela administração do jogo. Fale com o suporte "
                    "técnico: {support}. Seu pedido também foi encaminhado a um administrador. Pelo {cite}, cada jogador é "

@@ -8,10 +8,10 @@
   "citations_total": 1071,
   "citations_nonexistent": 0,
   "drafts_with_citation_share": 0.814,
-  "needs_human_share": 0.832,
+  "needs_human_share": 0.899,
   "needs_human_share_by_kind": {
     "complaint": 0.955,
-    "report": 0.284
+    "report": 0.65
   },
   "spam_or_duplicate_share": 0.006,
   "duplicate_recall_vs_admin": 0.0,
@@ -22,8 +22,8 @@
     "kk": 7,
     "en": 4
   },
-  "latency_ms_p50": 2.7,
-  "latency_ms_p95": 5.3,
+  "latency_ms_p50": 2.9,
+  "latency_ms_p95": 6.0,
   "cost_usd_per_ticket": 0.0,
   "intents": {
     "approve": 326,
@@ -34,15 +34,17 @@
     "toxic": 8,
     "admin_complaint": 16,
     "duplicate": 3,
-    "clarify": 71,
+    "help_ack": 50,
     "offtopic_flood": 17,
-    "question_unknown": 18,
+    "question_unknown": 17,
     "help_generic": 13,
     "help_vehicle": 14,
+    "clarify": 21,
     "report_watch": 27,
     "help_service": 4,
     "report_need_id": 12,
     "report_rp": 2,
+    "question_kb": 1,
     "report_appeal": 2,
     "question_howto": 2,
     "question_tech": 1
