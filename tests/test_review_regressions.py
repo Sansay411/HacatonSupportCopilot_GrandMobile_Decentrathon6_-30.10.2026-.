@@ -24,7 +24,7 @@ def new_service(tmp_path, name="proc", db="shared.db"):
     shutil.copy(FIXTURE_RULES, d / "rules.json")
     cp = Copilot(data_dir=d, models_dir=tmp_path / "нет")
     store = Store(tmp_path / db)
-    svc = TicketService(cp, store, templates_json=ROOT / "reports/template_suggestions_summary.json")
+    svc = TicketService(cp, store, templates_json=ROOT / "tests/fixtures/template_summary_synthetic.json")
     return svc, store
 
 

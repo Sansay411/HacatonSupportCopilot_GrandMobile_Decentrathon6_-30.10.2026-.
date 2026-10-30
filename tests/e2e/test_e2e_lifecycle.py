@@ -442,12 +442,12 @@ def test_18_templates_review_is_saved(pg, srv):
     card.locator("[data-tact=approve]").click()
     expect(card).to_contain_text("Не сохранено")
     pg.http_noise.clear()                                                  # 422 на небезопасный текст ожидаем
-    card.locator("textarea").fill("Приветствую, слежу за игроком {nick}[{n}].")
+    card.locator("textarea").fill("Здравствуйте, {nick}! Обращение {n} принято, ожидайте ответа администратора.")
     card.locator("[data-tact=approve]").click()
     expect(p.locator(".toast").last).to_contain_text("Шаблон утверждён")
     r = srv.get("/templates?only_candidates=false")
     c = next(x for x in r["clusters"] if x["key"] == key)
-    assert c["review"]["status"] == "approved" and r["totals"]["candidates"] == 29
+    assert c["review"]["status"] == "approved" and r["totals"]["candidates"] == sum(1 for x in r["clusters"] if x["gap"]) >= 1
     srv.restart()
     pg.errors.clear()
     p.reload()

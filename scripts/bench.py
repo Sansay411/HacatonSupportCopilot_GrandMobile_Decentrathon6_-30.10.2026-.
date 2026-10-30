@@ -3,6 +3,7 @@
     python scripts/bench.py --n 2000                 # пайплайн в процессе
     python scripts/bench.py --n 500 --http           # POST /triage по HTTP на настоящем uvicorn
     python scripts/bench.py --fixture --http         # на тестовых правилах, если данных кейса нет
+    python scripts/bench.py --valid --http           # на настоящих обращениях data/tickets_valid.jsonl (нужны data/ и models/)
 
 Ограничения кейса: стоимость не выше $0.002 за обращение, p95 до 5 секунд. Скрипт измеряет задержку каждого вызова
 (time.perf_counter), стоимость берёт из счётчиков LLM (без LLM внешних вызовов нет и стоимость 0) и печатает, на какой
@@ -28,6 +29,21 @@ sys.path.insert(0, str(ROOT))
 
 LIMIT_P95_MS = 5000
 LIMIT_COST = 0.002
+
+
+def corpus_valid(n: int) -> list[dict]:
+    """Настоящие обращения валидации как есть (с заявителями и временем, дедупликация работает). Ответы админов убираются."""
+    rows = [json.loads(x) for x in open(ROOT / "data/tickets_valid.jsonl", encoding="utf-8")]
+    out = []
+    for i in range(n):
+        d = dict(rows[i % len(rows)])
+        d["messages"] = [m for m in d.get("messages", []) if m.get("role") != "admin"]
+        for k in ("verdict", "punishment", "violation", "status", "lang", "region"):
+            d.pop(k, None)
+        if i >= len(rows):
+            d["reporter_hash"] = f"{d.get('reporter_hash')}-{i}"
+        out.append(d)
+    return out
 
 
 def corpus(n: int) -> list[dict]:
@@ -113,13 +129,14 @@ def main() -> int:
     ap.add_argument("--n", type=int, default=1000)
     ap.add_argument("--http", action="store_true", help="мерить POST /triage по HTTP, а не вызов пайплайна")
     ap.add_argument("--fixture", action="store_true", help="тестовые правила из tests/fixtures")
+    ap.add_argument("--valid", action="store_true", help="настоящие обращения data/tickets_valid.jsonl вместо синтетических")
     ap.add_argument("--out", default=str(ROOT / "reports/bench_local.json"))
     args = ap.parse_args()
     if args.fixture:
         d = Path(tempfile.mkdtemp(prefix="sentra-bench-data-"))
         shutil.copy(ROOT / "tests/fixtures/rules_mini.json", d / "rules.json")
         os.environ["COPILOT_DATA"] = str(d)
-    items = corpus(args.n)
+    items = corpus_valid(args.n) if args.valid else corpus(args.n)
     lat, cfg = (run_http if args.http else run_inproc)(items)
     cost_total = cfg.pop("_cost_total")
     res = {
@@ -128,7 +145,7 @@ def main() -> int:
         "cost_usd_per_ticket": round(cost_total / len(lat), 6),
         "limits": {"p95_ms": LIMIT_P95_MS, "cost_usd_per_ticket": LIMIT_COST},
         "p95_within_limit": pct(lat, .95) <= LIMIT_P95_MS, "cost_within_limit": cost_total / len(lat) <= LIMIT_COST,
-        "config": cfg,
+        "config": dict(cfg, corpus="data/tickets_valid.jsonl" if args.valid else "tests/fixtures/synthetic_tickets.json"),
         "host": {"python": platform.python_version(), "platform": platform.platform(), "cpus": os.cpu_count()},
         "note": ("Замер на ТЕСТОВЫХ правилах и без ML-моделей: данных кейса на машине нет. "
                  "Цифры ML-режима с реальными моделями не измерялись." if (cfg["rules_synthetic"] or not cfg["models_loaded"]) else

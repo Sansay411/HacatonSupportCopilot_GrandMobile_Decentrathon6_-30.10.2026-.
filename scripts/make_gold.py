@@ -62,6 +62,7 @@ def main():
         pr = PRIORITY_OVERRIDES.get(i) or priority_rules(cat, sig)
         gold[d["ticket_id"]] = {"category": cat, "priority": pr}
     out = root / "data/labels/valid_gold.json"
+    out.parent.mkdir(parents=True, exist_ok=True)     # на чистой машине data/labels ещё нет
     out.write_text(json.dumps(gold, ensure_ascii=False, indent=0), encoding="utf-8")
     from collections import Counter
     print(Counter(v["category"] for v in gold.values()).most_common())

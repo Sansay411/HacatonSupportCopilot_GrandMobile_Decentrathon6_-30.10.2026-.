@@ -4,6 +4,9 @@ import json
 from support import ROOT
 
 
+GOOD_TEMPLATE = "Здравствуйте, {nick}! Обращение {n} принято, ожидайте ответа администратора."
+
+
 def ticket(c, text="застрял", **kw):
     body = {"kind": "report", "text": text, "reporter": "x"}
     body.update(kw)
@@ -101,10 +104,11 @@ def test_metrics_are_marked_as_historical(boot):
 
 
 # ---------------------------------------------------------------- шаблоны
-def test_templates_are_the_real_clustering_result(boot):
+def test_templates_come_from_the_clustering_summary_file(boot):
     c, _ = boot()
     t = c.get("/templates?only_candidates=false").json()
-    assert t["available"] and t["totals"]["candidates"] == 29 == sum(1 for x in t["clusters"] if x["gap"])
+    n_gap = sum(1 for x in t["clusters"] if x["gap"])
+    assert t["available"] and t["totals"]["candidates"] == n_gap >= 1 and len(t["clusters"]) == t["totals"]["clusters"]
     assert t["provenance"]["kind"] == "offline analysis" and t["provenance"]["examples_available"] is False
     assert "примеров" in t["provenance"]["examples_note"].lower()
     cand = next(x for x in t["clusters"] if x["gap"])
@@ -118,21 +122,21 @@ def test_template_review_is_validated_saved_and_survives_restart(boot):
     key = cand["key"]
     bad = c.post(f"/templates/{key}/review", json={"action": "approve", "template": "Здравствуйте! Бан будет снят завтра."})
     assert bad.status_code == 422 and bad.json()["detail"]["code"] == "template_rejected"
-    unk = c.post(f"/templates/{key}/review", json={"action": "approve", "template": "Приветствую, {unknown} слежу за вами."})
+    unk = c.post(f"/templates/{key}/review", json={"action": "approve", "template": "Здравствуйте, {unknown}, ожидайте."})
     assert unk.status_code == 422 and "unknown" in json.dumps(unk.json(), ensure_ascii=False)
-    fake = c.post(f"/templates/{key}/review", json={"action": "approve", "template": "Приветствую. Нарушен п. 99.9 Общих правил."})
+    fake = c.post(f"/templates/{key}/review", json={"action": "approve", "template": "Здравствуйте. Нарушен п. 99.9 Общих правил."})
     assert fake.status_code == 422
-    ok = c.post(f"/templates/{key}/review", json={"action": "approve", "template": "Приветствую, слежу за игроком {nick}[{n}].",
+    ok = c.post(f"/templates/{key}/review", json={"action": "approve", "template": GOOD_TEMPLATE,
                                                   "note": "проверено"})
     assert ok.status_code == 200 and ok.json()["status"] == "approved" and ok.json()["safety"]["compat"]["integrated_in_pipeline"] is False
     c2, _ = boot()
     got = next(x for x in c2.get("/templates?only_candidates=true").json()["clusters"] if x["key"] == key)
-    assert got["review"]["status"] == "approved" and got["review"]["template_final"].startswith("Приветствую, слежу")
+    assert got["review"]["status"] == "approved" and got["review"]["template_final"] == GOOD_TEMPLATE
     assert got["review"]["note"] == "проверено" and got["review"]["template_original"] == cand["template"]
     counts = c2.get("/templates").json()["review_counts"]
     assert counts["approved"] == 1
     # редактирование утверждённого сбрасывает утверждение: изменённый текст проверяют заново
-    ed = c2.post(f"/templates/{key}/review", json={"action": "edit", "template": "Приветствую, уточните вопрос."})
+    ed = c2.post(f"/templates/{key}/review", json={"action": "edit", "template": "Здравствуйте, уточните, пожалуйста, вопрос."})
     assert ed.json()["status"] == "pending"
     rej = c2.post(f"/templates/{key}/review", json={"action": "reject", "note": "не подходит"})
     assert rej.json()["status"] == "rejected"

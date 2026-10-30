@@ -33,7 +33,8 @@ def boot(tmp_path, monkeypatch):
     import shutil
     started = []
 
-    def _boot(*, rules: bool = True, db_name: str = "sentra.db", data_name: str = "data", metrics: bool = False):
+    def _boot(*, rules: bool = True, db_name: str = "sentra.db", data_name: str = "data", metrics: bool = False,
+              templates=None):
         from fastapi.testclient import TestClient
         data = tmp_path / data_name
         data.mkdir(exist_ok=True)
@@ -43,6 +44,7 @@ def boot(tmp_path, monkeypatch):
         monkeypatch.setenv("COPILOT_MODELS", str(tmp_path / "no_models"))
         monkeypatch.setenv("COPILOT_DB", str(tmp_path / db_name))
         monkeypatch.setenv("COPILOT_METRICS", str(ROOT / "reports/metrics.json") if metrics else str(tmp_path / "нет.json"))
+        monkeypatch.setenv("COPILOT_TEMPLATES", str(templates or ROOT / "tests/fixtures/template_summary_synthetic.json"))
         monkeypatch.setenv("COPILOT_TEMPLATES_PRIVATE", str(tmp_path / "нет-private.json"))
         for k in ("COPILOT_LLM_BASE_URL", "COPILOT_LLM_API_KEY", "COPILOT_LLM_MODEL"):
             monkeypatch.delenv(k, raising=False)

@@ -9,3 +9,5 @@ reports/private/
 *.jsonl.gz
 .pytest_cache/
 var/
+# сводки шаблонов содержат формулировки ответов админов из выдачи: создаются локально (make suggest-templates)
+reports/template_suggestions_summary.*

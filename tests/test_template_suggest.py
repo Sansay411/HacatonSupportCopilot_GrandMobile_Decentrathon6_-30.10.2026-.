@@ -189,30 +189,18 @@ def test_private_view_keeps_examples(clusters):
 
 
 # ---------------------------------------------------------------- API
-def test_templates_endpoint_without_summary(tmp_path, monkeypatch):
-    from support import HAS_DATA
-    if not HAS_DATA:
-        pytest.skip("нет data/ и models/")
-    from fastapi.testclient import TestClient
-    from copilot import api
-    monkeypatch.setattr(api, "TEMPLATES_JSON", tmp_path / "none.json")
-    r = TestClient(api.app).get("/templates")
+def test_templates_endpoint_without_summary(boot, tmp_path):
+    c, _ = boot(templates=tmp_path / "none.json")
+    r = c.get("/templates")
     assert r.status_code == 200 and r.json()["available"] is False
 
 
-def test_templates_endpoint_with_summary(tmp_path, monkeypatch, clusters):
-    from support import HAS_DATA
-    if not HAS_DATA:
-        pytest.skip("нет data/ и models/")
-    from fastapi.testclient import TestClient
-    from copilot import api
+def test_templates_endpoint_with_summary(boot, tmp_path, clusters):
     summary = ts.public_view(clusters, Params(**SYN), {"tickets": 280})
     p = tmp_path / "s.json"
     p.write_text(json.dumps(summary, ensure_ascii=False), encoding="utf-8")
     p.with_suffix(".md").write_text(ts.render_markdown(summary), encoding="utf-8")
-    monkeypatch.setattr(api, "TEMPLATES_JSON", p)
-    monkeypatch.setattr(api, "TEMPLATES_MD", p.with_suffix(".md"))
-    c = TestClient(api.app)
+    c, _ = boot(templates=p)
     body = c.get("/templates").json()
     assert body["available"] and body["clusters"] and all(x["gap"] for x in body["clusters"])
     assert "markdown" in body and len(c.get("/templates?only_candidates=false").json()["clusters"]) == len(summary["clusters"])

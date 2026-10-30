@@ -33,6 +33,7 @@ class Server:
             shutil.copy(FIXTURE_RULES, self.data / "rules.json")
         self.env = dict(os.environ, COPILOT_DATA=str(self.data), COPILOT_MODELS=str(tmp / "no_models"),
                         COPILOT_DB=str(tmp / db), COPILOT_METRICS=str(ROOT / "reports/metrics.json"),
+                        COPILOT_TEMPLATES=str(ROOT / "tests/fixtures/template_summary_synthetic.json"),
                         COPILOT_TEMPLATES_PRIVATE=str(tmp / "нет.json"), PYTHONIOENCODING="utf-8")
         for k in ("COPILOT_LLM_BASE_URL", "COPILOT_LLM_API_KEY", "COPILOT_LLM_MODEL"):
             self.env.pop(k, None)

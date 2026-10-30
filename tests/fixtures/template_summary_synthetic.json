@@ -1,0 +1,171 @@
+{
+ "meta": {
+  "tickets": 280,
+  "source": "synthetic test fixture",
+  "params": {
+   "min_cluster": 20,
+   "min_reply_count": 5,
+   "min_reply_share": 0.05,
+   "min_core_words": 3,
+   "merge_sim": 0.6,
+   "min_lift": 2.0,
+   "stock_share": 0.03,
+   "stock_min_count": 300,
+   "intent_share_ok": 0.6,
+   "draft_sim_ok": 0.15,
+   "max_k": 3,
+   "per_cluster": 80,
+   "top_replies": 5,
+   "examples": 5,
+   "seed": 7
+  }
+ },
+ "totals": {
+  "clusters": 4,
+  "candidates": 1,
+  "candidate_clusters": 1,
+  "tickets_in_candidates": 80,
+  "tickets_in_clusters": 265
+ },
+ "stock_replies": [],
+ "clusters": [
+  {
+   "category": "report.help",
+   "cluster": 1,
+   "size": 80,
+   "terms": [
+    "текстурах",
+    "тачка",
+    "помогите",
+    "застряла",
+    "дома"
+   ],
+   "langs": {
+    "ru": 80
+   },
+   "intent": "help_generic",
+   "intent_share": 1.0,
+   "draft_sim": 0.006,
+   "distinct_replies": 1,
+   "top_reply_share": 1.0,
+   "exact_share": 1.0,
+   "variants": 1,
+   "lift": 3.5,
+   "status": "кандидат в шаблон",
+   "gap": true,
+   "gap_reasons": [
+    "основной сценарий «help_generic» общий и ничего конкретного не говорит",
+    "черновик мало похож на ответ админов (косинус 0.01)"
+   ],
+   "merged_clusters": 1,
+   "categories": [
+    "report.help"
+   ],
+   "template": "Приветствую, {nick}. Телепорт на МП закрыт, воспользуйтесь п. 3.1 ОП. С уважением, администрация.",
+   "template_count": 80,
+   "refs": [
+    "3.1"
+   ],
+   "guard": []
+  },
+  {
+   "category": "report.help",
+   "cluster": 0,
+   "size": 80,
+   "terms": [
+    "пропали",
+    "после",
+    "обновления",
+    "куда",
+    "деньги",
+    "вопрос"
+   ],
+   "langs": {
+    "ru": 80
+   },
+   "intent": "question_unknown",
+   "intent_share": 1.0,
+   "draft_sim": 0.0,
+   "distinct_replies": 80,
+   "top_reply_share": 0.0125,
+   "exact_share": 0.0125,
+   "variants": 1,
+   "lift": 3.5,
+   "status": "ответы не повторяются",
+   "gap": false,
+   "gap_reasons": [
+    "основной сценарий «question_unknown» общий и ничего конкретного не говорит",
+    "черновик мало похож на ответ админов (косинус 0.00)"
+   ],
+   "merged_clusters": 1,
+   "categories": [
+    "report.help"
+   ]
+  },
+  {
+   "category": "report.vehicle",
+   "cluster": 1,
+   "size": 57,
+   "terms": [
+    "упал",
+    "машине",
+    "делать",
+    "воду"
+   ],
+   "langs": {
+    "ru": 57
+   },
+   "intent": "help_vehicle",
+   "intent_share": 1.0,
+   "draft_sim": 1.0,
+   "distinct_replies": 1,
+   "top_reply_share": 1.0,
+   "exact_share": 1.0,
+   "variants": 1,
+   "lift": 4.67,
+   "status": "покрыт текущими сценариями",
+   "gap": false,
+   "gap_reasons": [],
+   "merged_clusters": 1,
+   "categories": [
+    "report.vehicle"
+   ],
+   "template": "Нажмите кнопку эвакуатора в меню автомобиля, она вернёт машину",
+   "template_count": 57,
+   "refs": [],
+   "guard": []
+  },
+  {
+   "category": "report.rule",
+   "cluster": 0,
+   "size": 48,
+   "terms": [
+    "читерит",
+    "стреляет",
+    "стены",
+    "сквозь",
+    "аимбот"
+   ],
+   "langs": {
+    "ru": 48
+   },
+   "intent": "need_evidence",
+   "intent_share": 1.0,
+   "draft_sim": 0.0,
+   "distinct_replies": 1,
+   "top_reply_share": 1.0,
+   "exact_share": 1.0,
+   "variants": 1,
+   "lift": 4.67,
+   "status": "отклонён: ссылка на пункт, которого нет в rules.json",
+   "gap": false,
+   "gap_reasons": [
+    "черновик мало похож на ответ админов (косинус 0.00)"
+   ],
+   "merged_clusters": 1,
+   "categories": [
+    "report.rule"
+   ]
+  }
+ ]
+}
