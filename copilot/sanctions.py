@@ -90,7 +90,7 @@ def choose(point, text: str) -> list[Sanction]:
     t = text.lower()
     if point.cite == "2.1":
         if re.search(r"родн|родак|сем(ью|ья|ьи|ье)\b|\bмам[уаы]?\b|\bмать\b|матер(и|ью)\b|osk\w*\W*rod|\brod(ni|nyu|u)?\b|"
-                     r"onadan|onam|onasi|анам|dodam|otam|туыс", t) and not re.search(r"упом", t):
+                     r"onadan|onam|onasi|анам|dodam|otam|туыс|mother|\bmom\b|family|relatives|madre|familia|m[ãa]e\b|fam[íi]lia", t) and not re.search(r"упом", t):
             pick = [l for l in lines if l.lower().startswith("оскорбление родных")]
         elif re.search(r"упом", t):
             pick = [l for l in lines if l.lower().startswith("упоминание")]
@@ -141,9 +141,9 @@ _KIND_NAMES = {
            "warn": "WARN", "verbal": "og‘zaki ogohlantirish", "reprimand": "hayfsan"},
     "en": {"mute": "a chat mute", "mute_report": "a report mute", "ban": "a character ban", "jail": "demorgan (jail)",
            "warn": "a WARN", "verbal": "a verbal warning", "reprimand": "a reprimand"},
-    "es": {"mute": "silencio en el chat (mute)", "mute_report": "silencio de reportes", "ban": "bloqueo del personaje",
+    "es": {"mute": "silencio en el chat", "mute_report": "silencio de reportes", "ban": "bloqueo del personaje",
            "jail": "demorgan (cárcel)", "warn": "un WARN", "verbal": "una advertencia verbal", "reprimand": "una amonestación"},
-    "pt": {"mute": "silenciamento no chat (mute)", "mute_report": "silenciamento de reports", "ban": "bloqueio do personagem",
+    "pt": {"mute": "silenciamento no chat", "mute_report": "silenciamento de reports", "ban": "bloqueio do personagem",
            "jail": "demorgan (prisão)", "warn": "um WARN", "verbal": "uma advertência verbal", "reprimand": "uma advertência formal"},
 }
 
