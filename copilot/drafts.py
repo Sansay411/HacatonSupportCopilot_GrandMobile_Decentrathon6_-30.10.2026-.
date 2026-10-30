@@ -283,6 +283,11 @@ def build(kind: str, cat: str, sig: Signals, text: str, lang: str, rb: RuleBase,
                         [f"ответ из базы знаний «{entry.key}»: так отвечали админы {entry.support} раз"])
         return done("question_unknown", _fmt(L["question_unknown"], **common), [], False,
                     ["вопрос по механике вне базы знаний: ответ проверяет человек"])
+    # «+» в репорт: игроки так просят телепорт на мероприятие (админы отвечают «телепорт на МП закрыт»)
+    if re.fullmatch(r"\s*\++\s*", text or ""):
+        return done("event_tp", L["event_tp"], [], False,
+                    ["«+» в репорте означает запрос телепорта на мероприятие (кластер из 2869 таких репортов в train)",
+                     "открыт ли сейчас телепорт, знает только администратор"])
     # оффтоп
     if PROFANITY.search(t) or sig.topics & {"greeting_offtopic"} and not sig.topics & {"help_word"}:
         c = "3.1"

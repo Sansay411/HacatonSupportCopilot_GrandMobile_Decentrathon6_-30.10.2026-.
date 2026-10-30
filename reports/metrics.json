@@ -5,13 +5,13 @@
   "priority_accuracy": 0.942,
   "draft_scenario_matches_admin_verdict": 0.639,
   "draft_scenario_n": 518,
-  "citations_total": 1071,
+  "citations_total": 1061,
   "citations_nonexistent": 0,
-  "drafts_with_citation_share": 0.814,
-  "needs_human_share": 0.899,
+  "drafts_with_citation_share": 0.804,
+  "needs_human_share": 0.909,
   "needs_human_share_by_kind": {
     "complaint": 0.955,
-    "report": 0.65
+    "report": 0.705
   },
   "spam_or_duplicate_share": 0.006,
   "duplicate_recall_vs_admin": 0.0,
@@ -22,7 +22,7 @@
     "kk": 7,
     "en": 4
   },
-  "latency_ms_p50": 2.9,
+  "latency_ms_p50": 2.8,
   "latency_ms_p95": 6.0,
   "cost_usd_per_ticket": 0.0,
   "intents": {
@@ -35,7 +35,7 @@
     "admin_complaint": 16,
     "duplicate": 3,
     "help_ack": 50,
-    "offtopic_flood": 17,
+    "offtopic_flood": 7,
     "question_unknown": 17,
     "help_generic": 13,
     "help_vehicle": 14,
@@ -45,6 +45,7 @@
     "report_need_id": 12,
     "report_rp": 2,
     "question_kb": 1,
+    "event_tp": 10,
     "report_appeal": 2,
     "question_howto": 2,
     "question_tech": 1
