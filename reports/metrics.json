@@ -8,9 +8,9 @@
   "citations_total": 1071,
   "citations_nonexistent": 0,
   "drafts_with_citation_share": 0.814,
-  "needs_human_share": 0.828,
+  "needs_human_share": 0.832,
   "needs_human_share_by_kind": {
-    "complaint": 0.95,
+    "complaint": 0.955,
     "report": 0.284
   },
   "spam_or_duplicate_share": 0.006,
@@ -22,8 +22,8 @@
     "kk": 7,
     "en": 4
   },
-  "latency_ms_p50": 2.5,
-  "latency_ms_p95": 4.9,
+  "latency_ms_p50": 2.6,
+  "latency_ms_p95": 5.2,
   "cost_usd_per_ticket": 0.0,
   "intents": {
     "approve": 326,

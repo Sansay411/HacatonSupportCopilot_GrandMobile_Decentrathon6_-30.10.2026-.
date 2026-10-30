@@ -92,6 +92,8 @@ def pick_violation(cat: str, sig: Signals, text: str, rb: RuleBase) -> tuple[str
             return "2.6", None
         if re.search(r"пропаганд|18\+|порн|секс|наркот", t):
             return "2.2", None
+        if re.search(r"(оск|хам|обзыва|матер)\w*\W+(\w+\W+)?(админ|администрац|хелпер)", t):
+            return "3.2", None
         return "2.1", None
     if cat == "complaint.cheat":
         return "5.2", None
@@ -207,6 +209,9 @@ def build(kind: str, cat: str, sig: Signals, text: str, lang: str, rb: RuleBase,
                 return done("not_complaint", _fmt(L["not_complaint"], cite=ct(c), **common), [c], True,
                             ["обращение не является жалобой"])
             c = "ЖБ 1.2.3"
+            if sig.has_url:
+                return done("no_description", _fmt(L["no_description"], cite=ct(c)), [c], False,
+                            ["нет описания, но есть ссылка: администратор должен открыть видео"])
             return done("no_description", _fmt(L["no_description"], cite=ct(c)), [c], True, ["нет описания ситуации"])
 
         prof_hits = len(PROFANITY.findall(t))
