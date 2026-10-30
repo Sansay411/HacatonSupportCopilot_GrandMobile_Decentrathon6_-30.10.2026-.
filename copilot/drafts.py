@@ -49,10 +49,15 @@ def _fmt(tpl: str, **kw) -> str:
     return out
 
 
+# вместо номера пункта, которого нет в rules.json: ссылку выдумывать нельзя
+_NO_CITE = {"ru": "правил сервера", "kk": "сервер ережелерінің", "uz": "server qoidalarining", "en": "the server rules",
+            "es": "las reglas del servidor", "pt": "as regras do servidor"}
+
+
 def cite_text(rb: RuleBase, cite: str, lang: str, genitive: bool = False) -> str:
     p = rb.get(cite)
     if p is None:
-        return cite
+        return _NO_CITE.get(lang, _NO_CITE["ru"])
     tpl = i18n.T[lang]["cite"]
     section = i18n.SECTION_GEN[lang][p.section_id]
     txt = _fmt(tpl, ref=p.ref, section=section)
@@ -172,8 +177,14 @@ def build(kind: str, cat: str, sig: Signals, text: str, lang: str, rb: RuleBase,
              penalty: bool = False) -> Draft:
         hello = L["hello"]
         full = f"{hello} {body}".strip()
+        reasons = list(reasons or [])
+        missing = [c for c in cited if not rb.exists(c)]
+        if missing:
+            # пункт, зашитый в сценарий, отсутствует в этой версии rules.json: номер в текст не попал
+            reasons.append("пункты не найдены в rules.json, ссылка в тексте обезличена: " + ", ".join(missing))
+            auto = False
         return Draft(lang=lang, text=full, cited=[c for c in cited if rb.exists(c)], intent=intent, auto_ok=auto,
-                     reasons=reasons or [], proposes_penalty=penalty)
+                     reasons=reasons, proposes_penalty=penalty)
 
     def ct(c, gen=False):
         return cite_text(rb, c, lang, genitive=gen)

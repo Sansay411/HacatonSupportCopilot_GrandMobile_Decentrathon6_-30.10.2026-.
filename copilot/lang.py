@@ -81,7 +81,9 @@ def detect(text: str, server_lang: str | None = None) -> str:
     if cyr >= lat:
         kk_hits = sum(1 for w in toks if w in _KK_WORDS)
         kk_letters = sum(1 for ch in letters if ch in "әғқңөұүһ")
-        if kk_letters >= 2 or (kk_letters == 1 and kk_hits >= 1) or kk_hits >= 2:
+        # әңөұһ не бывают в русском и украинском: даже одной такой буквы достаточно («Төлем жасадым»)
+        kk_only = sum(1 for ch in letters if ch in _KK_ONLY)
+        if kk_letters >= 2 or kk_only >= 1 or (kk_letters == 1 and kk_hits >= 1) or kk_hits >= 2:
             # «қ», «ғ» есть и в узбекской кириллице
             if chars & {"ў", "ҳ"} and not chars & _KK_ONLY:
                 return "uz"

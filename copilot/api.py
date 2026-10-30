@@ -18,6 +18,7 @@ from pydantic import BaseModel, Field
 
 from .llm import from_env as llm_from_env
 from .pipeline import Copilot
+from .ticket import has_player_content
 
 ROOT = Path(__file__).resolve().parents[1]
 FEEDBACK_PATH = Path(os.environ.get("COPILOT_FEEDBACK", ROOT / "reports/private/feedback.jsonl"))
@@ -79,7 +80,7 @@ def health():
 def triage(req: TriageRequest, debug: bool = False, enqueue: bool = False):
     payload = req.model_dump()
     payload["messages"] = [m for m in payload["messages"] if m.get("role") != "admin"]
-    if not any((m.get("text") or "").strip() or m.get("attachments") for m in payload["messages"]):
+    if not has_player_content(payload):
         raise HTTPException(422, "в обращении нет сообщений игрока")
     resp = copilot.triage(payload)
     if enqueue:
@@ -87,8 +88,7 @@ def triage(req: TriageRequest, debug: bool = False, enqueue: bool = False):
         with _lock:
             QUEUE.appendleft({"queue_id": qid, "received": time.time(), "request": payload, "response": resp,
                               "status": "new"})
-        resp = dict(resp, queue_id=qid)
-        return JSONResponse(resp)
+        return JSONResponse(dict(_public(resp, debug), queue_id=qid))
     return _public(resp, debug)
 
 

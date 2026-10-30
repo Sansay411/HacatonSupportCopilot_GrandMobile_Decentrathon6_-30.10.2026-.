@@ -55,7 +55,7 @@ class CategoryModel:
         top, p = ranked[0]
         if rules_cat in _HARD:
             return CategoryResult(rules_cat, max(p if top == rules_cat else 0.0, 0.85), "rules", rules_cat)
-        if rules_cat == "complaint.admin" and "appeal" in sig.topics:
+        if rules_cat == "complaint.admin" and sig.topics & {"appeal", "admin_subject"}:
             return CategoryResult(rules_cat, max(p if top == rules_cat else 0.0, 0.8), "rules", rules_cat)
         if sig.content_free:
             invalid = "complaint.invalid" if t.kind == "complaint" else "report.offtopic"

@@ -22,6 +22,10 @@
 | Латентность p50 / p95 (без LLM) | 2,8 мс / 6,0 мс |
 | Стоимость | $0 (локально, CPU) |
 
+Эти метрики получены до независимого аудита от 30.10.2026. После аудита в код внесены исправления
+(см. [REPORT.md](REPORT.md), раздел 6), а метрики на реальной валидации не пересчитаны: на машине аудита не было
+выдачи кейса. Перед сдачей выполните `make train && make eval`.
+
 Как считались метрики и где они слабые, написано в [REPORT.md](REPORT.md). Коротко: категорий и
 приоритетов в выданной валидации нет, поэтому dev-разметку мы сделали сами по
 `taxonomy.json` (это черновик организаторов). Цифры по категории ориентировочные.
@@ -39,11 +43,19 @@ make install                 # зависимости: fastapi, scikit-learn, ht
 make train                   # обучение двух моделей на train, около 3 минут на 2 CPU
 make predict IN=tickets.jsonl OUT=pred.jsonl
 make serve                   # HTTP на :8000, интерфейс админа на http://localhost:8000/
-make test                    # 21 тест: юниты на синтетике + сквозные на реальных правилах
+make test                    # 60 тестов на синтетике работают без data/ и models/; ещё 7 сквозных включаются при их наличии
 make gold && make eval       # dev-разметка valid и метрики -> reports/metrics.json
+make eval-drafts             # качество черновиков: инварианты на синтетике (язык, пункты, обещания, эскалации)
+make eval-drafts-real        # то же на data/tickets_valid.jsonl + выборка для ручной проверки в reports/private/
 ```
 
 Python 3.10+. GPU не нужен.
+
+**Что нужно для запуска.** Обязателен `data/rules.json` (без него сервис сообщает об этом и не стартует). Без
+`models/` сервис работает на правилах, пишет предупреждение, и качество классификации ниже: модели обучает
+`make train` на `data/tickets_train.jsonl.gz`. Обученные модели содержат словарь из обращений игроков, поэтому в
+репозиторий не кладутся. Если у проверяющего нет train, модели можно передать отдельным закрытым архивом с согласия
+организаторов.
 
 ### Пример запроса
 
@@ -173,7 +185,7 @@ export COPILOT_LLM_PRICE_IN=0.10 COPILOT_LLM_PRICE_OUT=0.40   # $ за 1M ток
 ```
 copilot/       textnorm, lang, signals, rules (RAG), taxonomy, classifier, sanctions,
                i18n (шаблоны 6 языков), drafts, guard, dedup, llm, pipeline, api
-scripts/       train.py, train_verdict.py, predict.py, evaluate.py, make_gold.py, eval_classifier.py,
+scripts/       train.py, train_verdict.py, predict.py, evaluate.py, make_gold.py, eval_classifier.py, eval_drafts.py,
                suggest_templates.py (бонус: кандидаты в шаблоны, логика в copilot/template_suggest.py)
 admin_ui/      интерфейс админа (один HTML-файл)
 tests/         pytest, синтетические правила в tests/fixtures

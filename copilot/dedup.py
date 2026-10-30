@@ -22,7 +22,7 @@ def _shingles(text: str) -> set[str]:
 
 
 def _ts(s: str | None) -> datetime | None:
-    if not s:
+    if not s or not isinstance(s, str):
         return None
     try:
         return datetime.fromisoformat(s.replace("Z", "+00:00")).replace(tzinfo=None)
@@ -37,7 +37,8 @@ def is_spam(text: str) -> bool:
         if top / len(words) >= 0.3:
             return True
     letters = re.sub(r"[^a-zа-яё]", "", for_matching(text))
-    if len(letters) >= 20 and " " not in text.strip():
+    # длинная строка без пробелов - мусор, но не ник вида Имя_Фамилия, который игроки присылают сами по себе
+    if len(letters) >= 20 and " " not in text.strip() and "_" not in text:
         return True
     if len(letters) >= 25:
         vowels = sum(1 for ch in letters if ch in "аеиоуыэюяaeiouy")

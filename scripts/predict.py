@@ -18,6 +18,21 @@ from copilot.llm import from_env  # noqa: E402
 from copilot.pipeline import Copilot  # noqa: E402
 
 
+def fallback(kind, reason: str) -> dict:
+    """Ответ на тикет, который не удалось разобрать: категория валидна, решает человек."""
+    cat = "complaint.other" if kind == "complaint" else "report.question"
+    return {"lang": "und", "category": cat, "priority": "p2", "is_spam_or_duplicate": False,
+            "extracted": {"nickname": None, "rule_refs": [], "has_evidence": False, "server": None},
+            "draft_reply": {"lang": "ru", "text": "", "cited": []}, "needs_human": True, "confidence": 0.0,
+            "reasons": [reason]}
+
+
+def _sort_key(item):
+    i, d = item
+    created = d.get("created_at") if isinstance(d, dict) else None
+    return (created if isinstance(created, str) else "", i)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--in", dest="inp", required=True)
@@ -30,21 +45,25 @@ def main():
     with open(args.inp, encoding="utf-8") as f:
         for i, line in enumerate(f):
             line = line.strip()
-            if line:
+            if not line:
+                continue
+            try:
                 rows.append((i, json.loads(line)))
-    order = sorted(rows, key=lambda x: (x[1].get("created_at") or "", x[0]))
+            except json.JSONDecodeError:
+                rows.append((i, None))     # битая строка: ответ-заглушка на её месте
+    order = sorted(rows, key=_sort_key)
     results = {}
     t0 = time.time()
     for i, d in order:
-        payload = dict(d)
-        payload["messages"] = [m for m in d.get("messages", []) if m.get("role") != "admin"]
+        if not isinstance(d, dict):
+            results[i] = fallback(None, "строка не является JSON-объектом: нужен человек")
+            continue
         try:
+            payload = dict(d)
+            payload["messages"] = [m for m in (d.get("messages") or []) if isinstance(m, dict) and m.get("role") != "admin"]
             r = cp.triage(payload)
         except Exception as e:  # один битый тикет не должен ронять прогон
-            r = {"lang": "und", "category": None, "priority": "p2", "is_spam_or_duplicate": False,
-                 "extracted": {"nickname": None, "rule_refs": [], "has_evidence": False, "server": None},
-                 "draft_reply": {"lang": "ru", "text": "", "cited": []}, "needs_human": True, "confidence": 0.0,
-                 "reasons": [f"ошибка обработки: {type(e).__name__}"]}
+            r = fallback(d.get("kind"), f"ошибка обработки: {type(e).__name__}")
         if not args.debug:
             r = {k: v for k, v in r.items() if not k.startswith("_")}
         if d.get("ticket_id"):

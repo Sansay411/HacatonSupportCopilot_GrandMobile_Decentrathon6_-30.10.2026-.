@@ -115,7 +115,37 @@ class LLMPolisher:
             if n not in draft_nums and n not in allowed_nums and not any(n in c for c in d.cited):
                 problems.append(f"число {n} отсутствует в черновике")
                 break
+        # срок наказания: число вместе с единицей («30 минут» нельзя превратить в «30 дней»)
+        extra_terms = _terms(text) - _terms(d.text)
+        if extra_terms:
+            problems.append("срок или единица измерения не из черновика: " + ", ".join(f"{n} {u}" for n, u in sorted(extra_terms)))
+        extra_types = _sanction_types(text) - _sanction_types(d.text)
+        if extra_types:
+            problems.append("вид наказания не из черновика: " + ", ".join(sorted(extra_types)))
         return problems
+
+
+_UNIT_CANON = (("мин", "m"), ("min", "m"), ("daqiqa", "m"), ("час", "h"), ("сағат", "h"), ("soat", "h"), ("hour", "h"),
+               ("сут", "d"), ("дн", "d"), ("ден", "d"), ("күн", "d"), ("kun", "d"), ("day", "d"),
+               ("нед", "w"), ("hafta", "w"), ("week", "w"), ("мес", "mo"), ("oy", "mo"), ("month", "mo"))
+_TERM = re.compile(r"(\d+)\s*(?:(?:[–—-]|до|gacha|дейін|to)\s*(\d+)\s*)?([a-zа-яәғқңөұүһі]+)", re.I)
+_SANCTION_TYPES = (("ban", "бан"), ("бан", "бан"), ("блокиров", "бан"), ("bloklash", "бан"), ("бұғатт", "бан"),
+                   ("деморган", "деморган"), ("demorgan", "деморган"), ("варн", "варн"), ("warn", "варн"),
+                   ("мут", "мут"), ("mute", "мут"), ("jail", "джайл"), ("джайл", "джайл"))
+
+
+def _terms(text: str) -> set[tuple[str, str]]:
+    out = set()
+    for a, b, word in _TERM.findall(text.lower()):
+        unit = next((c for stem, c in _UNIT_CANON if word.startswith(stem)), None)
+        if unit:
+            out.update((n, unit) for n in (a, b) if n)
+    return out
+
+
+def _sanction_types(text: str) -> set[str]:
+    words = re.findall(r"[a-zа-яәғқңөұүһі]+", text.lower())
+    return {canon for w in words for stem, canon in _SANCTION_TYPES if w.startswith(stem)}
 
 
 def from_env():

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import os
 import pickle
 import time
@@ -19,6 +20,7 @@ from .taxonomy import priority_rules
 from .ticket import from_dict
 
 ROOT = Path(__file__).resolve().parents[1]
+log = logging.getLogger("copilot")
 NEEDS_HUMAN_ALWAYS = {"report.account", "report.payment", "complaint.admin"}
 
 
@@ -26,12 +28,18 @@ class Copilot:
     def __init__(self, data_dir: str | Path | None = None, models_dir: str | Path | None = None, llm=None):
         data_dir = Path(data_dir or os.environ.get("COPILOT_DATA", ROOT / "data"))
         models_dir = Path(models_dir or os.environ.get("COPILOT_MODELS", ROOT / "models"))
+        if not (data_dir / "rules.json").exists():
+            raise FileNotFoundError(f"нет {data_dir / 'rules.json'}: положите выдачу кейса в data/ "
+                                    f"(rules.json, taxonomy.json) или задайте COPILOT_DATA")
         self.rules = load_rules(str(data_dir / "rules.json"))
         tax_path = data_dir / "taxonomy.json"
         if tax_path.exists():
             tax = json.loads(tax_path.read_text(encoding="utf-8"))
             NEEDS_HUMAN_ALWAYS.update(tax.get("needs_human_always", []))
         self.category_model = CategoryModel(models_dir / "category.pkl")
+        if not self.category_model.loaded:
+            log.warning("%s не найден: классификатор работает только по правилам, качество ниже (выполните make train)",
+                        models_dir / "category.pkl")
         self.verdict_model = None
         vp = models_dir / "verdict.pkl"
         if vp.exists():
@@ -98,6 +106,9 @@ class Copilot:
         if priority == "p0":
             needs_human = True
             reasons.append("приоритет p0")
+        if "admin_subject" in sig.topics:
+            needs_human = True
+            reasons.append("обращение на действия администратора: решает старшая администрация")
         if confidence < 0.5 and not dup_reason:
             needs_human = True
             reasons.append(f"низкая уверенность классификации ({confidence})")

@@ -82,6 +82,8 @@ def label_rules(kind: str, sig: Signals, text: str, verdict: str | None = None,
             oc = outcome_category(violation, rule_base)
             if oc and oc != "complaint.admin":
                 return oc
+        if "admin_subject" in sig.topics:
+            return "complaint.admin"
         # пункт, который назвал сам игрок, если он согласуется с текстом
         topic_cats = [cat for topic, cat in _TOPIC_ORDER if topic in sig.topics]
         ref_cats = [c for c in (ref_category(r) for r in sig.rule_refs) if c]
