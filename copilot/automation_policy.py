@@ -171,13 +171,10 @@ def evaluate_automation_policy(
             reasons.append(orig_msg)
 
     # Низкая уверенность классификатора отправляет обращение человеку во всех неоднозначных случаях,
-    # кроме детерминированных сценариев самообслуживания/KB с явным позитивным триггером
-    # (для жалоб — только внутри нецелевой категории complaint.invalid),
-    # прошедших все проверки безопасности и обязательной эскалации.
-    is_confidence_exempt = (
-        draft.intent in CONFIDENCE_EXEMPT_SAFE_INTENTS
-        and (kind == "report" or category == "complaint.invalid")
-    )
+    # кроме детерминированных сценариев самообслуживания/KB с явным позитивным триггером во внутриигровых репортах.
+    # Для жалоб исключения нет: жалоба со ссылкой на видео и уверенностью 0,26 была закрыта автоответом «раздел жалоб
+    # не для вопросов», а порог 0,5 как раз и отправляет такие случаи человеку (docs/MERGE_REVIEW.md).
+    is_confidence_exempt = draft.intent in CONFIDENCE_EXEMPT_SAFE_INTENTS and kind == "report"
     if confidence < 0.5 and not dup_reason:
         if needs_human or not is_confidence_exempt:
             needs_human = True

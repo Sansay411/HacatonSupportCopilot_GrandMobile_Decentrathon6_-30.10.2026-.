@@ -25,7 +25,8 @@ FILES = ["tests/test_draft_audit.py", "tests/fixtures/draft_probes.py", "docs/au
          "README.md", "REPORT.md", "copilot/drafts.py", "copilot/selfcheck.py",
          "docs/audit/FINAL_POLISH.md", "tests/test_final_polish.py", "tests/test_ticket_identity.py", "tests/fixtures/rag_cases.py",
          "tests/test_replay_and_brevity.py", "tests/test_redteam_audit.py", "tests/test_evidence_negation.py",
-         "tests/test_style.py", "tests/test_llm_fallback.py", "docs/LLM_FALLBACK.md", "copilot/llm.py", "copilot/style.py"]
+         "tests/test_style.py", "tests/test_llm_fallback.py", "docs/LLM_FALLBACK.md", "copilot/llm.py", "copilot/style.py",
+         "tests/test_safe_automation.py", "tests/test_weaknesses_fixes.py", "copilot/automation_policy.py", "copilot/kb.py", "docs/MERGE_REVIEW.md", "tests/test_regressions.py"]
 VERBOSE = "-v" in sys.argv
 MIN_WORDS = 5                    # фразы короче пяти слов («не согласен с наказанием») встречаются у многих игроков и ничего не раскрывают
 MIN_LEN = 6                      # короче: «оск», «+», «помогите» слишком общие, это слова, а не тексты

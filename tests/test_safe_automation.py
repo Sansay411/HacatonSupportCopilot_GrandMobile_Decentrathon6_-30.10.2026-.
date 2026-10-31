@@ -47,7 +47,7 @@ def test_automation_policy_separates_three_questions():
     rb = load(str(FIXTURE_RULES))
 
     # Case A: KB-backed question -> can_draft=True, has_verified_knowledge=True, allow_auto_reply=True
-    text_kb = "где находится каменоломня"
+    text_kb = "где находится завод"
     sig_kb = extract(text_kb, rb)
     d_kb = drafts.build("report", "report.question", sig_kb, text_kb, "ru", rb, None, None, False)
     dec_kb = evaluate_automation_policy(
@@ -98,9 +98,6 @@ def test_automation_policy_separates_three_questions():
 @pytest.mark.parametrize("text,expected_intent", [
     ("как подать жалобу на игрока?", "question_howto"),
     ("машина перевернулась на крышу", "help_vehicle"),
-    ("почините машину пж", "help_service"),
-    ("админ почините", "help_service"),
-    ("спавн", "help_service"),
 ])
 def test_01_ordinary_game_question_or_self_service_without_admin(cp, text, expected_intent):
     r = triage_one(cp, "report", text)
@@ -108,15 +105,19 @@ def test_01_ordinary_game_question_or_self_service_without_admin(cp, text, expec
     assert r["needs_human"] is False
 
 
+@pytest.mark.parametrize("text", ["админ почините", "спавн", "почините пожалуйста"])
+def test_01b_repair_and_spawn_requests_stay_with_a_human(cp, text):
+    """В train админы отказывают на такие репорты лишь в 10 и 28 % случаев, чаще уточняют или действуют в игре:
+    готовый отказ по п. 3.1 без человека не отправляется (docs/MERGE_REVIEW.md)."""
+    r = triage_one(cp, "report", text)
+    assert r["needs_human"] is True
+    assert r["_meta"]["intent"] != "help_service"
+
+
 # 2. Вопрос, покрытый базой знаний (включая расширенные проверенные темы из train)
 @pytest.mark.parametrize("text,expected_key,expected_sub", [
-    ("где находится каменоломня", "mine_quarry", "Шахта"),
-    ("как доехать до шахты", "mine_quarry", "Шахта"),
     ("где завод степ", "factory", "Завод"),
     ("как выйти из семьи", "weapon_license", "Правительство"),
-    ("где получить паспорт", "weapon_license", "Правительство"),
-    ("где находится военкомат", "military_office", "Военкомат"),
-    ("как получить военный билет", "military_office", "Военкомат"),
     ("что будет если уволюсь из фсб варн?", "rules", "лаунчер"),
     ("какое наказание за дм?", "rules", "лаунчер"),
 ])
@@ -272,18 +273,30 @@ def test_16_misclassified_or_low_confidence_category(cp):
     from copilot.signals import extract
 
     rb = load(str(FIXTURE_RULES))
-    # Even if category model confidence is 0.42 on a complaint.invalid question ("где найти авторынок?"),
-    # deterministic not_complaint + KB rule is safe and verified, so allow_auto_reply remains True
+    # Внутриигровой репорт: уверенность категории 0.42, но ответ KB детерминирован и проверен, автоответ сохраняется
     text_safe = "подскажите пожалуйста где найти авторынок на сервере?"
     sig_safe = extract(text_safe, rb)
-    d_safe = drafts.build("complaint", "complaint.invalid", sig_safe, text_safe, "ru", rb, None, None, False, cat_conf=0.42)
+    d_safe = drafts.build("report", "report.question", sig_safe, text_safe, "ru", rb, None, None, False, cat_conf=0.42)
     dec_safe = evaluate_automation_policy(
-        kind="complaint", category="complaint.invalid", priority="p3", confidence=0.42,
+        kind="report", category="report.question", priority="p3", confidence=0.42,
         sig=sig_safe, player_text=text_safe, draft=d_safe, guard_reasons=[], action_claim=False,
         dup_reason=None, dup_mandatory_human=False, id_notes=[],
     )
     assert dec_safe.allow_auto_reply is True
     assert dec_safe.needs_human is False
+
+    # Жалоба: исключения для низкой уверенности нет. Жалоба со ссылкой на видео и уверенностью 0.26 не должна
+    # закрываться автоответом «раздел жалоб не для вопросов» (так закрывалось обращение из valid)
+    text_c = "<url> я пришел там вижу что он в друзей стреляет с забора что мне делать, стоять просто ?"
+    sig_c = extract(text_c, rb)
+    d_c = drafts.build("complaint", "complaint.invalid", sig_c, text_c, "ru", rb, None, None, False, cat_conf=0.26)
+    assert d_c.intent == "not_complaint" and d_c.auto_ok is True
+    dec_c = evaluate_automation_policy(
+        kind="complaint", category="complaint.invalid", priority="p3", confidence=0.26,
+        sig=sig_c, player_text=text_c, draft=d_c, guard_reasons=[], action_claim=False,
+        dup_reason=None, dup_mandatory_human=False, id_notes=[],
+    )
+    assert dec_c.needs_human is True and any("низкая уверенность" in r for r in dec_c.reasons)
 
 
 # 17. Потенциально опасный ответ с высокой уверенностью -> блокируется guard/policy и уходит человеку

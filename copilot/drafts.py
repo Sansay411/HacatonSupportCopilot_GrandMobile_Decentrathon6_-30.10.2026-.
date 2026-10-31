@@ -45,14 +45,10 @@ def _has_vehicle(t: str) -> bool:
     return bool(_VEHICLE.search(t)) and not bool(_NO_VEHICLE.search(t))
 
 
-_REPAIR = re.compile(r"\b(?:почин|почен|пачин)\w*", re.I)
-_SERVICE = re.compile(
-    r"\bтп\b|телепорт|тепни|спавн дайте|дайте спавн|заспавн\w* меня"
-    r"|^\s*(?:админ\w*\s+)?спавн\s*(?:пж|пожалуйста|плиз)?\s*[!?.]*$"
-    r"|дайте (денег|деньги|машин|вирт|лвл|уровень)|заправ|\bmp\b|\bмп\b|"
-    r"мероприяти|подкиньте|teleport|\b(?:почин|почен|пачин)\w*",
-    re.I,
-)
+# «почините» и «спавн» сюда не входят: в train на такие репорты админы отказывают лишь в 28 % и 10 % случаев, чаще уточняют
+# или действуют в игре, поэтому готового отказа по п. 3.1 без человека для них нет (docs/MERGE_REVIEW.md)
+_SERVICE = re.compile(r"\bтп\b|телепорт|тепни|спавн дайте|дайте (денег|деньги|машин|вирт|лвл|уровень)|заправ|\bmp\b|\bмп\b|"
+                      r"мероприяти|подкиньте|teleport", re.I)
 _RP_DISPUTE = re.compile(r"наручник|посадил|арест|\bкоп\b|мент|связал|заломал|задерж|kishan|qamad|не по рп|нон ?рп", re.I)
 _TECH = re.compile(r"\bвип\b|\bvip\b|донат|не приш|не появ|купил|купив|\bбаг\b|не работает|вылет|лагает|фризит|почт", re.I)
 # «как подать жалобу»: нужно слово-вопрос рядом; просто упоминание жалобы («проверьте мою жалобу») не повод объяснять, как её подавать
@@ -600,10 +596,7 @@ def build(kind: str, cat: str, sig: Signals, text: str, lang: str, rb: RuleBase,
     if cat == "report.help":
         if _REPORT_HELP_APPEAL.search(t) or _APPEAL_EXTRA.search(t) or _has_penalty_question(t) or violation_denial(t) == "first":
             return report_appeal_draft()
-        if _SERVICE.search(t) and (
-            not _has_vehicle(t)
-            or (_REPAIR.search(t) and not _STUCK_VEHICLE.search(t) and not re.search(r"застрял|перевер|в вод|эвакуат", t))
-        ):
+        if _SERVICE.search(t) and not _has_vehicle(t):
             c = "3.1"
             return done("help_service", _fmt(L["help_service"], cite=ct(c)), [c], True, ["просьба о телепорте или имуществе"])
         if _has_vehicle(t):
