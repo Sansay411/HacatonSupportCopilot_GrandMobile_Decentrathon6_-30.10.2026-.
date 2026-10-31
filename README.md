@@ -47,7 +47,8 @@
 * запрос видео называл нарушение только в 23 % ответов и ни разу на узбекском; теперь в 72 % (ru 66 %, uz 84 %);
 * срок «30 мин» принимался за ID игрока, репорты «помогите, меня бьют» получали «спросите в Discord».
 
-Итог: 0 обещаний, 0 несуществующих цитат, 0 изменений категории и приоритета, скорость прежняя, 364 теста проходят. Пять минут для жюри:
+Итог: 0 обещаний, 0 несуществующих цитат, 0 изменений категории и приоритета, скорость прежняя, 531 тест проходит. Финальная полировка
+(короче шаблоны, без неподтверждённых утверждений, точнее база знаний, явная обработка `ticket_id`): [docs/audit/FINAL_POLISH.md](docs/audit/FINAL_POLISH.md). Пять минут для жюри:
 [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md), экраны: `docs/audit/screens/`.
 
 ## Запуск
@@ -64,8 +65,8 @@ make train                   # обучение двух моделей на tra
 make predict IN=tickets.jsonl OUT=pred.jsonl
 make serve                   # HTTP на :8000, интерфейс Sentra на http://localhost:8000/
 make data-status             # что из данных кейса и моделей на месте, а чего не хватает
-make test                    # 454 теста без браузера: с data/ и models/ проходят все, без них часть пропускается
-make e2e                     # 21 сквозной тест в настоящем браузере (pip install -r requirements-dev.txt, нужен Edge или Chrome); всего 364
+make test                    # 510 тестов без браузера: с data/ и models/ проходят все, без них часть пропускается
+make e2e                     # 21 сквозной тест в настоящем браузере (pip install -r requirements-dev.txt, нужен Edge или Chrome); всего 531
 make bench                   # замер p50/p95 и стоимости по HTTP -> reports/bench_local.json
 make gold && make eval       # dev-разметка valid и метрики -> reports/metrics.json
 make eval-drafts             # качество черновиков: инварианты на синтетике (язык, пункты, обещания, эскалации)
@@ -260,7 +261,7 @@ scripts/       train.py, train_verdict.py, predict.py, evaluate.py, make_gold.py
                suggest_templates.py, serve.py, check_data.py, bench.py
 admin_ui/      интерфейс Sentra без сборки: index.html, sentra.css, core.js, viz.js, views.js, queue.js, app.js, assets/
 docs/brand/    бренд: BRAND.md, доска бренда, скриншоты экранов
-docs/audit/    матрица функциональности, FINAL_QUALITY.md (проверка ИИ), DRAFT_QUALITY.md (аудит черновиков), screens/ (экраны на синтетике)
+docs/audit/    матрица функциональности, FINAL_QUALITY.md (проверка ИИ), DRAFT_QUALITY.md (аудит черновиков), FINAL_POLISH.md (финальная полировка), screens/ (экраны на синтетике)
 docs/          DEMO_SCRIPT.md: показ для жюри на 5 минут
 experiments/   скрипты аудитов и проверок воспроизводимости (final_quality, draft_audit); в продукт не входят
 tests/         pytest, синтетические правила в tests/fixtures; tests/e2e: сквозные тесты в браузере (Playwright)

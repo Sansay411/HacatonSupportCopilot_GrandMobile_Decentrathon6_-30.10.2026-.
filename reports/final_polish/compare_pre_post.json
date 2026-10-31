@@ -1,0 +1,339 @@
+{
+  "a": "pre",
+  "b": "post",
+  "valid": {
+    "n": 1000,
+    "category_changed": 0,
+    "priority_changed": 0,
+    "needs_human_changed": {},
+    "rule_refs_changed": 0,
+    "cited_changed_same_intent": 0,
+    "intent_transitions": {},
+    "reply_lang_changed": 1,
+    "is_dup_changed": 0,
+    "text_changed": 751,
+    "median_len_all": [
+      230,
+      204
+    ],
+    "median_len_complaint": [
+      260,
+      243
+    ],
+    "median_len_report": [
+      102,
+      95
+    ],
+    "diversity": {
+      "a": {
+        "distinct": 417,
+        "per_1000": 417.0,
+        "top_share": 0.15
+      },
+      "b": {
+        "distinct": 418,
+        "per_1000": 418.0,
+        "top_share": 0.15
+      }
+    },
+    "unwanted_phrases_a_b": {
+      "по приложенным материалам": [
+        325,
+        0
+      ],
+      "жалоба закрыта": [
+        0,
+        0
+      ],
+      "благодарность": [
+        1,
+        0
+      ],
+      "администратор на связи / сейчас": [
+        67,
+        0
+      ],
+      "следите за объявлениями": [
+        10,
+        0
+      ]
+    },
+    "per_intent": {
+      "approve": {
+        "a": {
+          "n": 325,
+          "median": 219,
+          "mean": 221.8
+        },
+        "b": {
+          "n": 325,
+          "median": 187,
+          "mean": 189.7
+        }
+      },
+      "need_evidence": {
+        "a": {
+          "n": 255,
+          "median": 286,
+          "mean": 312.5
+        },
+        "b": {
+          "n": 255,
+          "median": 268,
+          "mean": 300.2
+        }
+      },
+      "report_watch": {
+        "a": {
+          "n": 28,
+          "median": 130,
+          "mean": 130.3
+        },
+        "b": {
+          "n": 28,
+          "median": 110,
+          "mean": 110.3
+        }
+      },
+      "help_ack": {
+        "a": {
+          "n": 54,
+          "median": 98,
+          "mean": 99.9
+        },
+        "b": {
+          "n": 54,
+          "median": 86,
+          "mean": 94.2
+        }
+      },
+      "appeal": {
+        "a": {
+          "n": 164,
+          "median": 339,
+          "mean": 343.9
+        },
+        "b": {
+          "n": 164,
+          "median": 280,
+          "mean": 289.9
+        }
+      },
+      "event_tp": {
+        "a": {
+          "n": 10,
+          "median": 120,
+          "mean": 120
+        },
+        "b": {
+          "n": 10,
+          "median": 74,
+          "mean": 74
+        }
+      },
+      "help_generic": {
+        "a": {
+          "n": 13,
+          "median": 80,
+          "mean": 80
+        },
+        "b": {
+          "n": 13,
+          "median": 93,
+          "mean": 93
+        }
+      }
+    },
+    "needs_human_share": [
+      0.914,
+      0.914
+    ]
+  },
+  "train": {
+    "n": 8000,
+    "category_changed": 0,
+    "priority_changed": 0,
+    "needs_human_changed": {
+      "False->True": 12
+    },
+    "rule_refs_changed": 0,
+    "cited_changed_same_intent": 0,
+    "intent_transitions": {
+      "question_kb->question_unknown": 12
+    },
+    "reply_lang_changed": 0,
+    "is_dup_changed": 0,
+    "text_changed": 5777,
+    "median_len_all": [
+      217,
+      186
+    ],
+    "median_len_complaint": [
+      248,
+      242
+    ],
+    "median_len_report": [
+      111,
+      93
+    ],
+    "diversity": {
+      "a": {
+        "distinct": 2355,
+        "per_1000": 294.4,
+        "top_share": 0.117
+      },
+      "b": {
+        "distinct": 2351,
+        "per_1000": 293.9,
+        "top_share": 0.117
+      }
+    },
+    "unwanted_phrases_a_b": {
+      "по приложенным материалам": [
+        1923,
+        0
+      ],
+      "жалоба закрыта": [
+        0,
+        0
+      ],
+      "благодарность": [
+        0,
+        0
+      ],
+      "администратор на связи / сейчас": [
+        980,
+        0
+      ],
+      "следите за объявлениями": [
+        213,
+        0
+      ]
+    },
+    "per_intent": {
+      "approve": {
+        "a": {
+          "n": 1923,
+          "median": 219,
+          "mean": 221.2
+        },
+        "b": {
+          "n": 1923,
+          "median": 187,
+          "mean": 189.2
+        }
+      },
+      "need_evidence": {
+        "a": {
+          "n": 1259,
+          "median": 285,
+          "mean": 288.9
+        },
+        "b": {
+          "n": 1259,
+          "median": 267,
+          "mean": 272.2
+        }
+      },
+      "report_watch": {
+        "a": {
+          "n": 545,
+          "median": 130,
+          "mean": 130.2
+        },
+        "b": {
+          "n": 545,
+          "median": 110,
+          "mean": 110.2
+        }
+      },
+      "help_ack": {
+        "a": {
+          "n": 764,
+          "median": 98,
+          "mean": 98.5
+        },
+        "b": {
+          "n": 764,
+          "median": 86,
+          "mean": 86.3
+        }
+      },
+      "appeal": {
+        "a": {
+          "n": 940,
+          "median": 339,
+          "mean": 339.4
+        },
+        "b": {
+          "n": 940,
+          "median": 280,
+          "mean": 280.8
+        }
+      },
+      "event_tp": {
+        "a": {
+          "n": 213,
+          "median": 120,
+          "mean": 120.0
+        },
+        "b": {
+          "n": 213,
+          "median": 74,
+          "mean": 74
+        }
+      },
+      "help_generic": {
+        "a": {
+          "n": 216,
+          "median": 80,
+          "mean": 80
+        },
+        "b": {
+          "n": 216,
+          "median": 93,
+          "mean": 93
+        }
+      }
+    },
+    "needs_human_share": [
+      0.8588,
+      0.8602
+    ]
+  },
+  "synth": {
+    "n": 78,
+    "category_changed": 0,
+    "priority_changed": 0,
+    "needs_human_changed": 1,
+    "intent_changed": 1,
+    "needs_human_all_b": null,
+    "scenario_ok_b": [
+      72,
+      72
+    ]
+  },
+  "tera": {
+    "n": 26,
+    "category_changed": 0,
+    "priority_changed": 0,
+    "needs_human_changed": 0,
+    "intent_changed": 0,
+    "needs_human_all_b": true,
+    "scenario_ok_b": null
+  },
+  "latency_ms_p50_p95": {
+    "pre": [
+      2.82,
+      7.12,
+      2.2,
+      5.44
+    ],
+    "post": [
+      2.51,
+      6.25,
+      2.08,
+      5.14
+    ]
+  }
+}

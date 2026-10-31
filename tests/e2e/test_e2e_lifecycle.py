@@ -135,7 +135,8 @@ def test_05_complaint_without_evidence_asks_for_evidence(pg, srv):
     t = srv.get(f"/tickets/{tid}")
     assert t["response"]["extracted"]["has_evidence"] is False
     # pipeline по замыслу кейса подтверждает оскорбление и без вложений; продукт обязан поставить человека и предупредить
-    assert t["needs_human"] is True and any("приложенным материалам" in x for x in t["response"]["_meta"]["policy"])
+    assert t["needs_human"] is True and any("вложений и ссылок в обращении нет" in x for x in t["response"]["_meta"]["policy"])
+    assert "приложенным материалам" not in t["response"]["draft_reply"]["text"]
     expect(pg.page.locator("#ws")).to_contain_text("Нарушение подтверждается без доказательств")
     expect(pg.page.locator("#ws")).to_contain_text("не найдены")
     expect(pg.page.locator("#ws")).to_contain_text("содержимое файлов и ссылок не анализируется")

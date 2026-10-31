@@ -67,6 +67,14 @@ class ApiError(Exception):
         return {"detail": {"code": self.code, "message": self.message, **self.extra}}
 
 
+def _same_ticket_content(stored: dict | None, payload: dict) -> bool:
+    """Тот же логический тикет: совпадают тип, заявитель и текст игрока. Время создания не сравнивается (повтор приходит позже)."""
+    if not stored:
+        return True
+    old, new = from_dict(stored.get("request") or {}), from_dict(payload)
+    return (old.kind, old.reporter_hash or None, old.player_text) == (new.kind, new.reporter_hash or None, new.player_text)
+
+
 def _s(v, limit: int, field: str, required: bool = False) -> str | None:
     if v is None or (isinstance(v, str) and not v.strip()):
         if required:
@@ -217,11 +225,18 @@ class TicketService:
         try:
             # блокировка записи БД держится на весь цикл: ключ идемпотентности, номер, разбор и запись видят одно состояние
             with self._create_lock, self.store.tx():
-                for lookup in ((self.store.find_by_idem, idem_key), (lambda k: self.store.find_by_external(source, k), external_id)):
-                    if lookup[1]:
-                        existing = lookup[0](lookup[1])
+                for by_ticket_id, find, key in ((False, self.store.find_by_idem, idem_key),
+                                                (True, lambda k: self.store.find_by_external(source, k), external_id)):
+                    if key:
+                        existing = find(key)
                         if existing:
-                            return self.store.get_ticket(existing), False
+                            stored = self.store.get_ticket(existing)
+                            # тот же ticket_id с другим содержимым это не повторная отправка: тихо отдать прежний ответ нельзя
+                            if by_ticket_id and not _same_ticket_content(stored, payload):
+                                raise ApiError(409, "ticket_id_conflict",
+                                               "Обращение с таким ticket_id уже есть, но содержимое другое (текст, заявитель или тип)",
+                                               ticket_id=key, existing_id=existing)
+                            return stored, False
                 tid = self.store.peek_next_id()
                 now_ts, now_iso = self.store.now()
                 payload.setdefault("created_at", now_iso)
@@ -236,8 +251,8 @@ class TicketService:
                     policy.append("политика Sentra: повтор не закрывается автоматически из-за похожего текста, решает администратор")
                 if meta_r.get("intent") == "approve" and not resp["extracted"]["has_evidence"]:
                     # pipeline по умолчанию подтверждает оскорбление, даже если вложений нет; в продукте это проверяет человек
-                    policy.append("политика Sentra: в черновике нарушение подтверждается «по приложенным материалам», но вложений и "
-                                  "ссылок в обращении нет; проверьте или выберите «Запросить доказательства»")
+                    policy.append("политика Sentra: черновик предлагает наказание, но вложений и ссылок в обращении нет; "
+                                  "проверьте нарушение или выберите «Запросить доказательства»")
                 policy_nh = needs_human or bool(dedup) or bool(policy)
                 resp["_meta"]["policy"] = policy
                 if red_counts:

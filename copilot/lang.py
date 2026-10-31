@@ -93,7 +93,9 @@ def detect(text: str, server_lang: str | None = None) -> str:
                 return "uz"
             return "kk"
         if chars & _UZ_CYR:
-            return "uz"
+            # «қ» и «ғ» бывают и в узбекской кириллице, но в казахском это обычные буквы: узбекским считаем текст
+            # с «ў» или «ҳ» либо с сервера uz, иначе короткая казахская фраза с одной «қ» получала ответ на узбекском
+            return "uz" if chars & {"ў", "ҳ"} or server_lang == "uz" else "kk"
         if chars & _UA_LETTERS or "'" in "".join(toks) and any(w in {"що", "мені", "будь", "ласка"} for w in toks):
             return "uk"
         return "ru"

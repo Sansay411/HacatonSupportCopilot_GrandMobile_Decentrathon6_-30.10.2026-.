@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import re
 import threading
-from collections import Counter
+from collections import Counter, OrderedDict
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 
@@ -81,6 +81,7 @@ def is_spam(text: str) -> bool:
 
 REASON_SAME_REPORTED = "тот же заявитель и тот же нарушитель менее часа назад"
 REASON_SIMILAR_TEXT = "тот же заявитель с тем же текстом менее часа назад"
+REASON_ID_CONFLICT = "тот же ticket_id уже приходил с другим содержимым (другой текст, заявитель или тип): проверьте обращение вручную"
 
 
 @dataclass
@@ -106,6 +107,7 @@ class DedupMatch:
 
 MAX_PER_REPORTER = 200
 MAX_REPORTERS = 50000
+MAX_TICKET_IDS = 200000
 
 
 class DedupStore:
@@ -113,6 +115,8 @@ class DedupStore:
         self._by_reporter: dict[str, list] = {}
         self._maxlen = maxlen
         self._lock = threading.Lock()
+        # ticket_id -> отпечатки содержимого, с которыми он приходил: нужны, чтобы заметить один id с разным содержимым
+        self._tids: OrderedDict[str, set] = OrderedDict()
 
     def _push(self, item: dict) -> None:
         lst = self._by_reporter.get(item["reporter"])
@@ -135,26 +139,35 @@ class DedupStore:
 
     def match_and_add(self, *, reporter: str | None, reported: str | None, text: str, kind: str,
                       created_at: str | None, category: str, ref: str | None = None,
-                      mandatory_human: bool = False, ticket_id: str | None = None) -> DedupMatch | None:
+                      mandatory_human: bool = False, ticket_id: str | None = None,
+                      notes: list[str] | None = None) -> DedupMatch | None:
         """То же, что check_and_add, но с подробностями совпадения. `ref` запоминается для ссылки на оригинал.
 
         `ticket_id` нужен для повторной отправки того же обращения (прогрев, повторный прогон, ретрай клиента):
-        тот же идентификатор с тем же текстом возвращает прежний результат и не считается дублем самого себя."""
+        тот же идентификатор с тем же текстом, заявителем и типом возвращает прежний результат и не считается дублем
+        самого себя. Тот же идентификатор с другим содержимым это не повтор и не дубль: обращение разбирается как новое,
+        а в `notes` (если передан список) добавляется REASON_ID_CONFLICT, чтобы вызывающий отправил его человеку."""
         if not reporter:
             return None
         now = _ts(created_at) or _utcnow()
         sh = _shingles(text)
         has_neg = _has_negation(text)
         prob_topics = _problem_topics(text)
+        fingerprint = (reporter, kind, hash(frozenset(sh)))
         best: tuple | None = None       # (время, совпадение): оригинал это самое позднее подходящее обращение
         with self._lock:
             if ticket_id:
+                seen = self._tids.get(ticket_id)
+                if seen is not None and fingerprint not in seen and notes is not None:
+                    notes.append(REASON_ID_CONFLICT)
                 for it in self._by_reporter.get(reporter, ()):
                     if it.get("tid") == ticket_id and it["kind"] == kind and it["sh"] == sh:
                         return it.get("result")
             for it in reversed(self._by_reporter.get(reporter, ())):
                 if it["kind"] != kind or it["ts"] > now or now - it["ts"] > WINDOW:
                     continue
+                if ticket_id and it.get("tid") == ticket_id:
+                    continue            # тот же идентификатор: это то же обращение с изменённым содержимым, а не его дубль
                 if best is not None and it["ts"] <= best[0]:
                     continue
                 # если в обоих обращениях явно указаны РАЗНЫЕ нарушители, это разные жалобы, а не дубль
@@ -189,13 +202,23 @@ class DedupStore:
             self._push({"reporter": reporter, "reported": reported, "ts": now, "sh": sh, "kind": kind,
                         "category": category, "ref": ref, "has_neg": has_neg, "topics": prob_topics,
                         "mandatory_human": inh_human, "tid": ticket_id, "result": best[1] if best else None})
+            if ticket_id:
+                self._tids.setdefault(ticket_id, set()).add(fingerprint)
+                self._tids.move_to_end(ticket_id)
+                while len(self._tids) > MAX_TICKET_IDS:
+                    self._tids.popitem(last=False)
         return best[1] if best else None
 
     def discard(self, ref: str) -> None:
         """Убрать обращение из памяти, если его не удалось сохранить: несуществующее обращение не должно быть оригиналом."""
         with self._lock:
+            gone: set[str] = set()
             for lst in self._by_reporter.values():
+                gone.update(it["tid"] for it in lst if it.get("ref") == ref and it.get("tid"))
                 lst[:] = [it for it in lst if it.get("ref") != ref]
+            for tid in gone:       # отпечаток остаётся, только пока где-то есть само обращение с этим идентификатором
+                if not any(it.get("tid") == tid for lst in self._by_reporter.values() for it in lst):
+                    self._tids.pop(tid, None)
 
     def restore(self, rows: list[dict]) -> int:
         """Восстановить память после перезапуска из сохранённых обращений.

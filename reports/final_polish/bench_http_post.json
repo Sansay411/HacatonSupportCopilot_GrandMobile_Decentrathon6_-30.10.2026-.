@@ -1,0 +1,32 @@
+{
+  "measured_at": "2026-10-31T12:46:50Z",
+  "mode": "http",
+  "n": 1000,
+  "p50_ms": 4.28,
+  "p95_ms": 8.03,
+  "p99_ms": 14.62,
+  "max_ms": 38.43,
+  "mean_ms": 4.77,
+  "throughput_per_s": 209.8,
+  "cost_usd_per_ticket": 0.0,
+  "limits": {
+    "p95_ms": 5000,
+    "cost_usd_per_ticket": 0.002
+  },
+  "p95_within_limit": true,
+  "cost_within_limit": true,
+  "config": {
+    "rules_synthetic": false,
+    "models_loaded": true,
+    "verdict_model_loaded": true,
+    "llm": false,
+    "llm_calls": 0,
+    "corpus": "data/tickets_valid.jsonl"
+  },
+  "host": {
+    "python": "3.12.10",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "cpus": 16
+  },
+  "note": "Замер на правилах кейса и загруженных моделях."
+}

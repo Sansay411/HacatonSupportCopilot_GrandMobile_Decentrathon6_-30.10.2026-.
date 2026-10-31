@@ -58,7 +58,7 @@ def test_model_features_are_unchanged(rb):
 
 
 def test_scenario_text_gets_policy_warning(boot):
-    """Через HTTP: текст из демо-видео получает предупреждение политики Sentra вместо тихого «по приложенным материалам»."""
+    """Через HTTP: текст из демо-видео получает предупреждение политики Sentra: наказание предложено, а вложений нет."""
     c, _ = boot()
     r = c.post("/tickets", json={"kind": "complaint", "reporter": "p-1",
                                  "text": "Игрок Player_One оскорблял мою семью в игровом чате. Прошу проверить ситуацию. Доказательств пока нет"})
@@ -67,4 +67,5 @@ def test_scenario_text_gets_policy_warning(boot):
     assert t["response"]["extracted"]["has_evidence"] is False
     assert t["needs_human"] is True
     if t["response"]["_meta"]["intent"] == "approve":
-        assert any("приложенным материалам" in x for x in t["response"]["_meta"]["policy"])
+        assert any("вложений и ссылок в обращении нет" in x for x in t["response"]["_meta"]["policy"])
+        assert "приложенным материалам" not in t["response"]["draft_reply"]["text"]

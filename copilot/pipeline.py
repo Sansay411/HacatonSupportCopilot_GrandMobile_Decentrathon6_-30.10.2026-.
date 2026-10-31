@@ -109,12 +109,14 @@ class Copilot:
         spam = dedup_mod.is_spam(t.player_text)
         dup_reason = None
         dup_match = None
+        id_notes: list[str] = []     # один ticket_id с другим содержимым: не повтор и не дубль, отправляется человеку
         if use_dedup:
             dup_match = self.dedup.match_and_add(
                 reporter=t.reporter_hash or payload.get("reporter"),
                 reported=t.reported_hash or t.reported_nick or sig.nickname,
                 text=t.player_text, kind=t.kind, created_at=t.created_at, category=cat.category, ref=ref,
-                mandatory_human=pre_mandatory, ticket_id=str(payload["ticket_id"]) if payload.get("ticket_id") else None,
+                mandatory_human=pre_mandatory, ticket_id=str(payload["ticket_id"])[:128] if payload.get("ticket_id") else None,
+                notes=id_notes,
             )
             dup_reason = dup_match.reason if dup_match else None
 
@@ -163,6 +165,9 @@ class Copilot:
             for r in esc_reasons:
                 if r not in reasons:
                     reasons.append(r)
+        if id_notes:
+            needs_human = True
+            reasons.extend(r for r in id_notes if r not in reasons)
         if dup_match and dup_match.original_mandatory_human:
             needs_human = True
             orig_msg = "исходное обращение в цепочке дублей требует проверки человеком"
