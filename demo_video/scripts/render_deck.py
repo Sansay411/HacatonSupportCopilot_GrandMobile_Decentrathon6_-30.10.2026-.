@@ -12,7 +12,7 @@ from playwright.async_api import async_playwright
 ROOT = Path(__file__).resolve().parents[2]
 DV = ROOT / "demo_video"
 OUT = DV / "work" / "deck"
-HASHES = [f"plaques-{i}" for i in (1, 2, 3, 4)] + [f"sec-{i}" for i in (2, 3, 4, 5, 6, 7)] + [f"s-{i}" for i in range(1, 8)]
+HASHES = ["hero"] + [f"plaques-{i}" for i in (1, 2, 3, 4)] + [f"sec-{i}" for i in (2, 3, 4, 5, 6, 7)] + [f"s-{i}" for i in range(1, 8)]
 
 
 async def main():

@@ -75,9 +75,26 @@
   .ready { margin-top:70px; display:grid; grid-template-columns:1fr 1fr; gap:0 64px; }
   .ready div { padding:26px 0; border-top:1px solid var(--line); font-size:32px; line-height:1.4; color:var(--t2); }
   .ready code { font-family:'JetBrains Mono',Consolas,monospace; color:var(--signal); font-size:30px; }
+
+  /* обложка README: три цифры на тёмном фоне */
+  #hero { background:radial-gradient(1100px 600px at 50% 0%, rgba(47,217,181,.07), transparent 70%), var(--s1); }
+  #hero .row { position:absolute; left:0; right:0; top:340px; display:flex; justify-content:center; gap:130px; text-align:center; }
+  #hero .v { font-size:190px; line-height:1; font-weight:600; letter-spacing:-.03em; color:var(--t1); white-space:nowrap; }
+  #hero .v small { font-size:84px; color:var(--signal); font-weight:600; }
+  #hero p { margin:26px 0 0; font-size:40px; color:var(--t2); }
+  #hero .cap { position:absolute; left:0; right:0; bottom:200px; text-align:center; font-size:34px; color:var(--t3); }
 </style>
 </head>
 <body>
+
+<section class="card" id="hero" data-id="hero">
+  <div class="row">
+    <div><div class="v">0<small> из 1224</small></div><p>выдуманных пунктов правил</p></div>
+    <div><div class="v">7<small> мс</small></div><p>p95 на процессоре</p></div>
+    <div><div class="v">$0</div><p>за одно обращение</p></div>
+  </div>
+  <div class="cap">Пункты правил выбирает код. Решение остаётся за модератором.</div>
+</section>
 
 <section class="card" id="plaques" data-id="plaques">
   <h1>Что умеет Sentra</h1>
