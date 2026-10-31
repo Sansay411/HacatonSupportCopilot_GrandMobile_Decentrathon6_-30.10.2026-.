@@ -11,7 +11,7 @@ from pathlib import Path
 
 from scipy.sparse import csr_matrix, hstack
 
-from . import dedup as dedup_mod
+from . import automation_policy, dedup as dedup_mod
 from . import drafts, guard, lang as lang_mod, verify
 from .classifier import CategoryModel
 from .features import model_text
@@ -137,45 +137,27 @@ class Copilot:
         cited, guard_reasons = guard.check(d.text, d.cited, self.rules)
         # номер пункта прямо в тексте: тот, которого нет в rules.json или нет среди цитат, отправляет черновик человеку
         guard_reasons += verify.text_ref_issues(d.text, cited, self.rules)
-        reasons = list(d.reasons) + guard_reasons
-        if dup_reason:
-            reasons.append(dup_reason)
-        if spam:
-            reasons.append("признаки спама или флуда")
-
         confidence = round(min(cat.confidence, vconf if verdict else 1.0), 2)
         # «передано администратору», «жалоба закрыта»: верно только после действия человека, автоотправка исключена
         action_claim = guard.claims_action(d.text)
-        if action_claim and d.auto_ok:
-            reasons.append("в тексте утверждение о передаче, рассмотрении или закрытии: отправка только после проверки человеком")
-        needs_human = (not d.auto_ok) or bool(guard_reasons) or d.proposes_penalty or action_claim
-        if cat.category in NEEDS_HUMAN_ALWAYS:
-            needs_human = True
-            if "всегда" not in " ".join(reasons):
-                reasons.append(f"категория {cat.category} всегда идёт человеку")
-        if priority == "p0":
-            needs_human = True
-            reasons.append("приоритет p0")
-        if "admin_subject" in sig.topics:
-            needs_human = True
-            reasons.append("обращение на действия администратора: решает старшая администрация")
-        esc_reasons = drafts.mandatory_escalation_reasons(t.kind, cat.category, sig, t.player_text, intent=d.intent)
-        if esc_reasons:
-            needs_human = True
-            for r in esc_reasons:
-                if r not in reasons:
-                    reasons.append(r)
-        if id_notes:
-            needs_human = True
-            reasons.extend(r for r in id_notes if r not in reasons)
-        if dup_match and dup_match.original_mandatory_human:
-            needs_human = True
-            orig_msg = "исходное обращение в цепочке дублей требует проверки человеком"
-            if orig_msg not in reasons:
-                reasons.append(orig_msg)
-        if confidence < 0.5 and not dup_reason:
-            needs_human = True
-            reasons.append(f"низкая уверенность классификации ({confidence})")
+        policy = automation_policy.evaluate_automation_policy(
+            kind=t.kind,
+            category=cat.category,
+            priority=priority,
+            confidence=confidence,
+            sig=sig,
+            player_text=t.player_text,
+            draft=d,
+            guard_reasons=guard_reasons,
+            action_claim=action_claim,
+            dup_reason=dup_reason,
+            dup_mandatory_human=bool(dup_match and dup_match.original_mandatory_human),
+            id_notes=id_notes,
+            spam=spam,
+            needs_human_categories=NEEDS_HUMAN_ALWAYS,
+        )
+        needs_human = policy.needs_human
+        reasons = policy.reasons
 
         extracted_refs = [r for r in sig.rule_refs if self.rules.exists(r)]
         return {

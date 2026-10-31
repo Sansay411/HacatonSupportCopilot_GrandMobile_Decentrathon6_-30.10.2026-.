@@ -1,0 +1,273 @@
+{
+  "tag": "safe_auto",
+  "valid": {
+    "n": 1000,
+    "intents": {
+      "approve": {
+        "n": 326,
+        "median_len": 187,
+        "mean_len": 189.9
+      },
+      "need_evidence": {
+        "n": 257,
+        "median_len": 268,
+        "mean_len": 300.5
+      },
+      "appeal": {
+        "n": 164,
+        "median_len": 280,
+        "mean_len": 289.9
+      },
+      "help_ack": {
+        "n": 54,
+        "median_len": 86,
+        "mean_len": 94.2
+      },
+      "no_description": {
+        "n": 35,
+        "median_len": 248,
+        "mean_len": 248
+      },
+      "report_watch": {
+        "n": 28,
+        "median_len": 110,
+        "mean_len": 110.3
+      },
+      "clarify": {
+        "n": 19,
+        "median_len": 73,
+        "mean_len": 73
+      },
+      "admin_complaint": {
+        "n": 15,
+        "median_len": 204,
+        "mean_len": 216.9
+      },
+      "question_unknown": {
+        "n": 13,
+        "median_len": 111,
+        "mean_len": 111
+      },
+      "help_vehicle": {
+        "n": 13,
+        "median_len": 95,
+        "mean_len": 95
+      },
+      "not_complaint": {
+        "n": 11,
+        "median_len": 246,
+        "mean_len": 252.2
+      },
+      "report_need_id": {
+        "n": 11,
+        "median_len": 124,
+        "mean_len": 124
+      },
+      "event_tp": {
+        "n": 10,
+        "median_len": 74,
+        "mean_len": 74
+      },
+      "help_generic": {
+        "n": 10,
+        "median_len": 93,
+        "mean_len": 93
+      },
+      "toxic": {
+        "n": 8,
+        "median_len": 205,
+        "mean_len": 205
+      },
+      "help_service": {
+        "n": 8,
+        "median_len": 115,
+        "mean_len": 115
+      },
+      "offtopic_flood": {
+        "n": 7,
+        "median_len": 143,
+        "mean_len": 143
+      },
+      "question_kb": {
+        "n": 3,
+        "median_len": 69,
+        "mean_len": 68.3
+      },
+      "report_rp": {
+        "n": 3,
+        "median_len": 143,
+        "mean_len": 143
+      },
+      "report_appeal": {
+        "n": 2,
+        "median_len": 160,
+        "mean_len": 160
+      },
+      "payment": {
+        "n": 1,
+        "median_len": 219,
+        "mean_len": 219
+      },
+      "question_tech": {
+        "n": 1,
+        "median_len": 126,
+        "mean_len": 126
+      },
+      "question_howto": {
+        "n": 1,
+        "median_len": 120,
+        "mean_len": 120
+      }
+    },
+    "median_len_all": 205,
+    "median_len_complaint": 246,
+    "median_len_report": 95,
+    "distinct_texts": 419,
+    "needs_human_share": 0.91,
+    "latency_ms_p50": 4.01,
+    "latency_ms_p95": 10.26,
+    "wall_s": 5.85
+  },
+  "train": {
+    "n": 8000,
+    "intents": {
+      "approve": {
+        "n": 1935,
+        "median_len": 187,
+        "mean_len": 189.1
+      },
+      "need_evidence": {
+        "n": 1264,
+        "median_len": 267,
+        "mean_len": 272.3
+      },
+      "appeal": {
+        "n": 949,
+        "median_len": 280,
+        "mean_len": 281.0
+      },
+      "help_ack": {
+        "n": 768,
+        "median_len": 86,
+        "mean_len": 86.3
+      },
+      "report_watch": {
+        "n": 551,
+        "median_len": 110,
+        "mean_len": 110.2
+      },
+      "clarify": {
+        "n": 536,
+        "median_len": 73,
+        "mean_len": 73.1
+      },
+      "question_unknown": {
+        "n": 410,
+        "median_len": 111,
+        "mean_len": 111.0
+      },
+      "report_need_id": {
+        "n": 294,
+        "median_len": 124,
+        "mean_len": 124.2
+      },
+      "no_description": {
+        "n": 223,
+        "median_len": 248,
+        "mean_len": 248.7
+      },
+      "event_tp": {
+        "n": 219,
+        "median_len": 74,
+        "mean_len": 74
+      },
+      "help_generic": {
+        "n": 195,
+        "median_len": 93,
+        "mean_len": 93
+      },
+      "help_vehicle": {
+        "n": 143,
+        "median_len": 95,
+        "mean_len": 95
+      },
+      "admin_complaint": {
+        "n": 131,
+        "median_len": 204,
+        "mean_len": 204.9
+      },
+      "help_service": {
+        "n": 89,
+        "median_len": 115,
+        "mean_len": 115
+      },
+      "not_complaint": {
+        "n": 78,
+        "median_len": 246,
+        "mean_len": 246.9
+      },
+      "report_appeal": {
+        "n": 62,
+        "median_len": 160,
+        "mean_len": 160.4
+      },
+      "report_rp": {
+        "n": 48,
+        "median_len": 143,
+        "mean_len": 143
+      },
+      "offtopic_flood": {
+        "n": 28,
+        "median_len": 143,
+        "mean_len": 143
+      },
+      "toxic": {
+        "n": 25,
+        "median_len": 205,
+        "mean_len": 205
+      },
+      "question_kb": {
+        "n": 22,
+        "median_len": 69,
+        "mean_len": 69.3
+      },
+      "question_tech": {
+        "n": 11,
+        "median_len": 126,
+        "mean_len": 126
+      },
+      "payment": {
+        "n": 9,
+        "median_len": 187,
+        "mean_len": 187
+      },
+      "account": {
+        "n": 9,
+        "median_len": 295,
+        "mean_len": 295
+      },
+      "question_howto": {
+        "n": 1,
+        "median_len": 120,
+        "mean_len": 120
+      }
+    },
+    "median_len_all": 186,
+    "median_len_complaint": 242,
+    "median_len_report": 93,
+    "distinct_texts": 2354,
+    "needs_human_share": 0.8612,
+    "latency_ms_p50": 3.62,
+    "latency_ms_p95": 8.87,
+    "wall_s": 33.89
+  },
+  "synth": {
+    "n": 78,
+    "scenario_ok": "72/72"
+  },
+  "tera": {
+    "n": 26,
+    "needs_human_all": true,
+    "duplicates_flagged": 13
+  }
+}

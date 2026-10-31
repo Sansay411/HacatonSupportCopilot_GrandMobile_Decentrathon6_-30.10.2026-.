@@ -45,8 +45,14 @@ def _has_vehicle(t: str) -> bool:
     return bool(_VEHICLE.search(t)) and not bool(_NO_VEHICLE.search(t))
 
 
-_SERVICE = re.compile(r"\bтп\b|телепорт|тепни|спавн дайте|дайте (денег|деньги|машин|вирт|лвл|уровень)|заправ|\bmp\b|\bмп\b|"
-                      r"мероприяти|подкиньте|teleport", re.I)
+_REPAIR = re.compile(r"\b(?:почин|почен|пачин)\w*", re.I)
+_SERVICE = re.compile(
+    r"\bтп\b|телепорт|тепни|спавн дайте|дайте спавн|заспавн\w* меня"
+    r"|^\s*(?:админ\w*\s+)?спавн\s*(?:пж|пожалуйста|плиз)?\s*[!?.]*$"
+    r"|дайте (денег|деньги|машин|вирт|лвл|уровень)|заправ|\bmp\b|\bмп\b|"
+    r"мероприяти|подкиньте|teleport|\b(?:почин|почен|пачин)\w*",
+    re.I,
+)
 _RP_DISPUTE = re.compile(r"наручник|посадил|арест|\bкоп\b|мент|связал|заломал|задерж|kishan|qamad|не по рп|нон ?рп", re.I)
 _TECH = re.compile(r"\bвип\b|\bvip\b|донат|не приш|не появ|купил|купив|\bбаг\b|не работает|вылет|лагает|фризит|почт", re.I)
 # «как подать жалобу»: нужно слово-вопрос рядом; просто упоминание жалобы («проверьте мою жалобу») не повод объяснять, как её подавать
@@ -63,7 +69,10 @@ _COMPLAINT_STATUS = re.compile(
 _HELP_EXTRA = re.compile(r"помож|помоч|помог|yordam|көмек", re.I)               # «поможіть», «помочь»
 _STUCK_VEHICLE = re.compile(r"(?:упал\w*|провалил\w*|утонул\w*|застрял\w*|перевернул\w*|слетел\w*)\W+(?:\w+\W+){0,3}?(?:в вод|в реч|в рек|в озер)|в вод[еу]\b|на крыше")
 # слово «машина» обязательно рядом: застрявший в текстурах персонаж эвакуатором не вытаскивается
-_DEFINITION_Q = re.compile(r"^\W*(?:(?:привет\w*|здравствуйте|админ\w*|подскажите)\W+){0,2}(?:что\s+(?:такое|значит|означает)|кто\s+такой)\b")
+_DEFINITION_Q = re.compile(
+    r"^\W*(?:(?:привет\w*|здравствуйте|админ\w*|подскажите)\W+){0,2}"
+    r"(?:что\s+(?:такое|значит|означает|будет\s+если)|кто\s+такой|како[еяй]\s+(?:наказани\w*|штраф\w*)\s+за)\b"
+)
 # слова про наказание игрока и вопрос о нём: «почему бан?», «когда снимете мут», «за что варн»
 _PENALTY = r"(?:бан\w*|мут\w*|варн\w*|warn\w*|наказани\w*|деморган\w*|блокировк\w*)"
 _PENALTY_Q = re.compile(
@@ -238,7 +247,7 @@ def violation_denial(t: str) -> str | None:
 _PROMPT_INJECTION = re.compile(
     r"\bsystem\s*:"
     r"|\bignore\s+(?:all\s+)?(?:previous|prior|above)\s+(?:instructions|rules|prompts)"
-    r"|\b(?:забудь|игнорируй|отмени|обойди)\s+(?:все\s+|предыдущие\s+|свои\s+)?(?:правила|инструкци\w*|ограничени\w*|указани\w*)"
+    r"|\b(?:забудь|игнорируй|отмени|обойди)\s+(?:(?:все|предыдущие|свои)\s+){0,2}(?:правила|инструкци\w*|ограничени\w*|указани\w*)"
     r"|\b(?:ты\s+обязан|ты\s+должен|приказыв\w+|требую)\s+(?:написать|ответить|сказать)\b"
     r"|\bнапиши(?:\s+в\s+ответе)?[,:\s]+что\s+(?:игрок\s+)?(?:уже\s+)?(?:бан\s+снят|разбанен|забанен|наказан|жалоба\s+одобрена|деньги\s+возвращены)",
     re.I,
@@ -472,6 +481,9 @@ def build(kind: str, cat: str, sig: Signals, text: str, lang: str, rb: RuleBase,
                 c = "1.4"
                 return done("account", _fmt(L["account"], cite=ct(c), **common), [c], False,
                             ["аккаунт или имущество: всегда человек"])
+        if cat == "complaint.invalid" and "threat_irl" in sig.topics:
+            c = "2.6"
+            return done("threat", _fmt(L["threat"], cite=ct(c)), [c], False, ["угроза вне игры: p0, человек"])
 
         if cat == "complaint.invalid":
             if PROFANITY.search(t) and sig.words >= 2:
@@ -576,7 +588,7 @@ def build(kind: str, cat: str, sig: Signals, text: str, lang: str, rb: RuleBase,
     if cat == "report.complaint":
         if "appeal" in sig.topics or _APPEAL_EXTRA.search(t) or _has_penalty_question(t) or violation_denial(t) == "first":
             return report_appeal_draft()
-        if (_DEFINITION_Q.match(t) or _COMPLAINT_STATUS.search(t)) and not sig.report_id and not nick:
+        if (_DEFINITION_Q.match(t) or _COMPLAINT_STATUS.search(t) or ("question" in sig.topics and _TECH.search(t))) and not sig.report_id and not nick:
             return question_flow()                  # «что значит ДМ», «проверьте мою жалобу»: это вопрос, а не жалоба
         if sig.report_id:
             return watch_draft(sig.report_id)
@@ -588,7 +600,10 @@ def build(kind: str, cat: str, sig: Signals, text: str, lang: str, rb: RuleBase,
     if cat == "report.help":
         if _REPORT_HELP_APPEAL.search(t) or _APPEAL_EXTRA.search(t) or _has_penalty_question(t) or violation_denial(t) == "first":
             return report_appeal_draft()
-        if _SERVICE.search(t) and not _has_vehicle(t):
+        if _SERVICE.search(t) and (
+            not _has_vehicle(t)
+            or (_REPAIR.search(t) and not _STUCK_VEHICLE.search(t) and not re.search(r"застрял|перевер|в вод|эвакуат", t))
+        ):
             c = "3.1"
             return done("help_service", _fmt(L["help_service"], cite=ct(c)), [c], True, ["просьба о телепорте или имуществе"])
         if _has_vehicle(t):
