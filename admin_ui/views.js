@@ -48,7 +48,7 @@ function routeStrip(s) {
     { t: 'Поступило', n: T, d: `дублей и спама: ${s.duplicates.flagged}` },
     { t: 'Классификация', n: T, d: `моделью ${pctOf(ql.by_model)}%, правилами ${100 - pctOf(ql.by_model)}%` },
     { t: 'Пункты правил', n: ql.with_cites, d: 'цитату выбирает код' },
-    { t: 'Черновик', n: T, d: ql.llm ? `LLM переформулировала ${ql.llm}` : 'шаблон на языке игрока' },
+    { t: 'Черновик', n: T, d: ql.llm ? `LLM вызывалась для ${ql.llm}` : 'шаблон на языке игрока' },
     { t: 'Guard', n: guarded, d: guarded ? 'остановлено проверкой' : 'ничего не остановлено', cls: guarded ? 'warn' : '' },
     { t: 'Решение', n: s.needs_human.total, d: `человеку; без правок допустимо: ${s.needs_human.auto_ok}`, cls: 'human' },
   ];

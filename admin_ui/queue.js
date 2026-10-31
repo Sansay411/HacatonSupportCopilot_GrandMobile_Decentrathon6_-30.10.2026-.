@@ -272,7 +272,7 @@ function draw(box, t, st, alts) {
 
       <section class="panel ai">
         <div class="panel-h"><h3><span class="ai-mark">${ic('spark')}Черновик ответа</span></h3>
-          <span class="aside">${m.llm ? 'переформулировано LLM, ' : ''}язык ответа: ${esc(langName(t.draft.lang || r.draft_reply.lang))}</span></div>
+          <span class="aside">${m.llm ? 'LLM вызывалась, ' : ''}язык ответа: ${esc(langName(t.draft.lang || r.draft_reply.lang))}</span></div>
         <div class="panel-b">
           ${open && alts.length > 1 ? `<div class="scn" role="group" aria-label="Сценарий ответа">${alts.map((a, i) =>
             `<button type="button" data-alt="${i}" aria-pressed="${i === st.alt && st.text.trim() === a.text.trim()}">${esc(intentName(a.intent))}</button>`).join('')}</div>` : ''}
