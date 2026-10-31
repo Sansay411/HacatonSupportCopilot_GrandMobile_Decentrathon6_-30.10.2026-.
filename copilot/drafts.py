@@ -235,6 +235,16 @@ def violation_denial(t: str) -> str | None:
     return "first" if first_person else "other"
 
 
+_PROMPT_INJECTION = re.compile(
+    r"\bsystem\s*:"
+    r"|\bignore\s+(?:all\s+)?(?:previous|prior|above)\s+(?:instructions|rules|prompts)"
+    r"|\b(?:забудь|игнорируй|отмени|обойди)\s+(?:все\s+|предыдущие\s+|свои\s+)?(?:правила|инструкци\w*|ограничени\w*|указани\w*)"
+    r"|\b(?:ты\s+обязан|ты\s+должен|приказыв\w+|требую)\s+(?:написать|ответить|сказать)\b"
+    r"|\bнапиши(?:\s+в\s+ответе)?[,:\s]+что\s+(?:игрок\s+)?(?:уже\s+)?(?:бан\s+снят|разбанен|забанен|наказан|жалоба\s+одобрена|деньги\s+возвращены)",
+    re.I,
+)
+
+
 def _has_penalty_question(t: str) -> bool:
     return bool(_PENALTY_Q.search(t)) and not bool(_THIRD_PARTY.search(t)) and not bool(_DEMAND_PENALTY.search(t))
 
@@ -269,6 +279,8 @@ def mandatory_escalation_reasons(kind: str, cat: str, sig: Signals, text: str, i
         reasons.append("обязательная эскалация: обжалование наказания требует проверки человеком")
     if "threat_irl" in sig.topics or intent == "threat":
         reasons.append("обязательная эскалация: угроза в реальной жизни (p0)")
+    if _PROMPT_INJECTION.search(t):
+        reasons.append("подозрение на инъекцию инструкции в тексте обращения: проверяет человек")
     return reasons
 
 
@@ -354,6 +366,8 @@ def decide_outcome(cat: str, verdict: str | None, conf: float, sig: Signals) -> 
     требуют видео (ЖБ 1.3.1). Поэтому один и тот же прогноз модели исхода
     по-разному переводится в сценарий для разных категорий.
     """
+    if sig.evidence_denied and not sig.has_evidence:
+        return "need_evidence"
     if cat == "complaint.insult":
         if verdict == "need_evidence" and conf >= 0.6:
             return "need_evidence"
@@ -373,6 +387,9 @@ def build(kind: str, cat: str, sig: Signals, text: str, lang: str, rb: RuleBase,
     L = i18n.T[lang]
     t = for_matching(text)
 
+    def ct(c, gen=False):
+        return cite_text(rb, c, lang, genitive=gen)
+
     def done(intent: str, body: str, cited: list[str], auto: bool, reasons: list[str] | None = None,
              penalty: bool = False) -> Draft:
         hello = L["hello"]
@@ -389,22 +406,19 @@ def build(kind: str, cat: str, sig: Signals, text: str, lang: str, rb: RuleBase,
             for r in esc:
                 if r not in reasons:
                     reasons.append(r)
-        return Draft(lang=lang, text=full, cited=[c for c in cited if rb.exists(c)], intent=intent, auto_ok=auto,
-                     reasons=reasons, proposes_penalty=penalty)
-
-    def ct(c, gen=False):
-        return cite_text(rb, c, lang, genitive=gen)
+        if duplicate and intent not in ("duplicate", "appeal_reject"):
+            dup_msg = "повтор обращения за последний час" if kind == "complaint" else "повтор репорта за последний час"
+            if dup_msg not in reasons:
+                reasons.append(dup_msg)
+        d = Draft(lang=lang, text=full, cited=[c for c in cited if rb.exists(c)], intent=intent, auto_ok=auto,
+                  reasons=reasons, proposes_penalty=penalty)
+        if duplicate and kind == "complaint" and intent not in ("duplicate", "appeal_reject"):
+            c_dup = "ЖБ 1.2.9"
+            dup_text = f"{hello} {_fmt(L['duplicate'], cite=ct(c_dup))}".strip()
+            d.alternatives.append({"intent": "duplicate", "text": dup_text, "cited": [c_dup] if rb.exists(c_dup) else []})
+        return d
 
     common = dict(support=i18n.SUPPORT_URL, discord=i18n.DISCORD_URL)
-
-    if duplicate:
-        esc = mandatory_escalation_reasons(kind, cat, sig, text)
-        c = "ЖБ 1.2.9" if kind == "complaint" else "3.1"
-        if kind == "complaint":
-            return done("duplicate", _fmt(L["duplicate"], cite=ct(c)), [c], not bool(esc),
-                        ["повтор обращения за последний час"] + esc)
-        return done("duplicate", _fmt(L["offtopic_flood"], cite=ct(c)), [c], not bool(esc),
-                    ["повтор репорта за последний час"] + esc)
 
     # ---------------- жалобы ----------------
     if kind == "complaint":
@@ -496,11 +510,11 @@ def build(kind: str, cat: str, sig: Signals, text: str, lang: str, rb: RuleBase,
         name_it = cat_conf >= _NAME_CONF or (rule is not None and rule in sig.rule_refs)
         if verdict == "approve" and approve_d:
             ne = _need_evidence(L, rule if name_it else None, term if name_it else None, lang, rb, ct, done)
-            approve_d.alternatives.append({"intent": ne.intent, "text": ne.text, "cited": ne.cited})
+            approve_d.alternatives.insert(0, {"intent": ne.intent, "text": ne.text, "cited": ne.cited})
             return approve_d
         ne = _need_evidence(L, rule if name_it else None, term if name_it else None, lang, rb, ct, done)
         if approve_d:
-            ne.alternatives.append({"intent": approve_d.intent, "text": approve_d.text, "cited": approve_d.cited})
+            ne.alternatives.insert(0, {"intent": approve_d.intent, "text": approve_d.text, "cited": approve_d.cited})
         return ne
 
     # ---------------- репорты ----------------

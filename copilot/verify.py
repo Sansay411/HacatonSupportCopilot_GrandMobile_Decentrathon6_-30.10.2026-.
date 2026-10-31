@@ -149,9 +149,32 @@ def extract_refs(text: str, rb: RuleBase) -> list[TextRef]:
     return out
 
 
+# утверждения о уже вынесенном наказании (без обещания в будущем времени): не блокируют сохранение, но дают предупреждение
+_PAST_PUNISHMENT_WARN = re.compile(
+    "|".join([
+        r"\b(?:уже\s+)?(?:забанен(?:[аоы])?|разбанен(?:[аоы])?|разблокирован(?:[аоы])?|наказан(?:[аоы])?)\b",
+        r"\b(?:игрок\w*|нарушител\w*|аккаунт\w*|персонаж\w*)(?:\s+\w+)?\s+(?:уже\s+|был\s+)?заблокирован(?:[аоы])?\b",
+        r"\bрешение\s+окончательн\w*\b",
+        r"\b(?:выдан\w*|назначен\w*|получил\w*)\s+(?:бан|блокировк\w*|мут|варн|warn|деморган)\b",
+        r"\b(?:бұғатталды|жазаланды)\b|\bшешім\s+түпкілікті\b",
+        r"\b(?:jazolandi|bloklandi|bandan\s+chiqarildi)\b|\bqaror\s+qat['\u2018\u2019`]?iy\b",
+        r"\b(?:already|has\s+been|was)\s+(?:banned|punished|blocked|unbanned|muted)\b|\bdecision\s+is\s+final\b",
+        r"\b(?:ya\s+fue|ha\s+sido)\s+(?:banead[oa]|sancionad[oa]|castigad[oa]|bloquead[oa])\b",
+        r"\b(?:j[aá]\s+foi|foi)\s+(?:banid[oa]|punid[oa]|bloquead[oa])\b",
+    ]),
+    re.IGNORECASE,
+)
+
+
 def find_promise(text: str) -> str | None:
     text = _norm(text)
     m = guard._PROMISE_RX.search(text) or _EXTRA_PROMISE.search(text)
+    return m.group(0) if m else None
+
+
+def find_past_punishment(text: str) -> str | None:
+    text = _norm(text)
+    m = _PAST_PUNISHMENT_WARN.search(text)
     return m.group(0) if m else None
 
 
@@ -174,6 +197,10 @@ def verify_text(text: str, rb: RuleBase, *, allow_placeholders: bool = False) ->
     if hit:
         v.violations.append(Violation(
             "promise", f"В тексте обещание разбана, возврата, компенсации или наказания: «{hit}»", hit))
+    past = find_past_punishment(text)
+    if past:
+        v.warnings.append(
+            f"В тексте утверждение о вынесенном наказании («{past}»): убедитесь, что оно действительно применено администратором")
     if not allow_placeholders and re.search(r"\{[a-z_]+\}", text):
         v.warnings.append("В тексте остались незаполненные поля вида {nick}")
     v.ok = not v.violations

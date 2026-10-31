@@ -16,7 +16,8 @@ from scipy.sparse import hstack
 
 from .features import model_text
 from .signals import Signals
-from .taxonomy import label_rules
+from .taxonomy import _KK_INSULT, label_rules
+from .textnorm import for_matching
 
 
 @dataclass
@@ -57,6 +58,8 @@ class CategoryModel:
             return CategoryResult(rules_cat, max(p if top == rules_cat else 0.0, 0.85), "rules", rules_cat)
         if rules_cat == "complaint.admin" and sig.topics & {"appeal", "admin_subject"}:
             return CategoryResult(rules_cat, max(p if top == rules_cat else 0.0, 0.8), "rules", rules_cat)
+        if rules_cat == "complaint.insult" and top in ("complaint.other", "complaint.invalid") and _KK_INSULT.search(for_matching(t.player_text)):
+            return CategoryResult(rules_cat, max(p if top == rules_cat else 0.0, 0.75), "rules", rules_cat)
         if sig.content_free:
             invalid = "complaint.invalid" if t.kind == "complaint" else "report.offtopic"
             return CategoryResult(invalid, 0.9, "rules", rules_cat)

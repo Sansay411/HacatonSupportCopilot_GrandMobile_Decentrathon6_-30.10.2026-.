@@ -224,6 +224,7 @@ def test_api_player_only_and_enqueue_format(tmp_path):
         "print(a, b, '_meta' in r, 'queue_id' in r)\n"
     )
     env = dict(os.environ, COPILOT_DATA=str(d), COPILOT_MODELS=str(tmp_path / "nomodels"),
-               COPILOT_FEEDBACK=str(tmp_path / "fb.jsonl"), PYTHONPATH=str(ROOT))
-    p = subprocess.run([sys.executable, "-c", script], capture_output=True, text=True, env=env, cwd=str(tmp_path))
+               COPILOT_FEEDBACK=str(tmp_path / "fb.jsonl"), PYTHONPATH=str(ROOT), PYTHONIOENCODING="utf-8")
+    p = subprocess.run([sys.executable, "-c", script], capture_output=True, text=True, env=env, cwd=str(tmp_path),
+                       encoding="utf-8", errors="replace")
     assert p.stdout.split() == ["422", "422", "False", "True"], p.stderr[-500:]

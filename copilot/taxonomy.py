@@ -96,6 +96,14 @@ _FALSE_ACCOUNT = re.compile(
 )
 
 
+# казахские слова оскорблений вне TOPICS (чтобы не менять признаки обученной модели без переобучения)
+_KK_INSULT = re.compile(
+    r"қорла\w*|балағат\w*|боқта\w*|тіл\s+тигіз\w*|намыс\w*\s+ти\w*"
+    r"|(?:отбас\w*|туыс\w*|ата-ана\w*|шеше\w*|ана\w*|әке\w*)\s+(?:қорла\w*|балағат\w*|боқта\w*|сөк\w*)",
+    re.I,
+)
+
+
 def label_rules(kind: str, sig: Signals, text: str, verdict: str | None = None,
                 violation: str | None = None, rule_base=None) -> str:
     t = for_matching(text)
@@ -114,6 +122,8 @@ def label_rules(kind: str, sig: Signals, text: str, verdict: str | None = None,
             return "complaint.admin"
         # пункт, который назвал сам игрок, если он согласуется с текстом
         topic_cats = [cat for topic, cat in _TOPIC_ORDER if topic in sig.topics]
+        if "complaint.insult" not in topic_cats and _KK_INSULT.search(t):
+            topic_cats.append("complaint.insult")
         ref_cats = [c for c in (ref_category(r) for r in sig.rule_refs) if c]
         for c in ref_cats:
             if not topic_cats or c in topic_cats:

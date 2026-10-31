@@ -158,7 +158,7 @@ class Signals:
     def has_evidence(self) -> bool:
         if self.has_url or self.images > 0:
             return True
-        return "evidence_word" in self.topics and "no_evidence_word" not in self.topics and not self.evidence_denied
+        return "evidence_word" in self.topics and not self.evidence_denied
 
 
 # Отрицание доказательств с вводными словами: «доказательств пока нет», «нет у меня видео», «скринов ещё нет». Список слов
@@ -170,11 +170,17 @@ _NO_EVIDENCE = re.compile("|".join([
     rf"\b(?:нет|нету|отсутствуют|отсутствует)\s+{_FILL}{_EV}",
     r"\bбез\s+(?:скрин\w*|видео|доказ\w*|запис\w*)",
     r"\bне\s+(?:успел\w*|смог\w*)\s+(?:заснять|записать|снять|сделать\s+скрин\w*)",
+    r"\b(?:д[әэ]лел\w*|бейне\w*|скрин\w*|видео\w*)\s+(?:(?:әзірге|әлі|эли|менде)\s+){0,2}жоқ\b",
+    r"\b(?:әзірге|әлі|эли)\s+(?:менде\s+)?(?:д[әэ]лел\w*|бейне\w*|скрин\w*|видео\w*)\s+жоқ\b",
+    r"\b(?:dalil\w*|skrin\w*|video\w*|isbot\w*)\s+(?:(?:hozircha|hali|menda)\s+){0,2}yo['\u2018\u2019`]?q\b",
+    r"\b(?:hozircha|hali)\s+(?:menda\s+)?(?:dalil\w*|skrin\w*|video\w*|isbot\w*)\s+yo['\u2018\u2019`]?q\b",
 ]), re.IGNORECASE)
 # Если рядом заявлено, что доказательства есть («видео нет, но скрины есть»), отрицание не применяется.
 _EVIDENCE_CLAIMED = re.compile(
     rf"\b{_EV}\s+(?:\w+\s+)?(?:есть|имеются|имеется|приложен\w*|прикреплен\w*|достаточно|хватает)\b"
-    rf"|\b(?:есть|имеются|приложил\w*|прикрепил\w*|прилагаю|прикладываю)\s+(?:\w+\s+)?{_EV}", re.IGNORECASE)
+    rf"|\b(?:есть|имеются|приложил\w*|прикрепил\w*|прилагаю|прикладываю)\s+(?:\w+\s+)?{_EV}"
+    r"|\b(?:д[әэ]лел\w*|бейне\w*|скрин\w*|видео\w*)\s+бар\b"
+    r"|\b(?:dalil\w*|skrin\w*|video\w*|isbot\w*)\s+bor\b", re.IGNORECASE)
 
 _NICK = re.compile(r"\b([A-Z][a-z]{1,15}_[A-Z][a-zA-Z]{1,20}\d{0,4})\b")
 # ID игрока из текста репорта. Этот разбор попадает в признаки обученной модели (флаг __pid), поэтому его не меняем без

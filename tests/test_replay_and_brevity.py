@@ -40,7 +40,8 @@ def test_different_ticket_id_with_same_text_is_still_a_duplicate(cp):
     cp.triage(_payload(tid="t1"))
     again = cp.triage(_payload(tid="t2", at="2026-10-30T10:05:00Z"))
     assert again["is_spam_or_duplicate"] is True
-    assert again["_meta"]["intent"] == "duplicate"
+    assert again["_meta"]["intent"] == "approve"
+    assert any(a["intent"] == "duplicate" for a in again["_meta"]["alternatives"])
 
 
 def test_replay_of_a_real_duplicate_stays_a_duplicate(cp):

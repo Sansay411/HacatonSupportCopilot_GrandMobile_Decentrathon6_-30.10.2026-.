@@ -59,6 +59,7 @@ def clean(text: str | None, region: str | None = None) -> str:
 
 def for_matching(text: str) -> str:
     """Форма для регулярок и классификатора: нижний регистр, ё→е, без растяжек."""
-    t = _INVISIBLE.sub("", text).lower().replace("ё", "е")
+    t = _INVISIBLE.sub("", text)
+    t = fix_cp1251_kazakh(t).lower().replace("ё", "е")
     t = _REPEAT.sub(r"\1\1", t)
     return t

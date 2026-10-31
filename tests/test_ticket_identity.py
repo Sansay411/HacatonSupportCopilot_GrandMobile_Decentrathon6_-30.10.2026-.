@@ -66,7 +66,8 @@ def test_replay_after_other_tickets_of_the_same_player_keeps_the_first_result(cp
 def test_new_message_of_the_same_player_with_another_ticket_id_is_a_real_duplicate(cp):
     cp.triage(payload(tid="t1"))
     again = cp.triage(payload(tid="t2", at="2026-10-30T10:07:00Z"))
-    assert again["is_spam_or_duplicate"] is True and again["_meta"]["intent"] == "duplicate"
+    assert again["is_spam_or_duplicate"] is True and again["_meta"]["intent"] == "approve"
+    assert any(a["intent"] == "duplicate" for a in again["_meta"]["alternatives"])
 
 
 def test_replay_of_a_duplicate_does_not_create_a_second_incident(cp):

@@ -70,9 +70,17 @@ _ASKS_HOW_OR_WHERE = re.compile(
     r"|\bчто\W+(?:такое|значит|означает)\b"
     r"|\bqayer\w*|\bqanday\b|қайда|қалай|\bwhere\b|\bhow\s+(?:do|can|to)\b", re.I)
 
+_INJECTION_GUARD = re.compile(
+    r"\bsystem\s*:|\b(?:забудь|игнорируй|отмени|обойди)\s+(?:все\s+|предыдущие\s+|свои\s+)?(?:правила|инструкци\w*)"
+    r"|\bignore\s+(?:all\s+)?(?:previous|prior|above)\s+(?:instructions|rules|prompts)",
+    re.I,
+)
+
 
 def lookup(text: str, lang: str) -> tuple[str, KBEntry] | None:
     t = for_matching(text)
+    if _INJECTION_GUARD.search(t):
+        return None
     if not _ASKS_HOW_OR_WHERE.search(t):
         return None
     for e in KB:
