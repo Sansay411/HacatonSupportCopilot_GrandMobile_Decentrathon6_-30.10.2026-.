@@ -11,3 +11,11 @@ reports/private/
 var/
 # сводки шаблонов содержат формулировки ответов админов из выдачи: создаются локально (make suggest-templates)
 reports/template_suggestions_summary.*
+# демо-видео: тяжёлые рабочие файлы остаются локально, в репозитории только скрипты, тексты и итоговый ролик в docs/demo
+demo_video/work/
+demo_video/raw/
+demo_video/final/
+demo_video/voice/
+demo_video/WEAKNESSES.md
+demo_video/scripts/audit_checks.py
+.claude/

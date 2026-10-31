@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Sentra by LGTM: карточки видео</title>
+<!-- Плашки, титульные карточки частей и слайды защиты. Один кадр выбирается хэшем: #plaques-3, #sec-2, #s-4.
+     Палитра и шрифт те же, что в интерфейсе Sentra (admin_ui/sentra.css). Цифры только из README.md / REPORT.md проекта. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap&subset=cyrillic">
+<style>
+  :root { --s0:#080A0A; --s1:#0C0F0E; --s2:#111514; --line:#2B3331; --t1:#EDF3F1; --t2:#A5B2AE; --t3:#76847F; --signal:#2FD9B5; --warm:#FFA24A; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; height:100%; background:var(--s1); }
+  body { width:1920px; height:1080px; overflow:hidden; position:relative;
+    font-family:'Onest','Segoe UI Variable','Segoe UI',system-ui,sans-serif; color:var(--t1); }
+  .card { display:none; position:absolute; inset:0; }
+  .card.on { display:block; }
+  .mono { font-family:'JetBrains Mono',Consolas,monospace; }
+
+  /* плашки */
+  #plaques { padding:120px 140px; background:radial-gradient(900px 520px at 50% 0%, rgba(47,217,181,.06), transparent 70%), var(--s1); }
+  #plaques h1 { margin:0 0 64px; font-size:76px; font-weight:600; letter-spacing:-.01em; }
+  #plaques .grid { display:grid; grid-template-columns:1fr 1fr; gap:28px; }
+  .plaque { background:var(--s2); border:1px solid var(--line); border-radius:14px; padding:40px 44px; height:288px; visibility:hidden; }
+  .plaque.show { visibility:visible; }
+  .plaque .n { font-size:24px; color:var(--signal); letter-spacing:.06em; }
+  .plaque h2 { margin:18px 0 14px; font-size:48px; font-weight:600; letter-spacing:-.005em; }
+  .plaque p { margin:0; font-size:29px; line-height:1.4; color:var(--t2); }
+
+  /* карточки частей */
+  .sec { background:var(--s0); }
+  .sec .in { position:absolute; left:200px; top:50%; transform:translateY(-54%); }
+  .sec .num { font-size:30px; color:var(--signal); letter-spacing:.14em; }
+  .sec h1 { margin:26px 0 22px; font-size:104px; line-height:1.04; font-weight:600; letter-spacing:-.015em; max-width:1500px; }
+  .sec .sub { font-size:36px; color:var(--t2); }
+  .sec .bar { width:96px; height:4px; background:var(--signal); border-radius:2px; margin-bottom:44px; }
+
+  /* слайды */
+  .slide { padding:110px 140px 0; background:var(--s1); }
+  .slide .eyebrow { font-size:24px; color:var(--signal); letter-spacing:.14em; }
+  .slide h1 { margin:26px 0 0; font-size:84px; line-height:1.08; font-weight:600; letter-spacing:-.015em; max-width:1560px; }
+  .slide .lead { margin-top:26px; font-size:34px; line-height:1.4; color:var(--t2); max-width:1400px; }
+  .foot { position:absolute; left:140px; right:140px; bottom:56px; display:flex; justify-content:space-between; font-size:22px; color:var(--t3); }
+  .foot b { color:var(--t2); font-weight:500; }
+
+  .four { display:grid; grid-template-columns:repeat(4, 1fr); gap:24px; margin-top:80px; }
+  .cell { border-top:2px solid var(--line); padding-top:26px; }
+  .cell .big { font-size:46px; font-weight:600; line-height:1.15; }
+  .cell p { margin:14px 0 0; font-size:28px; line-height:1.4; color:var(--t2); }
+
+  .flow { display:flex; align-items:stretch; gap:0; margin-top:84px; }
+  .step { flex:1; background:var(--s2); border:1px solid var(--line); padding:30px 26px 30px; position:relative; min-height:250px; }
+  .step + .step { margin-left:34px; }
+  .step + .step::before { content:''; position:absolute; left:-34px; top:50%; width:34px; height:2px; background:var(--line); }
+  .step .tag { font-size:20px; letter-spacing:.1em; color:var(--t3); }
+  .step .tag.code { color:var(--signal); }
+  .step h3 { margin:18px 0 10px; font-size:34px; line-height:1.2; font-weight:600; }
+  .step p { margin:0; font-size:24px; line-height:1.4; color:var(--t2); }
+  .step.key { border-color:var(--signal); background:rgba(47,217,181,.06); }
+
+  .cols { display:grid; grid-template-columns:repeat(4, 1fr); gap:24px; margin-top:80px; }
+  .col h3 { margin:0 0 20px; font-size:22px; letter-spacing:.14em; color:var(--t3); font-weight:500; }
+  .col li { list-style:none; font-size:34px; line-height:1.3; padding:12px 0; border-top:1px solid var(--line); }
+  .col ul { margin:0; padding:0; }
+
+  .nums { display:grid; grid-template-columns:repeat(4, 1fr); gap:24px; margin-top:76px; }
+  .nums .v { font-size:112px; line-height:1; font-weight:600; letter-spacing:-.02em; color:var(--signal); white-space:nowrap; }
+  .nums .v small { font-size:48px; color:var(--t2); font-weight:500; }
+  .nums p { margin:18px 0 0; font-size:28px; line-height:1.4; color:var(--t2); }
+  .note { margin-top:64px; padding-top:28px; border-top:1px solid var(--line); font-size:28px; line-height:1.45; color:var(--t3); max-width:1500px; }
+
+  .lim { margin-top:64px; display:grid; grid-template-columns:1fr 1fr; gap:0 64px; }
+  .lim div { padding:26px 0; border-top:1px solid var(--line); font-size:31px; line-height:1.4; color:var(--t2); }
+  .lim div b { display:block; color:var(--warm); font-size:21px; letter-spacing:.14em; font-weight:500; margin-bottom:10px; }
+
+  .ready { margin-top:70px; display:grid; grid-template-columns:1fr 1fr; gap:0 64px; }
+  .ready div { padding:26px 0; border-top:1px solid var(--line); font-size:32px; line-height:1.4; color:var(--t2); }
+  .ready code { font-family:'JetBrains Mono',Consolas,monospace; color:var(--signal); font-size:30px; }
+</style>
+</head>
+<body>
+
+<section class="card" id="plaques" data-id="plaques">
+  <h1>Что умеет Sentra</h1>
+  <div class="grid">
+    <div class="plaque"><div class="n mono">01</div><h2>Разбор обращения</h2><p>Язык, категория, приоритет, факты и дубли за несколько миллисекунд</p></div>
+    <div class="plaque"><div class="n mono">02</div><h2>Пункты правил из кода</h2><p>Цитируются только пункты, которые есть в rules.json. Выдуманных нет</p></div>
+    <div class="plaque"><div class="n mono">03</div><h2>Проверка текста</h2><p>Блок несуществующих пунктов и обещаний. Предупреждение об утверждениях о наказании</p></div>
+    <div class="plaque"><div class="n mono">04</div><h2>Решает человек</h2><p>Sentra готовит черновик, модератор правит и утверждает. История сохраняется</p></div>
+  </div>
+</section>
+
+<section class="card sec" data-id="sec-2"><div class="in"><div class="bar"></div><div class="num mono">ЧАСТЬ 1</div><h1>Разбор настоящего обращения</h1><div class="sub">Категория, приоритет, пункты правил и черновик</div></div></section>
+<section class="card sec" data-id="sec-3"><div class="in"><div class="bar"></div><div class="num mono">ЧАСТЬ 2</div><h1>Защита от выдуманного</h1><div class="sub">Проверка текста: несуществующие пункты и обещания</div></div></section>
+<section class="card sec" data-id="sec-7"><div class="in"><div class="bar"></div><div class="num mono">ЧАСТЬ 3</div><h1>Язык игрока</h1><div class="sub">Обращение на казахском: язык, категория и ответ</div></div></section>
+<section class="card sec" data-id="sec-4"><div class="in"><div class="bar"></div><div class="num mono">ЧАСТЬ 4</div><h1>Обязательная эскалация</h1><div class="sub">Случаи, где ответ без человека недопустим</div></div></section>
+<section class="card sec" data-id="sec-5"><div class="in"><div class="bar"></div><div class="num mono">ЧАСТЬ 5</div><h1>Рабочее место модератора</h1><div class="sub">Правка, утверждение и история решений</div></div></section>
+<section class="card sec" data-id="sec-6"><div class="in"><div class="bar"></div><div class="num mono">ДАЛЬШЕ</div><h1>Как это устроено</h1><div class="sub">Задача, идея, стек, результаты и ограничения</div></div></section>
+
+<section class="card slide" data-id="s-1">
+  <div class="eyebrow mono">01 / ЗАДАЧА</div>
+  <h1>Каждое обращение игрока нужно прочитать, разобрать и ответить по правилам</h1>
+  <div class="four">
+    <div class="cell"><div class="big">Язык игрока</div><p>Русский, узбекский, казахский, английский</p></div>
+    <div class="cell"><div class="big">Только реальные пункты</div><p>Ссылки на правила Grand Mobile, без выдуманных номеров</p></div>
+    <div class="cell"><div class="big">Без обещаний</div><p>Ни разбана, ни возврата, ни наказания без решения админа</p></div>
+    <div class="cell"><div class="big">Спорное человеку</div><p>Сложные и опасные случаи уходят модератору</p></div>
+  </div>
+  <div class="foot"><b>Sentra by LGTM</b><span class="mono">Decentrathon 6.0 · кейс Grand Mobile</span></div>
+</section>
+
+<section class="card slide" data-id="s-2">
+  <div class="eyebrow mono">02 / ИДЕЯ</div>
+  <h1>Пункты правил выбирает код, а не модель</h1>
+  <div class="flow">
+    <div class="step"><div class="tag mono code">КОД</div><h3>Обращение</h3><p>Язык, ID игрока, ссылки, вложения, факты</p></div>
+    <div class="step"><div class="tag mono">МОДЕЛЬ</div><h3>Категория и приоритет</h3><p>Классические модели scikit-learn, на CPU</p></div>
+    <div class="step key"><div class="tag mono code">КОД</div><h3>Пункты из rules.json</h3><p>Только существующие номера</p></div>
+    <div class="step"><div class="tag mono code">КОД</div><h3>Черновик и проверка</h3><p>Шаблон на языке игрока, блок обещаний</p></div>
+    <div class="step"><div class="tag mono code">ЧЕЛОВЕК</div><h3>Модератор</h3><p>Правит, утверждает, решение записывается</p></div>
+  </div>
+  <div class="foot"><b>Sentra by LGTM</b><span class="mono">2 / 7</span></div>
+</section>
+
+<section class="card slide" data-id="s-3">
+  <div class="eyebrow mono">03 / СТЕК</div>
+  <h1>Работает локально и не отправляет данные во внешние сервисы</h1>
+  <div class="cols">
+    <div class="col"><h3 class="mono">СЕРВЕР</h3><ul><li>Python 3.10+</li><li>FastAPI</li><li>SQLite</li></ul></div>
+    <div class="col"><h3 class="mono">РАЗБОР</h3><ul><li>scikit-learn</li><li>Правила и выражения</li><li>266 пунктов правил</li></ul></div>
+    <div class="col"><h3 class="mono">ИНТЕРФЕЙС</h3><ul><li>HTML и JavaScript</li><li>Без сборки и фреймворков</li><li>Командный центр</li></ul></div>
+    <div class="col"><h3 class="mono">РЕЖИМ</h3><ul><li>Только CPU</li><li>$0 за обращение</li><li>LLM выключена</li></ul></div>
+  </div>
+  <div class="foot"><b>Sentra by LGTM</b><span class="mono">3 / 7</span></div>
+</section>
+
+<section class="card slide" data-id="s-4">
+  <div class="eyebrow mono">04 / РЕЗУЛЬТАТЫ НА ВАЛИДАЦИИ, 1000 ОБРАЩЕНИЙ</div>
+  <h1>Проверяем то, что можно проверить кодом</h1>
+  <div class="nums">
+    <div><div class="v">0<small> из 1200+</small></div><p>цитат несуществующих пунктов правил</p></div>
+    <div><div class="v">7<small> мс</small></div><p>p95 по HTTP, на CPU, без LLM</p></div>
+    <div><div class="v">$0</div><p>стоимость одного обращения</p></div>
+    <div><div class="v">0,82</div><p>accuracy категории на новых текстах, macro-F1 0,72</p></div>
+  </div>
+  <div class="note">На всех 1000 текстах accuracy около 0,87, но 373 из них повторяют обучающую выборку. Категории мы разметили сами по taxonomy.json, официальной разметки в данных нет, поэтому цифры по категории ориентировочные.</div>
+  <div class="foot"><b>Sentra by LGTM</b><span class="mono">4 / 7</span></div>
+</section>
+
+<section class="card slide" data-id="s-5">
+  <div class="eyebrow mono">05 / ЧЕСТНЫЕ ОГРАНИЧЕНИЯ</div>
+  <h1>Что мы нашли сами и не стали скрывать</h1>
+  <div class="lim">
+    <div><b class="mono">LLM</b>Qwen3.5-4B проверена и не включена: p95 14,7 с при лимите 5 с</div>
+    <div><b class="mono">РАЗМЕТКА</b>Категории размечены нами, не организаторами. Это оценка, не официальный результат</div>
+    <div><b class="mono">ДУБЛИ</b>Повтор того же заявителя за час находим. Точность на данных кейса не измерена: исходных жалоб в валидации нет</div>
+    <div><b class="mono">КАЗАХСКИЙ</b>В валидации всего 9 ответов на казахском, оценка ненадёжна. Уверенность ниже, решение у человека</div>
+  </div>
+  <div class="foot"><b>Sentra by LGTM</b><span class="mono">5 / 7</span></div>
+</section>
+
+<section class="card slide" data-id="s-6">
+  <div class="eyebrow mono">06 / РОЛЬ ЧЕЛОВЕКА</div>
+  <h1>Sentra готовит, человек решает</h1>
+  <div class="four">
+    <div class="cell"><div class="big">~91 %</div><p>обращений помечены «нужен человек»</p></div>
+    <div class="cell"><div class="big">Черновик</div><p>игроку ничего не уходит без утверждения модератора</p></div>
+    <div class="cell"><div class="big">Правка</div><p>текст можно изменить, проверка запускается заново</p></div>
+    <div class="cell"><div class="big">История</div><p>каждое решение остаётся в журнале обращения</p></div>
+  </div>
+  <div class="foot"><b>Sentra by LGTM</b><span class="mono">6 / 7</span></div>
+</section>
+
+<section class="card slide" data-id="s-7">
+  <div class="eyebrow mono">07 / ГОТОВЫЙ MVP</div>
+  <h1>Рабочий продукт, а не макет</h1>
+  <div class="ready">
+    <div>Запуск: <code>python scripts/serve.py</code>. Пакетно: <code>make predict</code></div>
+    <div>Обращения, статусы и история хранятся в SQLite</div>
+    <div>652 теста проходят, включая сквозные в браузере</div>
+    <div>Данные кейса в репозиторий не входят</div>
+  </div>
+  <div class="foot"><b>Sentra by LGTM</b><span class="mono">7 / 7</span></div>
+</section>
+
+<script>
+  const hash = location.hash.slice(1);
+  let id = hash, n = 0;
+  if (hash.startsWith('plaques-')) { id = 'plaques'; n = parseInt(hash.split('-')[1], 10); }
+  const el = document.querySelector('[data-id="' + id + '"]');
+  if (el) el.classList.add('on');
+  document.querySelectorAll('#plaques .plaque').forEach((p, i) => { if (i < n) p.classList.add('show'); });
+</script>
+</body>
+</html>
