@@ -76,6 +76,10 @@ def outcome_category(violation: str | None, rule_base) -> str | None:
     return None
 
 
+# явный взлом: слово «верните» из stuck-признака рядом с ним не превращает репорт в просьбу о помощи
+_HIJACK = re.compile(r"взлом|украл\w*\s+(?:мо\w+\s+)?(?:акк|машин|дом|деньг|бизнес|имущ)|(?:зашел|зашёл|залез|вошел|вошёл|влез|заходил|зашли|вошли)\s+(?:\w+\s+){0,2}?(?:в|на)\s+(?:мо\w+\s+)?(?:аккаунт|акк\b)")
+
+
 def label_rules(kind: str, sig: Signals, text: str, verdict: str | None = None,
                 violation: str | None = None, rule_base=None) -> str:
     t = text.lower()
@@ -113,7 +117,7 @@ def label_rules(kind: str, sig: Signals, text: str, verdict: str | None = None,
     # report
     if "payment" in sig.topics:
         return "report.payment"
-    if "account" in sig.topics and not ("stuck" in sig.topics and "взлом" not in t):
+    if "account" in sig.topics and not ("stuck" in sig.topics and not _HIJACK.search(t)):
         return "report.account"
     if "threat_irl" in sig.topics:
         return "report.complaint"

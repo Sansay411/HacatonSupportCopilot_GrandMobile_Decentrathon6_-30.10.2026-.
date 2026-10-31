@@ -1,0 +1,20 @@
+{
+  "category_changed": 0,
+  "priority_changed": 0,
+  "needs_human_changed": {
+    "False->True": 3
+  },
+  "text_changed": 361,
+  "intent_transitions": {
+    "appeal_reject->appeal": 161,
+    "need_evidence->appeal": 2,
+    "clarify->help_ack": 2,
+    "admin_complaint->appeal": 1,
+    "report_watch->help_ack": 1,
+    "question_unknown->report_rp": 1,
+    "question_unknown->report_watch": 1,
+    "question_howto->question_unknown": 1,
+    "report_need_id->report_watch": 1,
+    "question_unknown->help_ack": 1
+  }
+}

@@ -424,7 +424,7 @@ def test_17_selfcheck_runs_real_probes(pg, srv):
     expect(p.locator("#view")).to_contain_text("Оффлайн-валидация")
     expect(p.locator("#view")).to_contain_text("не гарантирует")
     p.click("#run-selfcheck")
-    expect(p.locator("#view")).to_contain_text("Пройдено 11 из 11")
+    expect(p.locator("#view")).to_contain_text("Пройдено 13 из 13")
     assert p.locator(".probe.bad").count() == 0
     live = srv.get("/stats")["live_citation_check"]
     assert live["failed"] == 0 and live["checked"] == srv.get("/stats")["tickets"]["total"]

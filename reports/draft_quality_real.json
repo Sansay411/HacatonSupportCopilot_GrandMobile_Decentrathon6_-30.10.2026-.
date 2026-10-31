@@ -1,0 +1,29 @@
+{
+ "mode": "real",
+ "tickets": 1000,
+ "tickets_with_any_problem": 0,
+ "problems": {},
+ "problem_rate": 0.0,
+ "needs_human_share": 0.912,
+ "by_group": {},
+ "groups_total": {
+  "cat:complaint.admin": 177,
+  "cat:complaint.cheat": 32,
+  "cat:complaint.dm": 169,
+  "cat:complaint.insult": 287,
+  "cat:complaint.invalid": 39,
+  "cat:complaint.other": 84,
+  "cat:complaint.rmt_ads": 3,
+  "cat:complaint.scam": 26,
+  "cat:report.complaint": 42,
+  "cat:report.help": 31,
+  "cat:report.offtopic": 88,
+  "cat:report.question": 22,
+  "lang:en": 4,
+  "lang:kk": 8,
+  "lang:ru": 856,
+  "lang:uz": 132,
+  "server:kk": 8,
+  "server:uz": 133
+ }
+}

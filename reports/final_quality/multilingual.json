@@ -1,0 +1,194 @@
+{
+  "note": "автоопределение языка и чистота алфавита это флаги; естественность перевода не доказана и требует носителя",
+  "template_coverage": {
+    "ru": {
+      "keys": 34,
+      "missing_vs_ru": [],
+      "extra_vs_ru": []
+    },
+    "kk": {
+      "keys": 34,
+      "missing_vs_ru": [],
+      "extra_vs_ru": []
+    },
+    "uz": {
+      "keys": 34,
+      "missing_vs_ru": [],
+      "extra_vs_ru": []
+    },
+    "en": {
+      "keys": 34,
+      "missing_vs_ru": [],
+      "extra_vs_ru": []
+    },
+    "es": {
+      "keys": 34,
+      "missing_vs_ru": [],
+      "extra_vs_ru": []
+    },
+    "pt": {
+      "keys": 34,
+      "missing_vs_ru": [],
+      "extra_vs_ru": []
+    }
+  },
+  "baseline_templates_valid": {
+    "purity_by_reply_lang": {
+      "en": {
+        "n": 4,
+        "flagged": 0,
+        "flagged_share": 0.0,
+        "flags": {}
+      },
+      "kk": {
+        "n": 8,
+        "flagged": 0,
+        "flagged_share": 0.0,
+        "flags": {}
+      },
+      "ru": {
+        "n": 856,
+        "flagged": 21,
+        "flagged_share": 0.025,
+        "flags": {
+          "ru_latin_mix": 21
+        }
+      },
+      "uz": {
+        "n": 132,
+        "flagged": 0,
+        "flagged_share": 0.0,
+        "flags": {}
+      }
+    },
+    "player_lang_to_reply_lang": {
+      "en->en": 4,
+      "kk->kk": 8,
+      "ru->ru": 826,
+      "und->ru": 30,
+      "und->uz": 1,
+      "uz->uz": 131
+    },
+    "intents_by_reply_lang": {
+      "ru": {
+        "approve": 309,
+        "need_evidence": 171,
+        "appeal_reject": 147,
+        "no_description": 35,
+        "not_complaint": 9,
+        "toxic": 8,
+        "admin_complaint": 10,
+        "duplicate": 1,
+        "help_ack": 33,
+        "offtopic_flood": 7,
+        "question_unknown": 17,
+        "help_generic": 13,
+        "help_vehicle": 14,
+        "clarify": 21,
+        "report_watch": 27,
+        "help_service": 4,
+        "report_need_id": 12,
+        "report_rp": 2,
+        "question_kb": 1,
+        "event_tp": 10,
+        "report_appeal": 2,
+        "question_howto": 2,
+        "question_tech": 1
+      },
+      "uz": {
+        "need_evidence": 83,
+        "not_complaint": 2,
+        "appeal_reject": 12,
+        "approve": 14,
+        "admin_complaint": 6,
+        "help_ack": 14,
+        "duplicate": 1
+      },
+      "kk": {
+        "appeal_reject": 2,
+        "need_evidence": 3,
+        "approve": 2,
+        "duplicate": 1
+      },
+      "en": {
+        "need_evidence": 1,
+        "help_ack": 3
+      }
+    }
+  },
+  "compare_sample": {
+    "A": {
+      "kk": {
+        "n": 8,
+        "flagged": 0,
+        "flagged_share": 0.0,
+        "flags": {}
+      },
+      "ru": {
+        "n": 97,
+        "flagged": 11,
+        "flagged_share": 0.113,
+        "flags": {
+          "ru_latin_mix": 11
+        }
+      },
+      "uz": {
+        "n": 45,
+        "flagged": 0,
+        "flagged_share": 0.0,
+        "flags": {}
+      }
+    },
+    "B_final_used": {
+      "kk": {
+        "n": 4,
+        "flagged": 0,
+        "flagged_share": 0.0,
+        "flags": {}
+      },
+      "ru": {
+        "n": 95,
+        "flagged": 2,
+        "flagged_share": 0.021,
+        "flags": {
+          "ru_latin_mix": 2
+        }
+      },
+      "uz": {
+        "n": 38,
+        "flagged": 36,
+        "flagged_share": 0.947,
+        "flags": {
+          "uz_cyrillic_mix": 36
+        }
+      }
+    },
+    "B_raw_all_generations": {
+      "kk": {
+        "n": 8,
+        "flagged": 3,
+        "flagged_share": 0.375,
+        "flags": {
+          "kk_russian_function_words": 3
+        }
+      },
+      "ru": {
+        "n": 97,
+        "flagged": 4,
+        "flagged_share": 0.041,
+        "flags": {
+          "ru_latin_mix": 4
+        }
+      },
+      "uz": {
+        "n": 45,
+        "flagged": 43,
+        "flagged_share": 0.956,
+        "flags": {
+          "uz_cyrillic_mix": 43,
+          "detect_ru": 3
+        }
+      }
+    }
+  }
+}

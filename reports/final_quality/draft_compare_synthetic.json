@@ -1,0 +1,186 @@
+{
+  "title": "synthetic n=48",
+  "n": 48,
+  "status_B": {
+    "ok": 23,
+    "skipped": 19,
+    "rejected": 6
+  },
+  "b_text_used_share": 0.479,
+  "needs_human_equal": 48,
+  "needs_human_changed_ids": [],
+  "category_equal": 48,
+  "cited_equal": 48,
+  "final_invariant_failures": {
+    "A": {},
+    "B_final": {}
+  },
+  "raw_qwen_invariant_failures_before_guard": {
+    "n_raw": 29,
+    "ref_not_in_rules": 1,
+    "lang_detected": 1
+  },
+  "reject_reasons": {
+    "вид наказания не из черновика: бан": 2,
+    "в тексте черновика пункт «N.N.N-bandi» отсутствует в rules.j": 2,
+    "Пункта «N.N.N-bandi» нет в rules.json": 2,
+    "ник не из фактов: Test_Nick.": 1,
+    "пункт N.N не из списка": 1,
+    "число N отсутствует в черновике": 1,
+    "в тексте черновика пункт «пункта N.N. Согласно» отсутствует ": 1,
+    "в тексте черновика пункт «пункт N.N.N требует» отсутствует в": 1,
+    "Пункта «пункта N.N. Согласно» нет в rules.json": 1,
+    "Пункта «пункт N.N.N требует» нет в rules.json": 1,
+    "язык ru вместо uz": 1
+  },
+  "latency_ms_end_to_end": {
+    "A": {
+      "p50": 0.608,
+      "p95": 1.506,
+      "p99": 3.028
+    },
+    "B": {
+      "p50": 4213.972,
+      "p95": 11287.054,
+      "p99": 12931.707,
+      "max": 13405.1
+    }
+  },
+  "qwen_generation": {
+    "seconds_p50": 8.234,
+    "seconds_p95": 11.98,
+    "seconds_mean": 7.733,
+    "tokens_out_mean": 86.5,
+    "tokens_per_second": 11.19
+  },
+  "text_length_chars": {
+    "A_mean": 237.4,
+    "B_mean": 250.8
+  },
+  "completeness_proxy": {
+    "A": {
+      "cite_coverage": 1.0,
+      "scenario_marker": 1.0
+    },
+    "B_final": {
+      "cite_coverage": 0.897,
+      "scenario_marker": 0.897
+    }
+  },
+  "by_lang": {
+    "ru": {
+      "n": 28,
+      "b_text_used": 12,
+      "b_used_share": 0.429,
+      "rejected": 4,
+      "errors": 0,
+      "lang_detect_mismatch_B_final": 0,
+      "lang_detect_mismatch_A": 0,
+      "gen_seconds_p95": 10.832
+    },
+    "uz": {
+      "n": 8,
+      "b_text_used": 3,
+      "b_used_share": 0.375,
+      "rejected": 2,
+      "errors": 0,
+      "lang_detect_mismatch_B_final": 0,
+      "lang_detect_mismatch_A": 0,
+      "gen_seconds_p95": 12.012
+    },
+    "kk": {
+      "n": 8,
+      "b_text_used": 6,
+      "b_used_share": 0.75,
+      "rejected": 0,
+      "errors": 0,
+      "lang_detect_mismatch_B_final": 0,
+      "lang_detect_mismatch_A": 0,
+      "gen_seconds_p95": 12.89
+    },
+    "en": {
+      "n": 4,
+      "b_text_used": 2,
+      "b_used_share": 0.5,
+      "rejected": 0,
+      "errors": 0,
+      "lang_detect_mismatch_B_final": 0,
+      "lang_detect_mismatch_A": 0,
+      "gen_seconds_p95": 4.372
+    }
+  },
+  "by_intent": {
+    "approve": {
+      "n": 7,
+      "b_used": 6
+    },
+    "need_evidence": {
+      "n": 8,
+      "b_used": 5
+    },
+    "not_complaint": {
+      "n": 3,
+      "b_used": 0
+    },
+    "no_description": {
+      "n": 1,
+      "b_used": 0
+    },
+    "appeal_reject": {
+      "n": 4,
+      "b_used": 3
+    },
+    "report_watch": {
+      "n": 3,
+      "b_used": 3
+    },
+    "help_vehicle": {
+      "n": 1,
+      "b_used": 0
+    },
+    "payment": {
+      "n": 4,
+      "b_used": 0
+    },
+    "account": {
+      "n": 4,
+      "b_used": 0
+    },
+    "threat": {
+      "n": 2,
+      "b_used": 0
+    },
+    "event_tp": {
+      "n": 1,
+      "b_used": 0
+    },
+    "question_unknown": {
+      "n": 5,
+      "b_used": 4
+    },
+    "help_ack": {
+      "n": 1,
+      "b_used": 0
+    },
+    "clarify": {
+      "n": 2,
+      "b_used": 2
+    },
+    "report_appeal": {
+      "n": 2,
+      "b_used": 0
+    }
+  },
+  "config": {
+    "model": "Qwen/Qwen3.5-4B",
+    "quant": "nf4",
+    "max_new_tokens": 200,
+    "decoding": "greedy",
+    "repetition_penalty": 1.05,
+    "thinking": false,
+    "load_seconds": 17.6,
+    "vram_peak_gb": 3.39,
+    "torch": "2.6.0+cu124",
+    "seed_sample": 20261031
+  }
+}

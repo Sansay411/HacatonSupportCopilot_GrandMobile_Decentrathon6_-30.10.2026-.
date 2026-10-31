@@ -109,7 +109,7 @@ T = {
         "need_evidence": "Спасибо за жалобу. Чтобы проверить нарушение{what}, нужна видеозапись с моментом нарушения, "
                          "на которой виден ник игрока: жалоба должна содержать полные доказательства ({cite_req}). "
                          "Видео загрузите на YouTube, imgur, Rutube, Яндекс Диск или Google Диск ({cite_platform}) и подайте новую жалобу.",
-        "what": " {title_lc}",
+        "what": " ({title})",
         "no_description": "Жалоба не может быть рассмотрена: в ней нет точного и логичного описания произошедшего ({cite}). "
                           "Опишите, что случилось, где и когда, укажите ник нарушителя и приложите доказательства, затем подайте новую жалобу.",
         "not_complaint": "Раздел жалоб не предназначен для вопросов, общения и технических проблем ({cite}). "
@@ -118,12 +118,12 @@ T = {
                  "Подайте новую жалобу со спокойным описанием ситуации и доказательствами.",
         "duplicate": "Эта жалоба повторяет ранее поданную, поэтому рассматриваться не будет ({cite}). "
                      "Дождитесь решения по первой жалобе.",
-        "appeal": "Ваше обращение по выданному наказанию принято и передано старшей администрации: решение о снятии "
-                  "или изменении наказания принимает только она. Если ещё не приложили, добавьте скриншот наказания и "
+        "appeal": "Ваше обращение по выданному наказанию принято: решение о снятии "
+                  "или изменении наказания принимает только старшая администрация. Если ещё не приложили, добавьте скриншот наказания и "
                   "видео, подтверждающее вашу позицию ({cite_req}). Обжаловать наказание можно в течение 48 часов ({cite_time}).",
-        "admin_complaint": "Жалоба на действия администратора принята и передана старшей администрации на проверку. "
+        "admin_complaint": "Жалоба на действия администратора принята: её проверяет старшая администрация. "
                            "Для рассмотрения нужны доказательства: видео или скриншоты с моментом нарушения ({cite_req}).",
-        "report_watch": "Передал администратору, он проследит за игроком{pid_part}. Если есть видео нарушения, оформите жалобу "
+        "report_watch": "Администратор проверит ситуацию и проследит за игроком{pid_part}. Если есть видео нарушения, оформите жалобу "
                         "в лаунчере: по жалобе с доказательствами нарушителя можно наказать.",
         "pid_part": " [{pid}]",
         "report_need_id": "Укажите ID нарушителя и что он нарушает, администратор проследит. Если есть видео, "
@@ -143,11 +143,11 @@ T = {
         "event_tp": "Телепорт на мероприятие сейчас закрыт или мероприятие не проводится. Следите за объявлениями администрации в чате.",
         "offtopic_flood": "Репорт предназначен для обращений к администрации. За оффтоп и флуд в репорт может последовать мут репорта ({cite}).",
         "account": "Вопросы доступа к аккаунту, взлома и пропажи имущества администрация в игре не решает. Обратитесь в "
-                   "техническую поддержку: {support}. Ваше обращение также передано администратору. Напоминаем: по {cite} "
+                   "техническую поддержку: {support}. Обращение также рассмотрит администратор. Напоминаем: по {cite} "
                    "игрок сам отвечает за сохранность аккаунта и имущества.",
         "payment": "Вопросы оплаты и доната решает техническая поддержка: {support}. Укажите дату, сумму и способ оплаты, "
-                   "приложите чек. Ваше обращение также передано администратору.",
-        "threat": "Угрозы и перенос конфликта за пределы игры запрещены ({cite}). Обращение передано старшей администрации. "
+                   "приложите чек. Обращение также рассмотрит администратор.",
+        "threat": "Угрозы и перенос конфликта за пределы игры запрещены ({cite}). Обращение рассмотрит старшая администрация. "
                   "Если угроза касается вашей безопасности в реальной жизни, обратитесь в полицию.",
         "bye": "",
     },
@@ -167,7 +167,7 @@ T = {
         "need_evidence": "Шағымыңызға рахмет. Бұзушылықты{what} тексеру үшін бейнежазба қажет: онда бұзушылық сәті мен "
                          "ойыншының никі анық көрінуі керек, өйткені шағымда толық дәлел болуы тиіс ({cite_req}). "
                          "Бейнені YouTube, imgur, Rutube, Яндекс Диск немесе Google Диск арқылы жүктеп ({cite_platform}), жаңа шағым беріңіз.",
-        "what": "",
+        "what": " ({title})",
         "no_description": "Шағым қаралмайды: онда не болғаны нақты әрі түсінікті жазылмаған ({cite}). "
                           "Не болғанын, қай жерде және қашан болғанын жазып, бұзушының никін көрсетіңіз, дәлелдерді тіркеп, жаңа шағым беріңіз.",
         "not_complaint": "Шағым бөлімі сұрақтарға, әңгімеге және техникалық мәселелерге арналмаған ({cite}). "
@@ -176,12 +176,12 @@ T = {
                  "Жағдайды сабырлы түрде сипаттап, дәлелдерді тіркеп, жаңа шағым беріңіз.",
         "duplicate": "Бұл шағым бұрын берілген шағымды қайталайды, сондықтан қаралмайды ({cite}). "
                      "Алғашқы шағымыңыз бойынша шешімді күтіңіз.",
-        "appeal": "Жазаға қатысты өтінішіңіз қабылданып, аға әкімшілікке жіберілді: жазаны алып тастау немесе өзгерту "
-                  "туралы шешімді тек солар қабылдайды. Әлі тіркемеген болсаңыз, жаза туралы скриншотты және өз ұстанымыңызды "
+        "appeal": "Жазаға қатысты өтінішіңіз қабылданды: жазаны алып тастау немесе өзгерту "
+                  "туралы шешімді тек аға әкімшілік қабылдайды. Әлі тіркемеген болсаңыз, жаза туралы скриншотты және өз ұстанымыңызды "
                   "растайтын бейнежазбаны қосыңыз ({cite_req}). Жазаға 48 сағат ішінде шағымдануға болады ({cite_time}).",
-        "admin_complaint": "Әкімшінің әрекетіне берілген шағым қабылданып, аға әкімшілікке тексеруге жіберілді. "
+        "admin_complaint": "Әкімшінің әрекетіне берілген шағым қабылданды: оны аға әкімшілік тексереді. "
                            "Қарау үшін дәлел қажет: бұзушылық сәті көрінетін бейне немесе скриншот ({cite_req}).",
-        "report_watch": "Хабарламаңызды әкімшіге бердім, ол ойыншыны{pid_part} бақылайды. Бұзушылықтың бейнежазбасы болса, "
+        "report_watch": "Әкімші жағдайды тексеріп, ойыншыны{pid_part} бақылайды. Бұзушылықтың бейнежазбасы болса, "
                         "лаунчер арқылы шағым беріңіз: дәлелі бар шағым бойынша бұзушыны жазалауға болады.",
         "pid_part": " [{pid}]",
         "report_need_id": "Бұзушының ID нөмірін және не бұзып жатқанын жазыңыз, әкімші бақылайды. Бейнежазба болса, "
@@ -201,11 +201,11 @@ T = {
         "event_tp": "Іс-шараға телепорт қазір жабық немесе іс-шара өтпей жатыр. Чаттағы әкімшілік хабарландыруларын қадағалаңыз.",
         "offtopic_flood": "Репорт әкімшілікке жүгіну үшін арналған. Оффтоп пен флуд үшін репортқа шектеу қойылуы мүмкін ({cite}).",
         "account": "Аккаунтқа кіру, аккаунтты бұзу және мүліктің жоғалуы мәселелерін ойын ішіндегі әкімшілік шешпейді. "
-                   "Техникалық қолдау қызметіне жазыңыз: {support}. Өтінішіңіз әкімшіге де берілді. Еске саламыз: {cite} бойынша "
+                   "Техникалық қолдау қызметіне жазыңыз: {support}. Өтінішіңізді әкімші де қарайды. Еске саламыз: {cite} бойынша "
                    "аккаунт пен мүліктің қауіпсіздігіне ойыншының өзі жауап береді.",
         "payment": "Төлем мен донат мәселелерін техникалық қолдау қызметі шешеді: {support}. Төлем күнін, сомасын және "
-                   "тәсілін жазып, чекті тіркеңіз. Өтінішіңіз әкімшіге де берілді.",
-        "threat": "Қорқытуға және жанжалды ойыннан тыс жерге көшіруге тыйым салынған ({cite}). Өтініш аға әкімшілікке берілді. "
+                   "тәсілін жазып, чекті тіркеңіз. Өтінішіңізді әкімші де қарайды.",
+        "threat": "Қорқытуға және жанжалды ойыннан тыс жерге көшіруге тыйым салынған ({cite}). Өтінішті аға әкімшілік қарайды. "
                   "Егер қауіп өміріңізге қатысты болса, полицияға жүгініңіз.",
         "bye": "",
     },
@@ -222,10 +222,10 @@ T = {
         "approve_term": "Shikoyatingiz ko‘rib chiqildi. Ilova qilingan materiallarda qoidabuzarlik ko‘rinadi: {term}{nick_part}. "
                         "Qoidalar bo‘yicha jazo: {sanction}. Aniq muddatni administrator belgilaydi. Faol pozitsiyangiz uchun rahmat! Shikoyat yopildi.",
         "nick_part": ", qoidabuzar: {nick}",
-        "need_evidence": "Shikoyatingiz uchun rahmat. Qoidabuzarlikni tekshirish uchun video dalil (videofiksatsiya) zarur: videoda "
+        "need_evidence": "Shikoyatingiz uchun rahmat. Qoidabuzarlikni{what} tekshirish uchun video dalil (videofiksatsiya) zarur: videoda "
                          "qoidabuzarlik lahzasi va o‘yinchining niki aniq ko‘rinishi kerak, chunki shikoyatda to‘liq dalillar bo‘lishi shart ({cite_req}). "
                          "Videoni YouTube, imgur, Rutube, Yandex Disk yoki Google Disk orqali yuklang ({cite_platform}) va yangi shikoyat yuboring.",
-        "what": "",
+        "what": " ({title})",
         "no_description": "Shikoyat ko‘rib chiqilmaydi: unda nima sodir bo‘lgani aniq va mantiqiy bayon qilinmagan ({cite}). "
                           "Nima bo‘lganini, qayerda va qachon bo‘lganini yozing, qoidabuzarning nikini ko‘rsating, dalillarni ilova qilib, yangi shikoyat yuboring.",
         "not_complaint": "Shikoyatlar bo‘limi savollar, suhbat va texnik muammolar uchun mo‘ljallanmagan ({cite}). "
@@ -234,12 +234,12 @@ T = {
                  "Vaziyatni xotirjam tasvirlab, dalillar bilan yangi shikoyat yuboring.",
         "duplicate": "Ushbu shikoyat avval yuborilgan shikoyatning takrori, shu sababli ko‘rib chiqilmaydi ({cite}). "
                      "Birinchi shikoyatingiz bo‘yicha qarorni kuting.",
-        "appeal": "Jazo bo‘yicha murojaatingiz qabul qilindi va katta ma’muriyatga yuborildi: jazoni olib tashlash yoki o‘zgartirish "
-                  "to‘g‘risidagi qarorni faqat ular qabul qiladi. Agar hali ilova qilmagan bo‘lsangiz, jazo skrinshotini va "
+        "appeal": "Jazo bo‘yicha murojaatingiz qabul qilindi: jazoni olib tashlash yoki o‘zgartirish "
+                  "to‘g‘risidagi qarorni faqat katta ma’muriyat qabul qiladi. Agar hali ilova qilmagan bo‘lsangiz, jazo skrinshotini va "
                   "pozitsiyangizni tasdiqlovchi videoni qo‘shing ({cite_req}). Jazo ustidan 48 soat ichida shikoyat qilish mumkin ({cite_time}).",
-        "admin_complaint": "Administrator harakatlari ustidan shikoyat qabul qilindi va tekshirish uchun katta ma’muriyatga yuborildi. "
+        "admin_complaint": "Administrator harakatlari ustidan shikoyat qabul qilindi: uni katta ma’muriyat tekshiradi. "
                            "Ko‘rib chiqish uchun dalil kerak: qoidabuzarlik lahzasi ko‘rinadigan video yoki skrinshot ({cite_req}).",
-        "report_watch": "Murojaatingiz administratorga yetkazildi, u o‘yinchini{pid_part} kuzatadi. Agar qoidabuzarlik videosi bo‘lsa, "
+        "report_watch": "Administrator vaziyatni tekshirib, o‘yinchini{pid_part} kuzatadi. Agar qoidabuzarlik videosi bo‘lsa, "
                         "launcher orqali shikoyat yozing: dalilli shikoyat bo‘yicha qoidabuzar jazolanishi mumkin.",
         "pid_part": " [{pid}]",
         "report_need_id": "Qoidabuzarning ID raqamini va nimani buzayotganini yozing, administrator kuzatadi. Video bo‘lsa, "
@@ -259,11 +259,11 @@ T = {
         "event_tp": "Tadbirga teleport hozir yopiq yoki tadbir o‘tkazilmayapti. Chatdagi ma’muriyat e’lonlarini kuzatib boring.",
         "offtopic_flood": "Report ma’muriyatga murojaat qilish uchun mo‘ljallangan. Reportda offtop va flud uchun reportga cheklov qo‘yilishi mumkin ({cite}).",
         "account": "Akkauntga kirish, akkauntni buzib kirish va mol-mulk yo‘qolishi masalalarini o‘yin ichidagi ma’muriyat hal qilmaydi. "
-                   "Texnik yordamga yozing: {support}. Murojaatingiz administratorga ham yetkazildi. Eslatma: {cite}ga ko‘ra "
+                   "Texnik yordamga yozing: {support}. Murojaatingizni administrator ham ko‘rib chiqadi. Eslatma: {cite}ga ko‘ra "
                    "akkaunt va mol-mulk xavfsizligi uchun o‘yinchining o‘zi javobgar.",
         "payment": "To‘lov va donat masalalarini texnik yordam xizmati hal qiladi: {support}. To‘lov sanasi, summasi va usulini "
-                   "yozing, chekni ilova qiling. Murojaatingiz administratorga ham yetkazildi.",
-        "threat": "Tahdid qilish va nizoni o‘yindan tashqariga olib chiqish taqiqlangan ({cite}). Murojaat katta ma’muriyatga yuborildi. "
+                   "yozing, chekni ilova qiling. Murojaatingizni administrator ham ko‘rib chiqadi.",
+        "threat": "Tahdid qilish va nizoni o‘yindan tashqariga olib chiqish taqiqlangan ({cite}). Murojaatni katta ma’muriyat ko‘rib chiqadi. "
                   "Agar tahdid real hayotdagi xavfsizligingizga tegishli bo‘lsa, politsiyaga murojaat qiling.",
         "bye": "",
     },
@@ -280,10 +280,10 @@ T = {
         "approve_term": "Your complaint has been reviewed. The attached materials show a violation: {term}{nick_part}. "
                         "Penalty under the rules: {sanction}. The exact term is set by the administrator. Thank you! The complaint is closed.",
         "nick_part": " by {nick}",
-        "need_evidence": "Thank you for the complaint. To check the violation we need a video showing the moment of the violation and "
+        "need_evidence": "Thank you for the complaint. To check the violation{what} we need a video showing the moment of the violation and "
                          "the player's nickname, since a complaint must contain full evidence ({cite_req}). Upload the video to YouTube, "
                          "imgur, Rutube, Yandex Disk or Google Drive ({cite_platform}) and submit a new complaint.",
-        "what": "",
+        "what": " ({title})",
         "no_description": "The complaint cannot be reviewed because it has no clear description of what happened ({cite}). "
                           "Describe what happened, where and when, give the offender's nickname, attach evidence and submit a new complaint.",
         "not_complaint": "The complaints section is not for questions, chatting or technical problems ({cite}). "
@@ -291,12 +291,12 @@ T = {
         "toxic": "The complaint cannot be reviewed because the text contains insults or profanity ({cite}). "
                  "Please submit a new complaint with a calm description and evidence.",
         "duplicate": "This complaint repeats one you already submitted, so it will not be reviewed ({cite}). Please wait for the decision on the first one.",
-        "appeal": "Your appeal has been received and passed to senior administration: only they can lift or change a penalty. "
+        "appeal": "Your appeal has been received: only senior administration can lift or change a penalty. "
                   "If you have not done so yet, add a screenshot of the penalty and a video supporting your position ({cite_req}). "
                   "Penalties can be appealed within 48 hours ({cite_time}).",
-        "admin_complaint": "Your complaint about an administrator has been received and passed to senior administration. "
+        "admin_complaint": "Your complaint about an administrator has been received: senior administration will review it. "
                            "Evidence is required: a video or screenshots showing the violation ({cite_req}).",
-        "report_watch": "I have passed this to an administrator who will watch the player{pid_part}. If you have a video of the "
+        "report_watch": "An administrator will look into this and watch the player{pid_part}. If you have a video of the "
                         "violation, file a complaint in the launcher so the offender can be penalized.",
         "pid_part": " [{pid}]",
         "report_need_id": "Please give the offender's ID and what they are doing, and an administrator will watch. If you have a video, file a complaint in the launcher.",
@@ -313,12 +313,12 @@ T = {
         "event_tp": "Teleport to the event is closed right now or no event is running. Watch for administrator announcements in chat.",
         "offtopic_flood": "Reports are for contacting administrators. Off-topic messages and flooding may lead to a report mute ({cite}).",
         "account": "Account access, hacking and lost property cannot be resolved by in-game administrators. Please contact technical "
-                   "support: {support}. Your request has also been passed to an administrator. Note: under {cite}, players are "
+                   "support: {support}. An administrator will also review your request. Note: under {cite}, players are "
                    "responsible for the security of their account and property.",
         "payment": "Payment and donation issues are handled by technical support: {support}. Include the date, amount and payment "
-                   "method and attach the receipt. Your request has also been passed to an administrator.",
-        "threat": "Threats and taking conflicts outside the game are prohibited ({cite}). Your report has been passed to senior "
-                  "administration. If the threat concerns your safety in real life, contact the police.",
+                   "method and attach the receipt. An administrator will also review your request.",
+        "threat": "Threats and taking conflicts outside the game are prohibited ({cite}). Senior "
+                  "administration will review your report. If the threat concerns your safety in real life, contact the police.",
         "bye": "",
     },
     # ---------------- испанский ----------------
@@ -334,21 +334,21 @@ T = {
         "approve_term": "Tu queja ha sido revisada. Los materiales adjuntos muestran una infracción: {term}{nick_part}. "
                         "Sanción según las reglas: {sanction}. El plazo exacto lo fija el administrador. ¡Gracias! La queja está cerrada.",
         "nick_part": " por parte de {nick}",
-        "need_evidence": "Gracias por la queja. Para comprobar la infracción necesitamos un video con el momento de la infracción y el "
+        "need_evidence": "Gracias por la queja. Para comprobar la infracción{what} necesitamos un video con el momento de la infracción y el "
                          "apodo del jugador, ya que la queja debe incluir pruebas completas ({cite_req}). Sube el video a YouTube, imgur, "
                          "Rutube, Yandex Disk o Google Drive ({cite_platform}) y envía una nueva queja.",
-        "what": "",
+        "what": " ({title})",
         "no_description": "La queja no puede revisarse porque no describe con claridad lo ocurrido ({cite}). Explica qué pasó, dónde "
                           "y cuándo, indica el apodo del infractor, adjunta pruebas y envía una nueva queja.",
         "not_complaint": "La sección de quejas no es para preguntas, conversaciones ni problemas técnicos ({cite}). "
                          "Pregunta en el servidor de Discord del juego ({discord}) o escribe al soporte técnico ({support}).",
         "toxic": "La queja no puede revisarse porque el texto contiene insultos o groserías ({cite}). Envía una nueva queja con una descripción tranquila y pruebas.",
         "duplicate": "Esta queja repite una anterior, por lo que no se revisará ({cite}). Espera la decisión sobre la primera.",
-        "appeal": "Tu apelación ha sido recibida y enviada a la administración superior: solo ella puede retirar o cambiar una sanción. "
+        "appeal": "Tu apelación ha sido recibida: solo la administración superior puede retirar o cambiar una sanción. "
                   "Si aún no lo hiciste, adjunta una captura de la sanción y un video que respalde tu postura ({cite_req}). "
                   "Las sanciones se pueden apelar en un plazo de 48 horas ({cite_time}).",
-        "admin_complaint": "Tu queja sobre un administrador ha sido recibida y enviada a la administración superior. Se necesitan pruebas: video o capturas ({cite_req}).",
-        "report_watch": "He avisado a un administrador, que vigilará al jugador{pid_part}. Si tienes un video de la infracción, "
+        "admin_complaint": "Tu queja sobre un administrador ha sido recibida: la revisará la administración superior. Se necesitan pruebas: video o capturas ({cite_req}).",
+        "report_watch": "Un administrador revisará la situación y vigilará al jugador{pid_part}. Si tienes un video de la infracción, "
                         "presenta una queja en el launcher para que el infractor pueda ser sancionado.",
         "pid_part": " [{pid}]",
         "report_need_id": "Indica el ID del infractor y qué está haciendo, y un administrador lo vigilará. Si tienes video, presenta una queja en el launcher.",
@@ -365,11 +365,11 @@ T = {
         "event_tp": "El teletransporte al evento está cerrado ahora o no hay ningún evento en curso. Atento a los anuncios de la administración en el chat.",
         "offtopic_flood": "Los reportes son para contactar con la administración. El offtopic y el flood pueden llevar a un silencio de reportes ({cite}).",
         "account": "Los problemas de acceso a la cuenta, hackeo y pérdida de bienes no los resuelve la administración del juego. Escribe al "
-                   "soporte técnico: {support}. Tu solicitud también se pasó a un administrador. Según el {cite}, cada jugador es "
+                   "soporte técnico: {support}. Un administrador también revisará tu solicitud. Según el {cite}, cada jugador es "
                    "responsable de la seguridad de su cuenta y sus bienes.",
         "payment": "Los pagos y donaciones los gestiona el soporte técnico: {support}. Indica fecha, importe y método de pago y adjunta "
-                   "el recibo. Tu solicitud también se pasó a un administrador.",
-        "threat": "Las amenazas y llevar conflictos fuera del juego están prohibidos ({cite}). El caso pasó a la administración superior. "
+                   "el recibo. Un administrador también revisará tu solicitud.",
+        "threat": "Las amenazas y llevar conflictos fuera del juego están prohibidos ({cite}). La administración superior revisará el caso. "
                   "Si la amenaza afecta a tu seguridad real, contacta a la policía.",
         "bye": "",
     },
@@ -386,21 +386,21 @@ T = {
         "approve_term": "Sua denúncia foi analisada. Os materiais anexados mostram uma violação: {term}{nick_part}. "
                         "Punição pelas regras: {sanction}. O prazo exato é definido pelo administrador. Obrigado! A denúncia está encerrada.",
         "nick_part": " por {nick}",
-        "need_evidence": "Obrigado pela denúncia. Para verificar a violação precisamos de um vídeo com o momento da violação e o apelido "
+        "need_evidence": "Obrigado pela denúncia. Para verificar a violação{what} precisamos de um vídeo com o momento da violação e o apelido "
                          "do jogador, pois a denúncia deve conter provas completas ({cite_req}). Envie o vídeo ao YouTube, imgur, Rutube, "
                          "Yandex Disk ou Google Drive ({cite_platform}) e faça uma nova denúncia.",
-        "what": "",
+        "what": " ({title})",
         "no_description": "A denúncia não pode ser analisada porque não descreve com clareza o que aconteceu ({cite}). Explique o que "
                           "aconteceu, onde e quando, informe o apelido do infrator, anexe provas e faça uma nova denúncia.",
         "not_complaint": "A seção de denúncias não é para perguntas, conversas ou problemas técnicos ({cite}). "
                          "Pergunte no servidor do Discord do jogo ({discord}) ou fale com o suporte técnico ({support}).",
         "toxic": "A denúncia não pode ser analisada porque o texto contém insultos ou palavrões ({cite}). Faça uma nova denúncia com uma descrição calma e provas.",
         "duplicate": "Esta denúncia repete uma anterior, por isso não será analisada ({cite}). Aguarde a decisão sobre a primeira.",
-        "appeal": "Seu recurso foi recebido e encaminhado à administração sênior: só ela pode retirar ou alterar uma punição. "
+        "appeal": "Seu recurso foi recebido: só a administração sênior pode retirar ou alterar uma punição. "
                   "Se ainda não fez isso, anexe uma captura da punição e um vídeo que comprove sua posição ({cite_req}). "
                   "É possível recorrer de uma punição em até 48 horas ({cite_time}).",
-        "admin_complaint": "Sua denúncia sobre um administrador foi recebida e encaminhada à administração sênior. São necessárias provas: vídeo ou capturas ({cite_req}).",
-        "report_watch": "Avisei um administrador, que vai observar o jogador{pid_part}. Se tiver um vídeo da violação, faça uma "
+        "admin_complaint": "Sua denúncia sobre um administrador foi recebida: a administração sênior vai analisá-la. São necessárias provas: vídeo ou capturas ({cite_req}).",
+        "report_watch": "Um administrador vai verificar a situação e observar o jogador{pid_part}. Se tiver um vídeo da violação, faça uma "
                         "denúncia no launcher para que o infrator possa ser punido.",
         "pid_part": " [{pid}]",
         "report_need_id": "Informe o ID do infrator e o que ele está fazendo, e um administrador vai observar. Se tiver vídeo, faça uma denúncia no launcher.",
@@ -417,11 +417,11 @@ T = {
         "event_tp": "O teleporte para o evento está fechado agora ou não há evento em andamento. Acompanhe os anúncios da administração no chat.",
         "offtopic_flood": "Os reports servem para falar com a administração. Offtopic e flood podem levar a um silenciamento de reports ({cite}).",
         "account": "Problemas de acesso à conta, invasão e perda de bens não são resolvidos pela administração do jogo. Fale com o suporte "
-                   "técnico: {support}. Seu pedido também foi encaminhado a um administrador. Pelo {cite}, cada jogador é "
+                   "técnico: {support}. Um administrador também vai analisar seu pedido. Pelo {cite}, cada jogador é "
                    "responsável pela segurança da própria conta e dos bens.",
         "payment": "Pagamentos e doações são tratados pelo suporte técnico: {support}. Informe data, valor e forma de pagamento e anexe "
-                   "o comprovante. Seu pedido também foi encaminhado a um administrador.",
-        "threat": "Ameaças e levar conflitos para fora do jogo são proibidos ({cite}). O caso foi encaminhado à administração sênior. "
+                   "o comprovante. Um administrador também vai analisar seu pedido.",
+        "threat": "Ameaças e levar conflitos para fora do jogo são proibidos ({cite}). A administração sênior vai analisar o caso. "
                   "Se a ameaça envolve sua segurança real, procure a polícia.",
         "bye": "",
     },

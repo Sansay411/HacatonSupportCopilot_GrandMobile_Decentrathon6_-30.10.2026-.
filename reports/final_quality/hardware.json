@@ -1,0 +1,26 @@
+{
+  "measured_at": "2026-10-31 (Asia/Almaty, локальное время машины)",
+  "source": "Win32_Processor/Win32_ComputerSystem (CIM), nvidia-smi, torch.cuda, pip list; ничего не оценивалось по памяти",
+  "cpu": {"name": "12th Gen Intel(R) Core(TM) i5-12500H", "cores": 12, "threads": 16},
+  "gpu": {"name": "NVIDIA GeForce RTX 4050 Laptop GPU", "vram_total_mib": 6141, "vram_used_idle_mib": "1190-1307 (экран и система)",
+          "vram_free_mib": "около 4730", "compute_capability": "8.9", "driver": "617.42", "cuda_umd": "13.4",
+          "power_cap_w": 80, "note": "WMI AdapterRAM показывает 4 ГБ, это ограничение API; реальные 6 ГБ по nvidia-smi"},
+  "ram": {"total_gb": 15.7, "free_gb_observed_during_work": "2.0-4.7"},
+  "disk": {"C_free_gb_before_download": 89.9, "C_free_gb_after_download": 79.7, "D_free_gb": 298, "E_free_gb": 762},
+  "cuda_toolkit_nvcc": false,
+  "runtimes_before_session": {"torch": "2.6.0+cu124 (CUDA доступна)", "transformers": "5.21.0", "onnxruntime": "1.30.0",
+                              "llama.cpp": false, "ollama": false, "vllm": false, "bitsandbytes": false, "accelerate": false,
+                              "flash-linear-attention": false, "causal_conv1d": false},
+  "installed_in_this_session": {"venv": "C:\\svllm (system-site-packages поверх глобального Python 3.12)",
+                                "bitsandbytes": "0.50.2", "accelerate": "1.15.0", "scikit-learn": "1.9.1 (как в рабочем venv)"},
+  "qwen3_5_4b_feasibility": {
+    "weights": "Qwen/Qwen3.5-4B, safetensors bf16, 8.9 ГБ на диске (2 файла), Apache-2.0, официальный репозиторий; GGUF у Qwen для этой модели нет",
+    "bf16_on_gpu": "невозможно: 8.9 ГБ весов больше 6 ГБ VRAM (замер не делался, арифметика)",
+    "bf16_on_cpu": "невозможно на этой машине: свободной RAM 2-4.7 ГБ (замер не делался)",
+    "nf4_bitsandbytes_on_gpu": {"works": true, "vram_after_load_gb": 3.12, "vram_peak_gb": 3.46, "load_seconds": "17-29",
+                                "decode_tokens_per_second_idle": 11.05, "decode_tokens_per_second_under_cpu_load": "5-6",
+                                "why_slow": "нет flash-linear-attention и causal_conv1d (нужен Triton, которого нет в Windows): слои Gated DeltaNet работают на эталонной реализации PyTorch"},
+    "gguf_llama_cpp": "не пробовалось: официального GGUF нет, сторонние бинарники и кванты не скачивались; скорость не измерена",
+    "cpu_only_runtime_in_docker": "не измерялось"
+  }
+}

@@ -122,7 +122,7 @@ class Copilot:
             category_for_draft = "complaint.invalid"
         d = drafts.build(t.kind, category_for_draft, sig, t.player_text, reply_lang, self.rules,
                          verdict, t.reported_nick or sig.nickname, duplicate=bool(dup_reason),
-                         verdict_conf=vconf)
+                         verdict_conf=vconf, cat_conf=cat.confidence)
 
         if self.llm is not None and d.intent in self.llm.intents:
             d = self.llm.polish(d, t, sig, cat.category, self.rules)
@@ -137,7 +137,11 @@ class Copilot:
             reasons.append("признаки спама или флуда")
 
         confidence = round(min(cat.confidence, vconf if verdict else 1.0), 2)
-        needs_human = (not d.auto_ok) or bool(guard_reasons) or d.proposes_penalty
+        # «передано администратору», «жалоба закрыта»: верно только после действия человека, автоотправка исключена
+        action_claim = guard.claims_action(d.text)
+        if action_claim and d.auto_ok:
+            reasons.append("в тексте утверждение о передаче, рассмотрении или закрытии: отправка только после проверки человеком")
+        needs_human = (not d.auto_ok) or bool(guard_reasons) or d.proposes_penalty or action_claim
         if cat.category in NEEDS_HUMAN_ALWAYS:
             needs_human = True
             if "всегда" not in " ".join(reasons):

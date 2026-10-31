@@ -87,6 +87,8 @@ TOPICS: dict[str, re.Pattern] = {
         r"взлом", r"взломал", r"взломали", r"\bвзл", r"(пропал|пропала|пропали|исчез|исчезла|исчезли|слетел|слетела|слетели)",
         r"украли (акк|аккаунт|машин|дом|деньг|бизнес)", r"не могу (зайти|войти|вой)", r"(доступ|пароль|почт[уа]|привязк)",
         r"аккаунт.*(угнал|увели|украли|чуж)", r"\bакк(аунт)? (взл|угн)", r"hack(ed)?", r"\bbuzib", r"o'g'irla",
+        # «кто-то зашёл в мой аккаунт и продал дом»
+        r"(зашел|залез|вошел|влез|заходил|зашли|вошли)\s+(?:\w+\s+){0,2}?(?:в|на)\s+(?:мо(?:й|ю|его|ем)\s+)?(?:аккаунт|акк\b|профиль)",
         r"обнул(или|ился|ение)",
         # казахский и узбекский: «аккаунтымды бұзды», «hisobimni buzishdi»
         r"аккаунт\w*.{0,40}бұз|бұз\w*.{0,40}аккаунт", r"hisob\w*.{0,30}buz|buz\w*.{0,30}hisob|akkaunt\w*.{0,30}buz",
@@ -134,7 +136,8 @@ class Signals:
     has_url: bool = False
     images: int = 0
     nickname: str | None = None
-    player_id: str | None = None
+    player_id: str | None = None      # как есть, для классификатора
+    report_id: str | None = None      # ID для текста ответа: без сроков и счётчиков
     server: str | None = None
     words: int = 0
     content_free: bool = False
@@ -145,7 +148,14 @@ class Signals:
 
 
 _NICK = re.compile(r"\b([A-Z][a-z]{1,15}_[A-Z][a-zA-Z]{1,20}\d{0,4})\b")
+# ID игрока из текста репорта. Этот разбор попадает в признаки обученной модели (флаг __pid), поэтому его не меняем без
+# переобучения. Он принимает за ID и срок («30 мин»), и количество («5 раз»): для черновика есть отдельный report_id ниже.
 _ID_REPORT = re.compile(r"(?:^|\s)(?:id|ид|айди|айд|\#)?\s*(\d{1,4})\s*(?:id|ид)?\s+(?=[а-яa-z])|(?:id|ид|айди)\s*(\d{1,4})", re.I)
+# то же, но число перед единицей времени, счётчиком или суммой ID не считается: «331 дм» да, «жду 30 мин» нет
+_NOT_AN_ID = (r"(?!(?:мин(?:ут\w*)?|час(?:а|ов)?|сек(?:унд\w*)?|раз(?:а|ов)?|дн(?:я|ей|и)|день|недел\w*|месяц\w*|год(?:а|ов)?|лет|"
+              r"руб\w*|тыс\w*|кк|шт\w*|метр\w*|уров\w*|лвл|lvl|min|sec|hour|day|time)(?![а-яa-z]))")
+_REPORT_ID = re.compile(
+    rf"(?:^|\s)(?:id|ид|айди|айд|\#)?\s*(\d{{1,4}})\s*(?:id|ид)?\s+{_NOT_AN_ID}(?=[а-яa-z])|(?:id|ид|айди)\s*(\d{{1,4}})", re.I)
 _SERVER = re.compile(r"\b(?:сервер|server|серв)\s*[#№]?\s*(\d{1,2})\b|\|\s*(\d{1,2})\b", re.I)
 
 
@@ -173,6 +183,9 @@ def extract(text: str, rule_base, rule_refs_raw: str | None = None, images: int 
     idm = _ID_REPORT.search(m)
     if idm:
         s.player_id = idm.group(1) or idm.group(2)
+    rid = _REPORT_ID.search(m)
+    if rid:
+        s.report_id = rid.group(1) or rid.group(2)
     sm = _SERVER.search(m)
     if sm:
         s.server = sm.group(1) or sm.group(2)

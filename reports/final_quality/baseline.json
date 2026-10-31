@@ -1,0 +1,709 @@
+{
+  "git_commit": "89974d7b0e95bdb461b89e386eef6e670c20e620",
+  "git_branch": "feature/sentra-real-product",
+  "git_dirty": "?? .claude/\n?? experiments/",
+  "python": "3.12.10",
+  "rules_fingerprint": "80cd4f920f362832",
+  "models_loaded": true,
+  "label_source": "own (data/labels/valid_gold.json: rules + manual overrides); official labels do not exist locally",
+  "leak_counts": {
+    "clean": 627,
+    "exact": 358,
+    "near": 15
+  },
+  "own_labels": {
+    "all": {
+      "n": 1000,
+      "accuracy": 0.875,
+      "macro_f1": 0.7639,
+      "per_class": {
+        "complaint.admin": {
+          "p": 0.966,
+          "r": 0.788,
+          "f1": 0.868,
+          "n": 217
+        },
+        "complaint.cheat": {
+          "p": 0.781,
+          "r": 0.926,
+          "f1": 0.847,
+          "n": 27
+        },
+        "complaint.dm": {
+          "p": 0.876,
+          "r": 0.919,
+          "f1": 0.897,
+          "n": 161
+        },
+        "complaint.insult": {
+          "p": 0.937,
+          "r": 0.964,
+          "f1": 0.951,
+          "n": 279
+        },
+        "complaint.invalid": {
+          "p": 0.821,
+          "r": 0.571,
+          "f1": 0.674,
+          "n": 56
+        },
+        "complaint.other": {
+          "p": 0.452,
+          "r": 0.809,
+          "f1": 0.58,
+          "n": 47
+        },
+        "complaint.rmt_ads": {
+          "p": 0.667,
+          "r": 1.0,
+          "f1": 0.8,
+          "n": 2
+        },
+        "complaint.scam": {
+          "p": 0.769,
+          "r": 0.714,
+          "f1": 0.741,
+          "n": 28
+        },
+        "report.account": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "n": 1
+        },
+        "report.complaint": {
+          "p": 1.0,
+          "r": 0.894,
+          "f1": 0.944,
+          "n": 47
+        },
+        "report.help": {
+          "p": 1.0,
+          "r": 0.939,
+          "f1": 0.969,
+          "n": 33
+        },
+        "report.offtopic": {
+          "p": 0.966,
+          "r": 0.944,
+          "f1": 0.955,
+          "n": 90
+        },
+        "report.question": {
+          "p": 0.545,
+          "r": 1.0,
+          "f1": 0.706,
+          "n": 12
+        }
+      },
+      "priority_macro_f1": 0.8795,
+      "priority_accuracy": 0.942
+    },
+    "exact_text_in_train": {
+      "n": 358,
+      "accuracy": 0.9693,
+      "macro_f1": 0.9431,
+      "per_class": {
+        "complaint.admin": {
+          "p": 1.0,
+          "r": 0.946,
+          "f1": 0.972,
+          "n": 37
+        },
+        "complaint.cheat": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "n": 10
+        },
+        "complaint.dm": {
+          "p": 0.977,
+          "r": 1.0,
+          "f1": 0.989,
+          "n": 43
+        },
+        "complaint.insult": {
+          "p": 0.993,
+          "r": 0.965,
+          "f1": 0.979,
+          "n": 142
+        },
+        "complaint.invalid": {
+          "p": 0.882,
+          "r": 0.833,
+          "f1": 0.857,
+          "n": 18
+        },
+        "complaint.other": {
+          "p": 0.5,
+          "r": 1.0,
+          "f1": 0.667,
+          "n": 6
+        },
+        "complaint.scam": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "n": 3
+        },
+        "report.complaint": {
+          "p": 1.0,
+          "r": 0.938,
+          "f1": 0.968,
+          "n": 16
+        },
+        "report.help": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "n": 13
+        },
+        "report.offtopic": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "n": 70
+        },
+        "report.question": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "n": 0
+        }
+      },
+      "priority_macro_f1": 0.9847,
+      "priority_accuracy": 0.9832
+    },
+    "near_dup_in_train": {
+      "n": 15,
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "per_class": {
+        "complaint.admin": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "n": 2
+        },
+        "complaint.cheat": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "n": 1
+        },
+        "complaint.dm": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "n": 2
+        },
+        "complaint.insult": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "n": 7
+        },
+        "complaint.other": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "n": 1
+        },
+        "complaint.scam": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "n": 2
+        }
+      },
+      "priority_macro_f1": 1.0,
+      "priority_accuracy": 1.0
+    },
+    "clean_not_in_train": {
+      "n": 627,
+      "accuracy": 0.8182,
+      "macro_f1": 0.7218,
+      "per_class": {
+        "complaint.admin": {
+          "p": 0.957,
+          "r": 0.753,
+          "f1": 0.843,
+          "n": 178
+        },
+        "complaint.cheat": {
+          "p": 0.667,
+          "r": 0.875,
+          "f1": 0.757,
+          "n": 16
+        },
+        "complaint.dm": {
+          "p": 0.837,
+          "r": 0.888,
+          "f1": 0.862,
+          "n": 116
+        },
+        "complaint.insult": {
+          "p": 0.88,
+          "r": 0.962,
+          "f1": 0.919,
+          "n": 130
+        },
+        "complaint.invalid": {
+          "p": 0.773,
+          "r": 0.447,
+          "f1": 0.567,
+          "n": 38
+        },
+        "complaint.other": {
+          "p": 0.437,
+          "r": 0.775,
+          "f1": 0.559,
+          "n": 40
+        },
+        "complaint.rmt_ads": {
+          "p": 0.667,
+          "r": 1.0,
+          "f1": 0.8,
+          "n": 2
+        },
+        "complaint.scam": {
+          "p": 0.714,
+          "r": 0.652,
+          "f1": 0.682,
+          "n": 23
+        },
+        "report.account": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "n": 1
+        },
+        "report.complaint": {
+          "p": 1.0,
+          "r": 0.871,
+          "f1": 0.931,
+          "n": 31
+        },
+        "report.help": {
+          "p": 1.0,
+          "r": 0.9,
+          "f1": 0.947,
+          "n": 20
+        },
+        "report.offtopic": {
+          "p": 0.833,
+          "r": 0.75,
+          "f1": 0.789,
+          "n": 20
+        },
+        "report.question": {
+          "p": 0.571,
+          "r": 1.0,
+          "f1": 0.727,
+          "n": 12
+        }
+      },
+      "priority_macro_f1": 0.8271,
+      "priority_accuracy": 0.9171
+    }
+  },
+  "own_labels_by_lang": {
+    "ru": {
+      "n": 859,
+      "accuracy": 0.8766,
+      "macro_f1": 0.766,
+      "per_class": {
+        "complaint.admin": {
+          "p": 0.968,
+          "r": 0.814,
+          "f1": 0.884,
+          "n": 188
+        },
+        "complaint.cheat": {
+          "p": 0.778,
+          "r": 0.913,
+          "f1": 0.84,
+          "n": 23
+        },
+        "complaint.dm": {
+          "p": 0.88,
+          "r": 0.917,
+          "f1": 0.898,
+          "n": 120
+        },
+        "complaint.insult": {
+          "p": 0.939,
+          "r": 0.966,
+          "f1": 0.952,
+          "n": 237
+        },
+        "complaint.invalid": {
+          "p": 0.811,
+          "r": 0.566,
+          "f1": 0.667,
+          "n": 53
+        },
+        "complaint.other": {
+          "p": 0.466,
+          "r": 0.791,
+          "f1": 0.586,
+          "n": 43
+        },
+        "complaint.rmt_ads": {
+          "p": 0.667,
+          "r": 1.0,
+          "f1": 0.8,
+          "n": 2
+        },
+        "complaint.scam": {
+          "p": 0.783,
+          "r": 0.75,
+          "f1": 0.766,
+          "n": 24
+        },
+        "report.account": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "n": 1
+        },
+        "report.complaint": {
+          "p": 1.0,
+          "r": 0.894,
+          "f1": 0.944,
+          "n": 47
+        },
+        "report.help": {
+          "p": 1.0,
+          "r": 0.939,
+          "f1": 0.969,
+          "n": 33
+        },
+        "report.offtopic": {
+          "p": 0.959,
+          "r": 0.934,
+          "f1": 0.947,
+          "n": 76
+        },
+        "report.question": {
+          "p": 0.545,
+          "r": 1.0,
+          "f1": 0.706,
+          "n": 12
+        }
+      },
+      "priority_macro_f1": 0.8787,
+      "priority_accuracy": 0.9383
+    },
+    "uz": {
+      "n": 133,
+      "accuracy": 0.8647,
+      "macro_f1": 0.7867,
+      "per_class": {
+        "complaint.admin": {
+          "p": 0.941,
+          "r": 0.615,
+          "f1": 0.744,
+          "n": 26
+        },
+        "complaint.cheat": {
+          "p": 0.8,
+          "r": 1.0,
+          "f1": 0.889,
+          "n": 4
+        },
+        "complaint.dm": {
+          "p": 0.86,
+          "r": 0.925,
+          "f1": 0.892,
+          "n": 40
+        },
+        "complaint.insult": {
+          "p": 0.927,
+          "r": 0.95,
+          "f1": 0.938,
+          "n": 40
+        },
+        "complaint.invalid": {
+          "p": 1.0,
+          "r": 0.667,
+          "f1": 0.8,
+          "n": 3
+        },
+        "complaint.other": {
+          "p": 0.222,
+          "r": 1.0,
+          "f1": 0.364,
+          "n": 2
+        },
+        "complaint.scam": {
+          "p": 1.0,
+          "r": 0.5,
+          "f1": 0.667,
+          "n": 4
+        },
+        "report.offtopic": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "n": 14
+        }
+      },
+      "priority_macro_f1": 0.9171,
+      "priority_accuracy": 0.9699
+    },
+    "kk": {
+      "n": 8,
+      "accuracy": 0.875,
+      "macro_f1": 0.95,
+      "per_class": {
+        "complaint.admin": {
+          "p": 1.0,
+          "r": 0.667,
+          "f1": 0.8,
+          "n": 3
+        },
+        "complaint.dm": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "n": 1
+        },
+        "complaint.insult": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "n": 2
+        },
+        "complaint.other": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "n": 2
+        },
+        "complaint.scam": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "n": 0
+        }
+      },
+      "priority_macro_f1": 0.4667,
+      "priority_accuracy": 0.875
+    }
+  },
+  "own_labels_clean_by_lang": {
+    "ru": {
+      "n": 513,
+      "accuracy": 0.8148,
+      "macro_f1": 0.7196,
+      "per_class": {
+        "complaint.admin": {
+          "p": 0.959,
+          "r": 0.78,
+          "f1": 0.86,
+          "n": 150
+        },
+        "complaint.cheat": {
+          "p": 0.625,
+          "r": 0.833,
+          "f1": 0.714,
+          "n": 12
+        },
+        "complaint.dm": {
+          "p": 0.829,
+          "r": 0.872,
+          "f1": 0.85,
+          "n": 78
+        },
+        "complaint.insult": {
+          "p": 0.869,
+          "r": 0.969,
+          "f1": 0.916,
+          "n": 96
+        },
+        "complaint.invalid": {
+          "p": 0.762,
+          "r": 0.444,
+          "f1": 0.561,
+          "n": 36
+        },
+        "complaint.other": {
+          "p": 0.468,
+          "r": 0.763,
+          "f1": 0.58,
+          "n": 38
+        },
+        "complaint.rmt_ads": {
+          "p": 0.667,
+          "r": 1.0,
+          "f1": 0.8,
+          "n": 2
+        },
+        "complaint.scam": {
+          "p": 0.722,
+          "r": 0.684,
+          "f1": 0.703,
+          "n": 19
+        },
+        "report.account": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "n": 1
+        },
+        "report.complaint": {
+          "p": 1.0,
+          "r": 0.871,
+          "f1": 0.931,
+          "n": 31
+        },
+        "report.help": {
+          "p": 1.0,
+          "r": 0.9,
+          "f1": 0.947,
+          "n": 20
+        },
+        "report.offtopic": {
+          "p": 0.812,
+          "r": 0.722,
+          "f1": 0.765,
+          "n": 18
+        },
+        "report.question": {
+          "p": 0.571,
+          "r": 1.0,
+          "f1": 0.727,
+          "n": 12
+        }
+      },
+      "priority_macro_f1": 0.8242,
+      "priority_accuracy": 0.9084
+    },
+    "uz": {
+      "n": 110,
+      "accuracy": 0.8364,
+      "macro_f1": 0.766,
+      "per_class": {
+        "complaint.admin": {
+          "p": 0.938,
+          "r": 0.6,
+          "f1": 0.732,
+          "n": 25
+        },
+        "complaint.cheat": {
+          "p": 0.8,
+          "r": 1.0,
+          "f1": 0.889,
+          "n": 4
+        },
+        "complaint.dm": {
+          "p": 0.85,
+          "r": 0.919,
+          "f1": 0.883,
+          "n": 37
+        },
+        "complaint.insult": {
+          "p": 0.914,
+          "r": 0.941,
+          "f1": 0.928,
+          "n": 34
+        },
+        "complaint.invalid": {
+          "p": 1.0,
+          "r": 0.5,
+          "f1": 0.667,
+          "n": 2
+        },
+        "complaint.other": {
+          "p": 0.222,
+          "r": 1.0,
+          "f1": 0.364,
+          "n": 2
+        },
+        "complaint.scam": {
+          "p": 1.0,
+          "r": 0.5,
+          "f1": 0.667,
+          "n": 4
+        },
+        "report.offtopic": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "n": 2
+        }
+      },
+      "priority_macro_f1": 0.879,
+      "priority_accuracy": 0.9636
+    },
+    "kk": {
+      "n": 4,
+      "accuracy": 0.75,
+      "macro_f1": 0.9,
+      "per_class": {
+        "complaint.admin": {
+          "p": 1.0,
+          "r": 0.667,
+          "f1": 0.8,
+          "n": 3
+        },
+        "complaint.dm": {
+          "p": 1.0,
+          "r": 1.0,
+          "f1": 1.0,
+          "n": 1
+        },
+        "complaint.scam": {
+          "p": 0.0,
+          "r": 0.0,
+          "f1": 0.0,
+          "n": 0
+        }
+      },
+      "priority_macro_f1": 0.4286,
+      "priority_accuracy": 0.75
+    }
+  },
+  "admin_verdict_proxy": {
+    "note": "согласие сценария черновика с вердиктом админа: это не категория и не оценка жюри",
+    "all": {
+      "n": 518,
+      "agreement": 0.639
+    },
+    "clean_not_in_train": {
+      "n": 351,
+      "agreement": 0.584
+    }
+  },
+  "latency_ms": {
+    "p50": 2.47,
+    "p95": 5.15,
+    "p99": 8.29
+  },
+  "intents": {
+    "approve": 325,
+    "need_evidence": 258,
+    "appeal_reject": 161,
+    "not_complaint": 11,
+    "no_description": 35,
+    "toxic": 8,
+    "admin_complaint": 16,
+    "duplicate": 3,
+    "help_ack": 50,
+    "event_tp": 10,
+    "question_unknown": 17,
+    "help_vehicle": 14,
+    "help_generic": 13,
+    "report_need_id": 12,
+    "report_watch": 27,
+    "help_service": 4,
+    "offtopic_flood": 7,
+    "report_rp": 2,
+    "clarify": 21,
+    "question_tech": 1,
+    "question_kb": 1,
+    "report_appeal": 2,
+    "question_howto": 2
+  }
+}

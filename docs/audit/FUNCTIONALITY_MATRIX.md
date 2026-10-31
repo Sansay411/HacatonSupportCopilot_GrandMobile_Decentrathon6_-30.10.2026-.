@@ -106,7 +106,7 @@
 | Статистика согласована с очередью и API, пустая база даёт нули | `test_lifecycle::test_stats_*`, `test_empty_stats_*`, `e2e::test_12` |
 | Метрики валидации помечены как исторические | `test_diagnostics_templates::test_metrics_are_marked_as_historical`, `e2e::test_17` |
 | Шаблоны: проверка, утверждение, отклонение, хранение, не подключены к генерации | `test_diagnostics_templates::test_template_*`, `test_approved_template_*`, `e2e::test_18` |
-| Живая самопроверка безопасности (11 проб) | `test_diagnostics_templates::test_selfcheck_*`, `e2e::test_17` |
+| Живая самопроверка безопасности (13 проб) | `test_diagnostics_templates::test_selfcheck_*`, `e2e::test_17` |
 | Импорт JSONL с битыми строками, повторный импорт | `test_lifecycle::test_import_*`, `e2e::test_15` |
 | XSS, prompt injection, CSP, маскирование секретов | `test_diagnostics_templates::test_security_headers_*`, `test_prompt_injection_*`, `test_lifecycle::test_secrets_*`, `e2e::test_16` |
 | Контракт кейса: формат `POST /triage` и `make predict` | `test_lifecycle::test_triage_contract_*`, `test_contract.py`, `test_regressions.py` |

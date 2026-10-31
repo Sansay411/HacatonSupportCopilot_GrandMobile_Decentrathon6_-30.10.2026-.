@@ -32,6 +32,28 @@ _PROMISE = [
 _PROMISE_RX = re.compile("|".join(_PROMISE), re.I)
 _REF_IN_DRAFT = re.compile(r"(?:п\.\s*|пункт\w*\s+|rule\s+|item\s+|punto\s+)(\d+(?:\.\d+)+)", re.I)
 
+# Утверждения, которые верны только после действия человека: «передано администратору», «жалоба закрыта»,
+# «жалоба рассмотрена». Канала отправки у сервиса нет, поэтому такой текст нельзя отдавать без проверки.
+_CLAIM = [
+    r"передан[оаы]?\s+(?:администратор|старшей|ответственн)", r"передал\s+администратор", r"администратору\b.{0,20}\bпередан",
+    r"(?:направлен|отправлен)[оаы]?\s+(?:администратор|старшей)",
+    r"жалоба\s+(?:рассмотрена|закрыта)", r"обжалование\s+рассмотрено", r"\bжалоба\s+принята\b",
+    r"ma[’']?muriyatga\s+(?:yuborildi|yetkazildi)", r"administratorga\s+(?:ham\s+)?(?:yetkazildi|yuborildi)",
+    r"shikoyat\s+yopildi", r"ko[‘']rib\s+chiqildi",
+    r"әкімшіге\s+(?:де\s+)?(?:берілді|жіберілді)", r"аға\s+әкімшілікке\s+(?:жіберілді|берілді)", r"шағым\s+жабылды", r"шағымыңыз\s+қаралды",
+    r"(?:passed|forwarded|sent)\s+(?:this\s+|it\s+)?to\s+(?:an?\s+|the\s+)?(?:administrator|senior|admin)",
+    r"(?:has|have)\s+(?:also\s+)?been\s+(?:passed|forwarded|sent)\s+to\s+(?:an?\s+|the\s+)?(?:administrator|senior)",
+    r"complaint\s+is\s+closed", r"(?:has|have)\s+been\s+reviewed",
+    r"queja\s+(?:est[aá]\s+cerrada|ha\s+sido\s+revisada)", r"(?:pas[oó]|avisado|enviad[oa])\s+a\s+(?:un\s+)?(?:la\s+)?administra",
+    r"den[uú]ncia\s+(?:est[aá]\s+encerrada|foi\s+analisada)", r"encaminhad[oa]\s+(?:a|ao)\s+(?:um\s+)?(?:administra|à\s+administra)",
+]
+_CLAIM_RX = re.compile("|".join(_CLAIM), re.I)
+
+
+def claims_action(text: str) -> bool:
+    """Текст утверждает, что обращение передано, рассмотрено или закрыто."""
+    return bool(_CLAIM_RX.search(text or ""))
+
 
 def check(text: str, cited: list[str], rb: RuleBase) -> tuple[list[str], list[str]]:
     """Возвращает (валидные цитаты, причины для человека)."""

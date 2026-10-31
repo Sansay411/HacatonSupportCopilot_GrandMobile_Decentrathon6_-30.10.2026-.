@@ -1,0 +1,126 @@
+{
+  "unofficial": "оценки LLM-судьи, не оценка жюри; слепота неполная",
+  "pairs": 23,
+  "preference": {
+    "tie": 6,
+    "A": 14,
+    "B": 3
+  },
+  "preference_by_lang": {
+    "ru": {
+      "tie": 6,
+      "A": 3,
+      "B": 3
+    },
+    "kk": {
+      "A": 6
+    },
+    "uz": {
+      "A": 3
+    },
+    "en": {
+      "A": 2
+    }
+  },
+  "A_templates": {
+    "relevance": 4.39,
+    "completeness": 4.65,
+    "naturalness": 3.96,
+    "language": 5.0,
+    "fact_support": 5.0,
+    "overall": 4.6,
+    "n": 23
+  },
+  "B_qwen": {
+    "relevance": 3.7,
+    "completeness": 3.74,
+    "naturalness": 3.13,
+    "language": 4.39,
+    "fact_support": 3.61,
+    "overall": 3.71,
+    "n": 23
+  },
+  "by_lang": {
+    "ru": {
+      "A_templates": {
+        "relevance": 4.33,
+        "completeness": 4.67,
+        "naturalness": 3.92,
+        "language": 5.0,
+        "fact_support": 5.0,
+        "overall": 4.58,
+        "n": 12
+      },
+      "B_qwen": {
+        "relevance": 4.33,
+        "completeness": 4.33,
+        "naturalness": 3.92,
+        "language": 5.0,
+        "fact_support": 4.42,
+        "overall": 4.4,
+        "n": 12
+      }
+    },
+    "kk": {
+      "A_templates": {
+        "relevance": 4.5,
+        "completeness": 4.67,
+        "naturalness": 4.0,
+        "language": 5.0,
+        "fact_support": 5.0,
+        "overall": 4.63,
+        "n": 6
+      },
+      "B_qwen": {
+        "relevance": 3.17,
+        "completeness": 3.33,
+        "naturalness": 2.33,
+        "language": 4.33,
+        "fact_support": 2.5,
+        "overall": 3.13,
+        "n": 6
+      }
+    },
+    "uz": {
+      "A_templates": {
+        "relevance": 4.0,
+        "completeness": 4.33,
+        "naturalness": 4.0,
+        "language": 5.0,
+        "fact_support": 5.0,
+        "overall": 4.47,
+        "n": 3
+      },
+      "B_qwen": {
+        "relevance": 1.67,
+        "completeness": 2.0,
+        "naturalness": 1.33,
+        "language": 1.67,
+        "fact_support": 2.0,
+        "overall": 1.73,
+        "n": 3
+      }
+    },
+    "en": {
+      "A_templates": {
+        "relevance": 5.0,
+        "completeness": 5.0,
+        "naturalness": 4.0,
+        "language": 5.0,
+        "fact_support": 5.0,
+        "overall": 4.8,
+        "n": 2
+      },
+      "B_qwen": {
+        "relevance": 4.5,
+        "completeness": 4.0,
+        "naturalness": 3.5,
+        "language": 5.0,
+        "fact_support": 4.5,
+        "overall": 4.3,
+        "n": 2
+      }
+    }
+  },
+  "sign_test_p_two_sided": 0.0127
+}

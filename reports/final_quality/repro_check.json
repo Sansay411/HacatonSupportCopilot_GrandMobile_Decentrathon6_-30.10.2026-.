@@ -1,0 +1,89 @@
+{
+  "python": "3.12.10",
+  "checkout_files": 101,
+  "no_private_files": {
+    "health_http": 200,
+    "health_mode": "unavailable",
+    "health_missing": null,
+    "triage_http": 503,
+    "triage_error_text": "{'detail': {'code': 'triage_unavailable', 'message': 'Триаж недоступен: не загружены правила, см. /health', 'problems': [{'code': 'rules_missing', 'level': 'err"
+  },
+  "fixture_mode": {
+    "health_http": 200,
+    "rules_synthetic": true,
+    "calls": [
+      {
+        "http": 200,
+        "contract_problems": [],
+        "lang": "ru",
+        "category": "complaint.insult",
+        "needs_human": true
+      },
+      {
+        "http": 200,
+        "contract_problems": [],
+        "lang": "uz",
+        "category": "complaint.insult",
+        "needs_human": true
+      },
+      {
+        "http": 200,
+        "contract_problems": [],
+        "lang": "kk",
+        "category": "report.question",
+        "needs_human": true
+      }
+    ]
+  },
+  "with_data_and_models": {
+    "health_http": 200,
+    "health_mode": "full",
+    "calls": [
+      {
+        "http": 200,
+        "contract_problems": [],
+        "lang": "ru",
+        "category": "complaint.insult",
+        "draft_lang": "ru"
+      },
+      {
+        "http": 200,
+        "contract_problems": [],
+        "lang": "uz",
+        "category": "complaint.insult",
+        "draft_lang": "uz"
+      },
+      {
+        "http": 200,
+        "contract_problems": [],
+        "lang": "kk",
+        "category": "report.offtopic",
+        "draft_lang": "kk"
+      }
+    ],
+    "latency_ms_first_calls": [
+      37.7,
+      20.7,
+      14.0
+    ]
+  },
+  "make_predict": {
+    "runs": [
+      {
+        "exit": 0,
+        "seconds": 4.3,
+        "sha": "f4b18306b759ab0f"
+      },
+      {
+        "exit": 0,
+        "seconds": 4.2,
+        "sha": "f4b18306b759ab0f"
+      }
+    ],
+    "identical_output": true,
+    "rows": 1000,
+    "rows_with_contract_problems": 0,
+    "has_internal_meta_field": false
+  },
+  "private_copies_removed": true
+}

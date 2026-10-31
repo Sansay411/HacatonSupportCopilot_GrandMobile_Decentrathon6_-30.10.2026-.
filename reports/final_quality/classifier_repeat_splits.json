@@ -1,0 +1,94 @@
+{
+  "splits": {
+    "seed_20261031": {
+      "A_prod": {
+        "holdout_acc": 0.9384,
+        "holdout_macro_f1": 0.9224,
+        "valid_all_acc": 0.877,
+        "valid_all_macro_f1": 0.7645,
+        "valid_clean_acc": 0.8198,
+        "valid_clean_macro_f1": 0.7218
+      },
+      "D_svc_cal": {
+        "holdout_acc": 0.9432,
+        "holdout_macro_f1": 0.929,
+        "valid_all_acc": 0.881,
+        "valid_all_macro_f1": 0.7827,
+        "valid_clean_acc": 0.8246,
+        "valid_clean_macro_f1": 0.7407
+      },
+      "delta_D_minus_A": {
+        "holdout_acc": 0.0048,
+        "holdout_macro_f1": 0.0066,
+        "valid_all_acc": 0.004,
+        "valid_all_macro_f1": 0.0182,
+        "valid_clean_acc": 0.0048,
+        "valid_clean_macro_f1": 0.0189
+      }
+    },
+    "seed_11": {
+      "A_prod": {
+        "holdout_acc": 0.9401,
+        "holdout_macro_f1": 0.9266,
+        "valid_all_acc": 0.873,
+        "valid_all_macro_f1": 0.7621,
+        "valid_clean_acc": 0.815,
+        "valid_clean_macro_f1": 0.7191
+      },
+      "D_svc_cal": {
+        "holdout_acc": 0.9438,
+        "holdout_macro_f1": 0.9318,
+        "valid_all_acc": 0.88,
+        "valid_all_macro_f1": 0.7843,
+        "valid_clean_acc": 0.823,
+        "valid_clean_macro_f1": 0.7424
+      },
+      "delta_D_minus_A": {
+        "holdout_acc": 0.0037,
+        "holdout_macro_f1": 0.0052,
+        "valid_all_acc": 0.007,
+        "valid_all_macro_f1": 0.0222,
+        "valid_clean_acc": 0.008,
+        "valid_clean_macro_f1": 0.0233
+      }
+    },
+    "seed_12": {
+      "A_prod": {
+        "holdout_acc": 0.9374,
+        "holdout_macro_f1": 0.9312,
+        "valid_all_acc": 0.875,
+        "valid_all_macro_f1": 0.7659,
+        "valid_clean_acc": 0.8182,
+        "valid_clean_macro_f1": 0.7247
+      },
+      "D_svc_cal": {
+        "holdout_acc": 0.9424,
+        "holdout_macro_f1": 0.9351,
+        "valid_all_acc": 0.88,
+        "valid_all_macro_f1": 0.7868,
+        "valid_clean_acc": 0.823,
+        "valid_clean_macro_f1": 0.7469
+      },
+      "delta_D_minus_A": {
+        "holdout_acc": 0.005,
+        "holdout_macro_f1": 0.0039,
+        "valid_all_acc": 0.005,
+        "valid_all_macro_f1": 0.0209,
+        "valid_clean_acc": 0.0048,
+        "valid_clean_macro_f1": 0.0222
+      }
+    }
+  },
+  "valid_pipeline_full_train": {
+    "category_changed": 17,
+    "LR_wrong_to_SVC_right": 10,
+    "LR_right_to_SVC_wrong": 5,
+    "both_wrong": 2,
+    "mcnemar_exact_p": 0.3018
+  },
+  "gate_decision": {
+    "adopt": false,
+    "reason": "правило пользователя: любой невыполненный критерий оставляет baseline. Прирост accuracy на отложенной части train значим во всех трёх разбиениях, но на valid с независимой разметкой он не значим (McNemar), а по заранее заданному правилу не выполнен критерий задержки (5,5 мс против 1,75 мс на тикет, существенно только формально).",
+    "ready_to_enable": "var/final_quality/models_D/category.pkl (обучена на всём train); включение: скопировать в models/ или задать COPILOT_MODELS"
+  }
+}

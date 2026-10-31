@@ -1,0 +1,22 @@
+{
+  "forbidden_tracked": [],
+  "id_hits": {},
+  "text_hits": {},
+  "files_scanned": 139,
+  "history_forbidden_paths": [
+    "reports/template_suggestions_summary.json",
+    "reports/template_suggestions_summary.md"
+  ],
+  "history_id_hit_files": [],
+  "history_derived_content_files": [
+    "reports/template_suggestions_summary.json",
+    "reports/template_suggestions_summary.md"
+  ],
+  "branches_containing_derived": [
+    "* feature/sentra-real-product",
+    "main",
+    "remotes/origin/HEAD -> origin/main",
+    "remotes/origin/feature/template-clusters",
+    "remotes/origin/main"
+  ]
+}

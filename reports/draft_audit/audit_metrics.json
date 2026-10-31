@@ -1,0 +1,106 @@
+{
+  "valid": {
+    "before": {
+      "n": 1000,
+      "settled_decision_drafts": 161,
+      "settled_decision_but_admin_lifted_penalty": 10,
+      "watch_drafts_with_id_taken_from_a_duration": 1,
+      "need_evidence_n": 258,
+      "need_evidence_names_violation": 0.2287,
+      "need_evidence_names_violation_ru": "59/171",
+      "need_evidence_names_violation_uz": "0/83",
+      "need_evidence_names_violation_kk": "0/3",
+      "handoff_claim_without_human": 0,
+      "promise_drafts": 0,
+      "nonexistent_citations": 0,
+      "needs_human_share": 0.909,
+      "auto_send_candidates": 91,
+      "scenario_matches_admin_verdict": 0.639,
+      "scenario_matches_n": 518,
+      "latency_ms_p50": 2.59,
+      "latency_ms_p95": 5.5
+    },
+    "after": {
+      "n": 1000,
+      "settled_decision_drafts": 0,
+      "settled_decision_but_admin_lifted_penalty": 0,
+      "watch_drafts_with_id_taken_from_a_duration": 0,
+      "need_evidence_n": 256,
+      "need_evidence_names_violation": 0.7188,
+      "need_evidence_names_violation_ru": "111/169",
+      "need_evidence_names_violation_uz": "70/83",
+      "need_evidence_names_violation_kk": "3/3",
+      "handoff_claim_without_human": 0,
+      "promise_drafts": 0,
+      "nonexistent_citations": 0,
+      "needs_human_share": 0.912,
+      "auto_send_candidates": 88,
+      "scenario_matches_admin_verdict": 0.6429,
+      "scenario_matches_n": 518,
+      "latency_ms_p50": 2.47,
+      "latency_ms_p95": 4.92
+    },
+    "category_changed": 0,
+    "priority_changed": 0,
+    "text_changed": 361,
+    "needs_human_changed_to_true": 3,
+    "needs_human_changed_to_false": 0
+  },
+  "train_sample": {
+    "before": {
+      "n": 8000,
+      "settled_decision_drafts": 925,
+      "settled_decision_but_admin_lifted_penalty": 69,
+      "watch_drafts_with_id_taken_from_a_duration": 9,
+      "need_evidence_n": 1277,
+      "need_evidence_names_violation": 0.3289,
+      "need_evidence_names_violation_ru": "420/1186",
+      "need_evidence_names_violation_uz": "0/89",
+      "need_evidence_names_violation_kk": "0/1",
+      "handoff_claim_without_human": 0,
+      "promise_drafts": 0,
+      "nonexistent_citations": 0,
+      "needs_human_share": 0.8379,
+      "auto_send_candidates": 1297,
+      "scenario_matches_admin_verdict": 0.6298,
+      "scenario_matches_n": 2963,
+      "latency_ms_p50": 2.09,
+      "latency_ms_p95": 5.03
+    },
+    "after": {
+      "n": 8000,
+      "settled_decision_drafts": 0,
+      "settled_decision_but_admin_lifted_penalty": 0,
+      "watch_drafts_with_id_taken_from_a_duration": 0,
+      "need_evidence_n": 1264,
+      "need_evidence_names_violation": 0.7445,
+      "need_evidence_names_violation_ru": "867/1173",
+      "need_evidence_names_violation_uz": "74/89",
+      "need_evidence_names_violation_kk": "0/1",
+      "handoff_claim_without_human": 0,
+      "promise_drafts": 0,
+      "nonexistent_citations": 0,
+      "needs_human_share": 0.8394,
+      "auto_send_candidates": 1285,
+      "scenario_matches_admin_verdict": 0.6315,
+      "scenario_matches_n": 2963,
+      "latency_ms_p50": 2.03,
+      "latency_ms_p95": 4.36
+    },
+    "category_changed": 0,
+    "priority_changed": 0,
+    "text_changed": 2399,
+    "needs_human_changed_to_true": 15,
+    "needs_human_changed_to_false": 3
+  },
+  "probes": {
+    "before": {
+      "scored": 72,
+      "acceptable": 46
+    },
+    "after": {
+      "scored": 72,
+      "acceptable": 72
+    }
+  }
+}

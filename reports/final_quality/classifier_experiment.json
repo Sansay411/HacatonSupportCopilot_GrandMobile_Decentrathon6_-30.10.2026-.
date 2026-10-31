@@ -1,0 +1,697 @@
+{
+  "protocol": "Сводка эксперимента с классификаторами: таблицы, парный бутстреп относительно A_prod, ошибки по классам.\n\nПравило решения зафиксировано до просмотра результатов: кандидат заменяет production-модель, только если\n(1) на отложенной части train (n≈17,7 тыс., группы повторов отделены) macro-F1 выше и 95 %-интервал разности не содержит 0;\n(2) на «чистых» тикетах valid (n=627) точечная разность accuracy и macro-F1 не отрицательна;\n(3) ни один из фокусных классов не теряет более 0,05 recall на valid;\n(4) задержка предсказания не растёт заметно. Иначе остаётся A_prod.",
+  "label_note": "valid: собственная разметка; holdout: слабая разметка train (правила + исход админа)",
+  "candidates": {
+    "A_prod": {
+      "holdout": {
+        "accuracy": 0.9384,
+        "macro_f1": 0.9224,
+        "n": 17751,
+        "by_lang": {
+          "ru": {
+            "n": 17114,
+            "accuracy": 0.9381,
+            "macro_f1": 0.9205
+          },
+          "uz": {
+            "n": 548,
+            "accuracy": 0.9544,
+            "macro_f1": 0.958
+          },
+          "kk": {
+            "n": 89,
+            "accuracy": 0.8989,
+            "macro_f1": 0.8949
+          }
+        }
+      },
+      "valid_all": {
+        "accuracy": 0.877,
+        "macro_f1": 0.7645,
+        "priority_macro_f1": 0.8787,
+        "priority_accuracy": 0.941,
+        "ece": 0.0586
+      },
+      "valid_clean": {
+        "accuracy": 0.8198,
+        "macro_f1": 0.7218,
+        "priority_macro_f1": 0.8255,
+        "priority_accuracy": 0.9155,
+        "ece": 0.0881
+      },
+      "valid_clean_by_lang": {
+        "ru": {
+          "n": 513,
+          "accuracy": 0.8129
+        },
+        "uz": {
+          "n": 110,
+          "accuracy": 0.8545
+        },
+        "kk": {
+          "n": 4,
+          "accuracy": 0.75
+        }
+      },
+      "translit_probe_clean_ru": {
+        "n": 513,
+        "accuracy_original": 0.8129,
+        "accuracy_translit": 0.6296,
+        "same_prediction_share": 0.7524
+      },
+      "focus_recall_valid_all": {
+        "complaint.other": 0.809,
+        "complaint.invalid": 0.571,
+        "report.question": 1.0,
+        "complaint.admin": 0.793,
+        "report.payment": null,
+        "report.account": 0.0,
+        "report.help": 0.939,
+        "report.offtopic": 0.944,
+        "complaint.scam": 0.714,
+        "complaint.cheat": 0.926
+      },
+      "focus_f1_valid_clean": {
+        "complaint.other": 0.559,
+        "complaint.invalid": 0.557,
+        "report.question": 0.727,
+        "complaint.admin": 0.849,
+        "report.payment": null,
+        "report.account": 0.0,
+        "report.help": 0.947,
+        "report.offtopic": 0.789,
+        "complaint.scam": 0.682,
+        "complaint.cheat": 0.757
+      },
+      "focus_f1_holdout": {
+        "complaint.other": 0.833,
+        "complaint.invalid": 0.827,
+        "report.question": 0.92,
+        "complaint.admin": 0.911,
+        "report.payment": 1.0,
+        "report.account": 0.928,
+        "report.help": 0.995,
+        "report.offtopic": 0.944,
+        "complaint.scam": 0.951,
+        "complaint.cheat": 0.883
+      },
+      "predict_ms_per_ticket": 1.755
+    },
+    "A_C1": {
+      "holdout": {
+        "accuracy": 0.9354,
+        "macro_f1": 0.9145,
+        "n": 17751,
+        "by_lang": {
+          "ru": {
+            "n": 17114,
+            "accuracy": 0.9348,
+            "macro_f1": 0.9124
+          },
+          "uz": {
+            "n": 548,
+            "accuracy": 0.958,
+            "macro_f1": 0.9597
+          },
+          "kk": {
+            "n": 89,
+            "accuracy": 0.8989,
+            "macro_f1": 0.8755
+          }
+        }
+      },
+      "valid_all": {
+        "accuracy": 0.873,
+        "macro_f1": 0.7614,
+        "priority_macro_f1": 0.877,
+        "priority_accuracy": 0.941,
+        "ece": 0.0374
+      },
+      "valid_clean": {
+        "accuracy": 0.8134,
+        "macro_f1": 0.7185,
+        "priority_macro_f1": 0.8251,
+        "priority_accuracy": 0.9155,
+        "ece": 0.0571
+      },
+      "valid_clean_by_lang": {
+        "ru": {
+          "n": 513,
+          "accuracy": 0.8051
+        },
+        "uz": {
+          "n": 110,
+          "accuracy": 0.8545
+        },
+        "kk": {
+          "n": 4,
+          "accuracy": 0.75
+        }
+      },
+      "translit_probe_clean_ru": {
+        "n": 513,
+        "accuracy_original": 0.8051,
+        "accuracy_translit": 0.6296,
+        "same_prediction_share": 0.7563
+      },
+      "focus_recall_valid_all": {
+        "complaint.other": 0.787,
+        "complaint.invalid": 0.589,
+        "report.question": 1.0,
+        "complaint.admin": 0.779,
+        "report.payment": null,
+        "report.account": 0.0,
+        "report.help": 0.939,
+        "report.offtopic": 0.944,
+        "complaint.scam": 0.714,
+        "complaint.cheat": 0.926
+      },
+      "focus_f1_valid_clean": {
+        "complaint.other": 0.536,
+        "complaint.invalid": 0.59,
+        "report.question": 0.727,
+        "complaint.admin": 0.835,
+        "report.payment": null,
+        "report.account": 0.0,
+        "report.help": 0.947,
+        "report.offtopic": 0.789,
+        "complaint.scam": 0.667,
+        "complaint.cheat": 0.737
+      },
+      "focus_f1_holdout": {
+        "complaint.other": 0.841,
+        "complaint.invalid": 0.834,
+        "report.question": 0.905,
+        "complaint.admin": 0.914,
+        "report.payment": 1.0,
+        "report.account": 0.928,
+        "report.help": 0.994,
+        "report.offtopic": 0.931,
+        "complaint.scam": 0.938,
+        "complaint.cheat": 0.888
+      },
+      "predict_ms_per_ticket": 2.453,
+      "vs_A_prod": {
+        "holdout_macro_f1": {
+          "delta": -0.0079,
+          "ci95": [
+            -0.0133,
+            -0.0037
+          ]
+        },
+        "holdout_accuracy": {
+          "delta": -0.003,
+          "ci95": [
+            -0.0047,
+            -0.0013
+          ]
+        },
+        "valid_all_accuracy": {
+          "delta": -0.004,
+          "ci95": [
+            -0.009,
+            0.0
+          ]
+        },
+        "valid_clean_accuracy": {
+          "delta": -0.0064,
+          "ci95": [
+            -0.0144,
+            0.0016
+          ]
+        },
+        "valid_clean_macro_f1": {
+          "delta": -0.0033,
+          "ci95": [
+            -0.0103,
+            0.0041
+          ]
+        }
+      },
+      "focus_recall_delta_vs_A_prod": {
+        "complaint.other": -0.022,
+        "complaint.invalid": 0.018,
+        "report.question": 0.0,
+        "complaint.admin": -0.014,
+        "report.help": 0.0,
+        "report.offtopic": 0.0,
+        "complaint.scam": 0.0,
+        "complaint.cheat": 0.0
+      },
+      "decision_rule": {
+        "1_holdout_f1_ci_above_0": false,
+        "2_clean_point_deltas_nonneg": false,
+        "3_no_focus_recall_drop_over_0.05": true,
+        "4_latency_ok": true
+      },
+      "adopt": false
+    },
+    "A_C16": {
+      "holdout": {
+        "accuracy": 0.9377,
+        "macro_f1": 0.9232,
+        "n": 17751,
+        "by_lang": {
+          "ru": {
+            "n": 17114,
+            "accuracy": 0.9377,
+            "macro_f1": 0.9217
+          },
+          "uz": {
+            "n": 548,
+            "accuracy": 0.9471,
+            "macro_f1": 0.9414
+          },
+          "kk": {
+            "n": 89,
+            "accuracy": 0.8764,
+            "macro_f1": 0.8831
+          }
+        }
+      },
+      "valid_all": {
+        "accuracy": 0.878,
+        "macro_f1": 0.7677,
+        "priority_macro_f1": 0.8797,
+        "priority_accuracy": 0.942,
+        "ece": 0.0766
+      },
+      "valid_clean": {
+        "accuracy": 0.823,
+        "macro_f1": 0.7283,
+        "priority_macro_f1": 0.8281,
+        "priority_accuracy": 0.9171,
+        "ece": 0.113
+      },
+      "valid_clean_by_lang": {
+        "ru": {
+          "n": 513,
+          "accuracy": 0.8187
+        },
+        "uz": {
+          "n": 110,
+          "accuracy": 0.8455
+        },
+        "kk": {
+          "n": 4,
+          "accuracy": 0.75
+        }
+      },
+      "translit_probe_clean_ru": {
+        "n": 513,
+        "accuracy_original": 0.8187,
+        "accuracy_translit": 0.6257,
+        "same_prediction_share": 0.7407
+      },
+      "focus_recall_valid_all": {
+        "complaint.other": 0.809,
+        "complaint.invalid": 0.589,
+        "report.question": 1.0,
+        "complaint.admin": 0.797,
+        "report.payment": null,
+        "report.account": 0.0,
+        "report.help": 0.939,
+        "report.offtopic": 0.956,
+        "complaint.scam": 0.714,
+        "complaint.cheat": 0.926
+      },
+      "focus_f1_valid_clean": {
+        "complaint.other": 0.569,
+        "complaint.invalid": 0.581,
+        "report.question": 0.75,
+        "complaint.admin": 0.85,
+        "report.payment": null,
+        "report.account": 0.0,
+        "report.help": 0.947,
+        "report.offtopic": 0.821,
+        "complaint.scam": 0.682,
+        "complaint.cheat": 0.757
+      },
+      "focus_f1_holdout": {
+        "complaint.other": 0.816,
+        "complaint.invalid": 0.822,
+        "report.question": 0.926,
+        "complaint.admin": 0.907,
+        "report.payment": 1.0,
+        "report.account": 0.941,
+        "report.help": 0.995,
+        "report.offtopic": 0.95,
+        "complaint.scam": 0.95,
+        "complaint.cheat": 0.878
+      },
+      "predict_ms_per_ticket": 1.683,
+      "vs_A_prod": {
+        "holdout_macro_f1": {
+          "delta": 0.0008,
+          "ci95": [
+            -0.0026,
+            0.0048
+          ]
+        },
+        "holdout_accuracy": {
+          "delta": -0.0007,
+          "ci95": [
+            -0.0024,
+            0.001
+          ]
+        },
+        "valid_all_accuracy": {
+          "delta": 0.001,
+          "ci95": [
+            -0.005,
+            0.007
+          ]
+        },
+        "valid_clean_accuracy": {
+          "delta": 0.0032,
+          "ci95": [
+            -0.0064,
+            0.0128
+          ]
+        },
+        "valid_clean_macro_f1": {
+          "delta": 0.0064,
+          "ci95": [
+            -0.0012,
+            0.0178
+          ]
+        }
+      },
+      "focus_recall_delta_vs_A_prod": {
+        "complaint.other": 0.0,
+        "complaint.invalid": 0.018,
+        "report.question": 0.0,
+        "complaint.admin": 0.004,
+        "report.help": 0.0,
+        "report.offtopic": 0.012,
+        "complaint.scam": 0.0,
+        "complaint.cheat": 0.0
+      },
+      "decision_rule": {
+        "1_holdout_f1_ci_above_0": false,
+        "2_clean_point_deltas_nonneg": true,
+        "3_no_focus_recall_drop_over_0.05": true,
+        "4_latency_ok": true
+      },
+      "adopt": false
+    },
+    "D_svc_cal": {
+      "holdout": {
+        "accuracy": 0.9432,
+        "macro_f1": 0.929,
+        "n": 17751,
+        "by_lang": {
+          "ru": {
+            "n": 17114,
+            "accuracy": 0.9432,
+            "macro_f1": 0.9274
+          },
+          "uz": {
+            "n": 548,
+            "accuracy": 0.9544,
+            "macro_f1": 0.9456
+          },
+          "kk": {
+            "n": 89,
+            "accuracy": 0.8652,
+            "macro_f1": 0.847
+          }
+        }
+      },
+      "valid_all": {
+        "accuracy": 0.881,
+        "macro_f1": 0.7827,
+        "priority_macro_f1": 0.883,
+        "priority_accuracy": 0.944,
+        "ece": 0.0469
+      },
+      "valid_clean": {
+        "accuracy": 0.8246,
+        "macro_f1": 0.7407,
+        "priority_macro_f1": 0.8334,
+        "priority_accuracy": 0.9203,
+        "ece": 0.0749
+      },
+      "valid_clean_by_lang": {
+        "ru": {
+          "n": 513,
+          "accuracy": 0.8187
+        },
+        "uz": {
+          "n": 110,
+          "accuracy": 0.8545
+        },
+        "kk": {
+          "n": 4,
+          "accuracy": 0.75
+        }
+      },
+      "translit_probe_clean_ru": {
+        "n": 513,
+        "accuracy_original": 0.8187,
+        "accuracy_translit": 0.6316,
+        "same_prediction_share": 0.7544
+      },
+      "focus_recall_valid_all": {
+        "complaint.other": 0.787,
+        "complaint.invalid": 0.589,
+        "report.question": 1.0,
+        "complaint.admin": 0.793,
+        "report.payment": null,
+        "report.account": 0.0,
+        "report.help": 0.939,
+        "report.offtopic": 0.944,
+        "complaint.scam": 0.714,
+        "complaint.cheat": 0.926
+      },
+      "focus_f1_valid_clean": {
+        "complaint.other": 0.561,
+        "complaint.invalid": 0.6,
+        "report.question": 0.727,
+        "complaint.admin": 0.849,
+        "report.payment": null,
+        "report.account": 0.0,
+        "report.help": 0.947,
+        "report.offtopic": 0.789,
+        "complaint.scam": 0.682,
+        "complaint.cheat": 0.757
+      },
+      "focus_f1_holdout": {
+        "complaint.other": 0.849,
+        "complaint.invalid": 0.829,
+        "report.question": 0.922,
+        "complaint.admin": 0.911,
+        "report.payment": 1.0,
+        "report.account": 0.985,
+        "report.help": 0.998,
+        "report.offtopic": 0.949,
+        "complaint.scam": 0.952,
+        "complaint.cheat": 0.885
+      },
+      "predict_ms_per_ticket": 5.511,
+      "vs_A_prod": {
+        "holdout_macro_f1": {
+          "delta": 0.0067,
+          "ci95": [
+            0.0001,
+            0.0136
+          ]
+        },
+        "holdout_accuracy": {
+          "delta": 0.0047,
+          "ci95": [
+            0.0028,
+            0.0069
+          ]
+        },
+        "valid_all_accuracy": {
+          "delta": 0.004,
+          "ci95": [
+            -0.002,
+            0.01
+          ]
+        },
+        "valid_clean_accuracy": {
+          "delta": 0.0048,
+          "ci95": [
+            -0.0048,
+            0.0144
+          ]
+        },
+        "valid_clean_macro_f1": {
+          "delta": 0.0189,
+          "ci95": [
+            0.0001,
+            0.0657
+          ]
+        }
+      },
+      "focus_recall_delta_vs_A_prod": {
+        "complaint.other": -0.022,
+        "complaint.invalid": 0.018,
+        "report.question": 0.0,
+        "complaint.admin": 0.0,
+        "report.help": 0.0,
+        "report.offtopic": 0.0,
+        "complaint.scam": 0.0,
+        "complaint.cheat": 0.0
+      },
+      "decision_rule": {
+        "1_holdout_f1_ci_above_0": true,
+        "2_clean_point_deltas_nonneg": true,
+        "3_no_focus_recall_drop_over_0.05": true,
+        "4_latency_ok": false
+      },
+      "adopt": false
+    },
+    "V_wide_LR": {
+      "holdout": {
+        "accuracy": 0.9394,
+        "macro_f1": 0.9237,
+        "n": 17751,
+        "by_lang": {
+          "ru": {
+            "n": 17114,
+            "accuracy": 0.9391,
+            "macro_f1": 0.9218
+          },
+          "uz": {
+            "n": 548,
+            "accuracy": 0.9562,
+            "macro_f1": 0.959
+          },
+          "kk": {
+            "n": 89,
+            "accuracy": 0.8989,
+            "macro_f1": 0.8949
+          }
+        }
+      },
+      "valid_all": {
+        "accuracy": 0.876,
+        "macro_f1": 0.7637,
+        "priority_macro_f1": 0.8787,
+        "priority_accuracy": 0.941,
+        "ece": 0.0605
+      },
+      "valid_clean": {
+        "accuracy": 0.8198,
+        "macro_f1": 0.7214,
+        "priority_macro_f1": 0.8255,
+        "priority_accuracy": 0.9155,
+        "ece": 0.0898
+      },
+      "valid_clean_by_lang": {
+        "ru": {
+          "n": 513,
+          "accuracy": 0.8129
+        },
+        "uz": {
+          "n": 110,
+          "accuracy": 0.8545
+        },
+        "kk": {
+          "n": 4,
+          "accuracy": 0.75
+        }
+      },
+      "translit_probe_clean_ru": {
+        "n": 513,
+        "accuracy_original": 0.8129,
+        "accuracy_translit": 0.6277,
+        "same_prediction_share": 0.7524
+      },
+      "focus_recall_valid_all": {
+        "complaint.other": 0.787,
+        "complaint.invalid": 0.571,
+        "report.question": 1.0,
+        "complaint.admin": 0.793,
+        "report.payment": null,
+        "report.account": 0.0,
+        "report.help": 0.939,
+        "report.offtopic": 0.944,
+        "complaint.scam": 0.714,
+        "complaint.cheat": 0.926
+      },
+      "focus_f1_valid_clean": {
+        "complaint.other": 0.556,
+        "complaint.invalid": 0.557,
+        "report.question": 0.727,
+        "complaint.admin": 0.846,
+        "report.payment": null,
+        "report.account": 0.0,
+        "report.help": 0.947,
+        "report.offtopic": 0.789,
+        "complaint.scam": 0.682,
+        "complaint.cheat": 0.757
+      },
+      "focus_f1_holdout": {
+        "complaint.other": 0.833,
+        "complaint.invalid": 0.83,
+        "report.question": 0.92,
+        "complaint.admin": 0.913,
+        "report.payment": 1.0,
+        "report.account": 0.941,
+        "report.help": 0.995,
+        "report.offtopic": 0.944,
+        "complaint.scam": 0.951,
+        "complaint.cheat": 0.887
+      },
+      "predict_ms_per_ticket": 1.146,
+      "vs_A_prod": {
+        "holdout_macro_f1": {
+          "delta": 0.0013,
+          "ci95": [
+            -0.0019,
+            0.005
+          ]
+        },
+        "holdout_accuracy": {
+          "delta": 0.001,
+          "ci95": [
+            -0.0002,
+            0.0022
+          ]
+        },
+        "valid_all_accuracy": {
+          "delta": -0.001,
+          "ci95": [
+            -0.005,
+            0.002
+          ]
+        },
+        "valid_clean_accuracy": {
+          "delta": 0.0,
+          "ci95": [
+            -0.0048,
+            0.0048
+          ]
+        },
+        "valid_clean_macro_f1": {
+          "delta": -0.0004,
+          "ci95": [
+            -0.0036,
+            0.0022
+          ]
+        }
+      },
+      "focus_recall_delta_vs_A_prod": {
+        "complaint.other": -0.022,
+        "complaint.invalid": 0.0,
+        "report.question": 0.0,
+        "complaint.admin": 0.0,
+        "report.help": 0.0,
+        "report.offtopic": 0.0,
+        "complaint.scam": 0.0,
+        "complaint.cheat": 0.0
+      },
+      "decision_rule": {
+        "1_holdout_f1_ci_above_0": false,
+        "2_clean_point_deltas_nonneg": false,
+        "3_no_focus_recall_drop_over_0.05": true,
+        "4_latency_ok": true
+      },
+      "adopt": false
+    }
+  }
+}
