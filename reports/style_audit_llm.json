@@ -1,0 +1,27 @@
+{
+ "llm": true,
+ "filter_on": {
+  "tickets": 1000,
+  "tickets_with_violation": 0,
+  "share": 0.0,
+  "by_code": {},
+  "by_lang": {}
+ },
+ "needs_human_share_filter_on": 0.919,
+ "llm_stats": {
+  "calls": 24,
+  "ok": 23,
+  "fallback": 1,
+  "style_fixed": 0,
+  "tokens_in": 32782,
+  "tokens_out": 1476,
+  "cost_usd": 0.011605800000000001,
+  "rejected": {
+   "утверждение о порядках в игре, которого ": 1
+  },
+  "latency_ms_p50": 1256.6,
+  "latency_ms_p95": 1517.6,
+  "cost_per_call_usd": 0.000484
+ },
+ "tickets_llm_consulted": 24
+}

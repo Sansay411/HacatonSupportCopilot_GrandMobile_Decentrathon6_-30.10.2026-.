@@ -75,7 +75,7 @@ def test_approve_is_short_and_states_only_what_the_service_knows(cp, l, text):
     r = ask(cp, "complaint", text, l, att=2)
     d = r["draft_reply"]["text"]
     assert r["_meta"]["intent"] == "approve" and r["needs_human"] is True
-    assert len(d) <= 230, d
+    assert len(d) <= 240, d       # было 230: срок словами («15 dan 30 daqiqagacha») на 9 знаков длиннее тире
     assert not EVIDENCE_CHECKED.search(d) and not THANKS.search(d) and not CLOSED.search(d)
     assert "2.1" in d and r["draft_reply"]["cited"] == ["2.1"]                  # конкретный пункт остаётся
 

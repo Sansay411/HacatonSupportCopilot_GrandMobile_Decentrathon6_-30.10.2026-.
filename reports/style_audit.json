@@ -1,0 +1,25 @@
+{
+ "llm": false,
+ "filter_on": {
+  "tickets": 1000,
+  "tickets_with_violation": 0,
+  "share": 0.0,
+  "by_code": {},
+  "by_lang": {}
+ },
+ "needs_human_share_filter_on": 0.914,
+ "filter_off": {
+  "tickets": 1000,
+  "tickets_with_violation": 2,
+  "share": 0.002,
+  "by_code": {
+   "slash": 2
+  },
+  "by_lang": {
+   "ru": {
+    "slash": 2
+   }
+  }
+ },
+ "texts_changed_by_filter": 2
+}

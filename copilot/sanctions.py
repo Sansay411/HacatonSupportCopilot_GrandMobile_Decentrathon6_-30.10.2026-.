@@ -183,7 +183,7 @@ def _span(s: Sanction, lang: str) -> str:
         if s.forever and s.lo:
             return f"{s.lo} {abl} бастап мерзімсізге дейін"
         if s.lo and s.hi and s.lo != s.hi:
-            return f"{s.lo}–{s.hi} {base}"
+            return f"{s.lo} {abl} {s.hi} {dat} дейін"
         if s.hi and not s.lo:
             return f"{s.hi} {dat} дейін"
         if s.lo:
@@ -195,8 +195,9 @@ def _span(s: Sanction, lang: str) -> str:
                 "uz": f"{s.lo} {u}dan muddatsizgacha", "en": f"from {s.lo} {u} up to permanent",
                 "es": f"de {s.lo} {u} a permanente", "pt": f"de {s.lo} {u} a permanente"}[lang]
     if s.lo and s.hi and s.lo != s.hi:
-        return {"ru": f"от {s.lo} до {s.hi} {u}", "kk": f"{s.lo}–{s.hi} {u}", "uz": f"{s.lo}–{s.hi} {u}",
-                "en": f"{s.lo}–{s.hi} {u}", "es": f"de {s.lo} a {s.hi} {u}", "pt": f"de {s.lo} a {s.hi} {u}"}[lang]
+        return {"ru": f"от {s.lo} до {s.hi} {u}", "kk": f"{s.lo} {u} бастап {s.hi} {u} дейін",
+                "uz": f"{s.lo} dan {s.hi} {u}gacha", "en": f"{s.lo} to {s.hi} {u}",
+                "es": f"de {s.lo} a {s.hi} {u}", "pt": f"de {s.lo} a {s.hi} {u}"}[lang]
     if s.hi and not s.lo:
         return {"ru": f"до {s.hi} {u}", "kk": f"{s.hi} {u} дейін", "uz": f"{s.hi} {u}gacha",
                 "en": f"up to {s.hi} {u}", "es": f"hasta {s.hi} {u}", "pt": f"até {s.hi} {u}"}[lang]

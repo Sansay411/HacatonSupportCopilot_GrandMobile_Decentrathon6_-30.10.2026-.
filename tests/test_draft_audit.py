@@ -283,9 +283,11 @@ def test_llm_text_with_handoff_claim_cannot_be_sent_automatically(cp):
     class FakeLLM:
         intents = ("clarify",)
 
-        def polish(self, d, t, sig, cat, rb):
+        def assist(self, d, t, sig, cat, rb):
             from dataclasses import replace
-            return replace(d, text="Здравствуйте! Ваше обращение передано администратору.", auto_ok=True)
+            if d.intent not in self.intents:
+                return d, False
+            return replace(d, text="Здравствуйте! Ваше обращение передано администратору.", auto_ok=True), True
 
     cp.llm = FakeLLM()
     try:
