@@ -11,6 +11,8 @@ import re
 
 from .rules import RuleBase
 
+_INVISIBLE = re.compile(r"[\u200b-\u200f\u202a-\u202e\u2060\ufeff\u00ad]+")
+
 _PROMISE = [
     # ru
     r"(будет|будут|будете) (снят|снято|сняты|разбанен|разблокирован|возвращен|возвращ[её]н|восстановлен)",
@@ -40,7 +42,7 @@ _CLAIM = [
     r"жалоба\s+(?:рассмотрена|закрыта)", r"обжалование\s+рассмотрено", r"\bжалоба\s+принята\b",
     r"ma[’']?muriyatga\s+(?:yuborildi|yetkazildi)", r"administratorga\s+(?:ham\s+)?(?:yetkazildi|yuborildi)",
     r"shikoyat\s+yopildi", r"ko[‘']rib\s+chiqildi",
-    r"әкімшіге\s+(?:де\s+)?(?:берілді|жіберілді)", r"аға\s+әкімшілікке\s+(?:жіберілді|берілді)", r"шағым\s+жабылды", r"шағымыңыз\s+қаралды",
+    r"әкімшіге\s+(?:де\s+)?(?:берілді|жіберді|жіберілді)", r"аға\s+әкімшілікке\s+(?:жіберілді|берілді)", r"шағым\s+жабылды", r"шағымыңыз\s+қаралды",
     r"(?:passed|forwarded|sent)\s+(?:this\s+|it\s+)?to\s+(?:an?\s+|the\s+)?(?:administrator|senior|admin)",
     r"(?:has|have)\s+(?:also\s+)?been\s+(?:passed|forwarded|sent)\s+to\s+(?:an?\s+|the\s+)?(?:administrator|senior)",
     r"complaint\s+is\s+closed", r"(?:has|have)\s+been\s+reviewed",
@@ -52,15 +54,17 @@ _CLAIM_RX = re.compile("|".join(_CLAIM), re.I)
 
 def claims_action(text: str) -> bool:
     """Текст утверждает, что обращение передано, рассмотрено или закрыто."""
-    return bool(_CLAIM_RX.search(text or ""))
+    t = _INVISIBLE.sub("", text or "")
+    return bool(_CLAIM_RX.search(t))
 
 
 def check(text: str, cited: list[str], rb: RuleBase) -> tuple[list[str], list[str]]:
     """Возвращает (валидные цитаты, причины для человека)."""
+    t = _INVISIBLE.sub("", text or "")
     reasons = []
     valid = [c for c in cited if rb.exists(c)]
     if len(valid) != len(cited):
         reasons.append("удалены несуществующие пункты правил: " + ", ".join(c for c in cited if c not in valid))
-    if _PROMISE_RX.search(text or ""):
+    if _PROMISE_RX.search(t):
         reasons.append("в тексте обещание (разбан, возврат, компенсация): нужен человек")
     return valid, reasons

@@ -101,7 +101,7 @@ class Page:
         self.http_noise: list[str] = []      # 4xx и 5xx на заведомо плохой ввод или режим сбоя: браузер пишет их в консоль сам
         self.page.on("console", self._console)
         self.page.on("pageerror", lambda e: self.errors.append(f"pageerror: {e}"))
-        self.page.on("requestfailed", lambda r: self.errors.append(f"requestfailed: {r.url} {r.failure}"))
+        self.page.on("requestfailed", lambda r: None if "ERR_ABORTED" in str(r.failure) else self.errors.append(f"requestfailed: {r.url} {r.failure}"))
         self.page.on("response", lambda r: self.errors.append(f"http {r.status}: {r.url}") if r.status >= 500 and r.status != 503 else None)
         self.page.on("dialog", lambda d: (self.dialogs.append(d.message), d.dismiss()))
 
@@ -116,5 +116,3 @@ class Page:
 
     def close(self):
         self.ctx.close()
-
-

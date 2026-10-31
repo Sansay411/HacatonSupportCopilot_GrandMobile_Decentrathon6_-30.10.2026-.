@@ -10,6 +10,7 @@ from __future__ import annotations
 import re
 
 from .signals import Signals
+from .textnorm import for_matching
 
 COMPLAINT_CATS = [
     "complaint.insult", "complaint.cheat", "complaint.dm", "complaint.scam", "complaint.rmt_ads",
@@ -76,13 +77,28 @@ def outcome_category(violation: str | None, rule_base) -> str | None:
     return None
 
 
-# явный взлом: слово «верните» из stuck-признака рядом с ним не превращает репорт в просьбу о помощи
-_HIJACK = re.compile(r"взлом|украл\w*\s+(?:мо\w+\s+)?(?:акк|машин|дом|деньг|бизнес|имущ)|(?:зашел|зашёл|залез|вошел|вошёл|влез|заходил|зашли|вошли)\s+(?:\w+\s+){0,2}?(?:в|на)\s+(?:мо\w+\s+)?(?:аккаунт|акк\b)")
+# явный взлом или потеря доступа к аккаунту: слова «верните» / «застрял» рядом с ним не превращают репорт в report.help
+_HIJACK = re.compile(
+    r"взлом|угнал\w*\s+(?:мо\w+\s+)?акк|увел\w*\s+(?:мо\w+\s+)?акк|украл\w*\s+(?:мо\w+\s+)?(?:акк|машин|дом|деньг|бизнес|имущ)"
+    r"|(?:зашел|зашёл|залез|вошел|вошёл|влез|заходил|зашли|вошли)\s+(?:\w+\s+){0,2}?(?:в|на)\s+(?:мо\w+\s+)?(?:аккаунт|акк\b|профиль)"
+    r"|забыл\w*\s+парол|потерял\w*\s+доступ|парол\w*.{0,25}акк|сменил\w*\s+(?:почт|парол)"
+    r"|(?:не могу|не получается)\s+(?:зайти|войти)\s+(?:на|в)\s+(?:свой\s+|мой\s+)?(?:аккаунт|акк\b)"
+    r"|vzlom|ukral\w*\s+akk|ugnal\w*\s+akk|аккаунт\w*.{0,40}бұз|hisob\w*.{0,30}buz|akkaunt\w*.{0,30}buz",
+    re.I,
+)
+
+# бытовые игровые вопросы про почту, вход в здание или пропажу звука/худа не должны попадать в report.account
+_FALSE_ACCOUNT = re.compile(
+    r"пропал\w*\s+(?:звук|худ|hud|радар|карт[аы]|интерфейс|текстур|метк|прицел|чат|курсор|голос|микрофон)"
+    r"|(?:не могу|не получается)\s+(?:войти|зайти|вой)\s+(?:в|на)\s+(?:здани|дом\b|гараж|мэри|магазин|интерьер|казарм|больниц|банк|парковк|склад)"
+    r"|(?:где\b.{0,25}\bпочт[ау]\b|устроиться.{0,25}\bпочт[ау]\b|курьер\w*.{0,25}\bпочт[ау]\b|работ\w*.{0,25}\bпочт[ау]\b)",
+    re.I,
+)
 
 
 def label_rules(kind: str, sig: Signals, text: str, verdict: str | None = None,
                 violation: str | None = None, rule_base=None) -> str:
-    t = text.lower()
+    t = for_matching(text)
     if kind == "complaint":
         if verdict in ("appeal_rejected", "appeal_approved"):
             return "complaint.admin"
@@ -117,7 +133,7 @@ def label_rules(kind: str, sig: Signals, text: str, verdict: str | None = None,
     # report
     if "payment" in sig.topics:
         return "report.payment"
-    if "account" in sig.topics and not ("stuck" in sig.topics and not _HIJACK.search(t)):
+    if "account" in sig.topics and not _FALSE_ACCOUNT.search(t) and not ("stuck" in sig.topics and not _HIJACK.search(t)):
         return "report.account"
     if "threat_irl" in sig.topics:
         return "report.complaint"

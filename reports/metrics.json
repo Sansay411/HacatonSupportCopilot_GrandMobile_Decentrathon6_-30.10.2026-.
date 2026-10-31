@@ -5,13 +5,13 @@
   "priority_accuracy": 0.942,
   "draft_scenario_matches_admin_verdict": 0.643,
   "draft_scenario_n": 518,
-  "citations_total": 1224,
+  "citations_total": 1222,
   "citations_nonexistent": 0,
-  "drafts_with_citation_share": 0.804,
-  "needs_human_share": 0.912,
+  "drafts_with_citation_share": 0.803,
+  "needs_human_share": 0.914,
   "needs_human_share_by_kind": {
     "complaint": 0.955,
-    "report": 0.721
+    "report": 0.732
   },
   "spam_or_duplicate_share": 0.006,
   "duplicate_recall_vs_admin": 0.0,
@@ -22,18 +22,19 @@
     "kk": 8,
     "en": 4
   },
-  "latency_ms_p50": 2.4,
-  "latency_ms_p95": 4.9,
+  "latency_ms_p50": 2.9,
+  "latency_ms_p95": 7.0,
   "cost_usd_per_ticket": 0.0,
   "intents": {
     "approve": 325,
-    "need_evidence": 256,
+    "need_evidence": 255,
     "appeal": 164,
     "not_complaint": 11,
     "no_description": 35,
     "toxic": 8,
     "admin_complaint": 15,
     "duplicate": 3,
+    "payment": 1,
     "help_ack": 54,
     "offtopic_flood": 7,
     "question_unknown": 15,
@@ -65,7 +66,7 @@
     "need_evidence": {
       "need_evidence": 100,
       "approved": 26,
-      "other": 72,
+      "other": 71,
       "rejected": 39,
       "invalid_format": 9,
       "appeal_rejected": 5,
@@ -117,6 +118,9 @@
       "closed": 1,
       "other": 1,
       "need_evidence": 1
+    },
+    "payment": {
+      "other": 1
     }
   }
 }

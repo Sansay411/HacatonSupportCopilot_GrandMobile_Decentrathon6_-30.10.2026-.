@@ -34,9 +34,18 @@ RP_TERMS_SECTION = 43
 _PREFIX_TO_SECTION = {v[0].lower(): k for k, v in SECTIONS.items() if v[0]}
 
 _REF_IN_TEXT = re.compile(
-    r"(?<![\d.])(\d{1,2}(?:\.\d{1,2}){1,2})(?![\d])\s*[.,]?\s*([a-zа-яё]{1,10})?",
+    r"(?:([a-zа-яё]{2,10})\s+)?(?<![\d.])(\d{1,2}(?:\.\d{1,2}){1,2})(?![\d])\s*[.,]?\s*([a-zа-яё]{1,10})?",
     re.IGNORECASE,
 )
+
+
+def _match_section_alias(token: str) -> int | None:
+    if not token:
+        return None
+    for sid, (_, _, aliases) in SECTIONS.items():
+        if any(token == a or (len(a) > 3 and token.startswith(a)) for a in aliases):
+            return sid
+    return None
 
 
 @dataclass(frozen=True)
@@ -95,23 +104,22 @@ class RuleBase:
         """Достаёт из свободного текста ссылки и приводит к виду цитаты.
 
         Возвращает только существующие пункты. «2.1оп», «5.2 OP», «1.1 gz»,
-        «1.2.3 ППЖ». Голые числа вроде «3» или «357» ссылками не считаем.
+        «GZ 1.2», «ПГО 1.2», «1.2.3 ППЖ». Голые числа вроде «3» или «357» ссылками не считаем.
         """
         if not text:
             return []
         t = for_matching(text)
         found: list[str] = []
         for m in _REF_IN_TEXT.finditer(t):
-            num, suffix = m.group(1), (m.group(2) or "").lower()
-            sec = default_section
-            if suffix:
-                for sid, (_, _, aliases) in SECTIONS.items():
-                    if any(suffix == a or (len(a) > 3 and suffix.startswith(a)) for a in aliases):
-                        sec = sid
-                        break
-                # «опг» начинается с «оп», поэтому проверка выше идёт по равенству
+            prefix = (m.group(1) or "").lower()
+            num = m.group(2)
+            suffix = (m.group(3) or "").lower()
+            sec_from_suffix = _match_section_alias(suffix)
+            sec_from_prefix = _match_section_alias(prefix)
+            explicit_sec = sec_from_suffix if sec_from_suffix is not None else sec_from_prefix
+            sec = explicit_sec if explicit_sec is not None else default_section
             point = self._lookup(sec, num)
-            if point is None and sec != default_section and not suffix:
+            if point is None and explicit_sec is None and sec != default_section:
                 point = self._lookup(default_section, num)
             if point and point.cite not in found:
                 found.append(point.cite)

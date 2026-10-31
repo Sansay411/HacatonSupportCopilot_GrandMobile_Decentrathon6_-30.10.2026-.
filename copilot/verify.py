@@ -96,9 +96,13 @@ class Verification:
                 "refs": [{"raw": r.raw, "cite": r.cite, "exists": r.exists} for r in self.refs]}
 
 
+_INVISIBLE = re.compile(r"[\u200b-\u200f\u202a-\u202e\u2060\ufeff\u00ad]+")
+
+
 def _norm(text: str) -> str:
-    """Один вид записи для разбора: полноширинные точки и цифры, типографские апострофы."""
-    t = unicodedata.normalize("NFKC", text or "")
+    """Один вид записи для разбора: полноширинные точки и цифры, типографские апострофы, без невидимых символов."""
+    t = _INVISIBLE.sub("", text or "")
+    t = unicodedata.normalize("NFKC", t)
     return t.replace("\u2019", "'").replace("\u2018", "'").replace("`", "'").replace("\u00b4", "'")
 
 

@@ -56,6 +56,10 @@ _RU_TRANSLIT = set("""
 osk oskorblenie oskorbil rod rodni rodnyu mat dm db tk sk soft cheat chit fraps nonrp
 nrp pg mg rk gz op pomogite pomogi pzh pls plz zastryal ubil ubivaet admin adm ban
 mut mute varn warn skam scam kop koptsy pochemu kak gde privet spasibo nakazanie
+ya menya mne moy moego moyu za chto zachem kogda kuda otkuda zabaneli zabanili
+razbante razbanit razban snimi snimite vernite verni dengi donat oplata oplatil
+popolnil spisalos spislis ne prishli prishel prishlo vzlomali vzlom ukrali ugnali
+parol akk akkaunt igrok jaloba zhaloba obmanul obman
 """.split())
 
 _TOKEN = re.compile(r"[a-zа-яёәғқңөұүһіїєґўҳ'ʻʼ‘’`]+", re.IGNORECASE)
@@ -94,13 +98,23 @@ def detect(text: str, server_lang: str | None = None) -> str:
             return "uk"
         return "ru"
 
+    ru_hits = sum(1 for w in toks if w in _RU_TRANSLIT)
     scores = {
-        "uz": sum(1 for w in toks if w in _UZ_WORDS or w.endswith(("ni", "ga", "da", "dan", "mi", "lar", "yapti", "yapdi", "dim", "di"))
-                  and w not in _EN_WORDS and len(w) > 3),
+        "uz": sum(
+            1
+            for w in toks
+            if w in _UZ_WORDS
+            or (
+                w.endswith(("ni", "ga", "da", "dan", "mi", "lar", "yapti", "yapdi", "dim", "di"))
+                and w not in _EN_WORDS
+                and w not in _RU_TRANSLIT
+                and len(w) > 3
+            )
+        ),
         "en": sum(1 for w in toks if w in _EN_WORDS),
-        "es": sum(1 for w in toks if w in _ES_WORDS),
-        "pt": sum(1 for w in toks if w in _PT_WORDS),
-        "ru": sum(1 for w in toks if w in _RU_TRANSLIT),
+        "es": sum(1 for w in toks if w in _ES_WORDS and (len(w) > 1 or ru_hits == 0)),
+        "pt": sum(1 for w in toks if w in _PT_WORDS and (len(w) > 1 or ru_hits == 0)),
+        "ru": ru_hits,
     }
     if "o'" in text.lower() or "g'" in text.lower() or "oʻ" in text or "gʻ" in text:
         scores["uz"] += 2

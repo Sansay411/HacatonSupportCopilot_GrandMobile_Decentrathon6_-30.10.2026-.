@@ -25,6 +25,8 @@ _STRONG_SURROGATES = set("ќЌѕЅјЈ")
 
 _WS = re.compile(r"\s+")
 _REPEAT = re.compile(r"(.)\1{3,}")
+# Zero-width и управляющие невидимые символы, которыми обходят регулярки
+_INVISIBLE = re.compile(r"[\u200b-\u200f\u202a-\u202e\u2060\ufeff\u00ad]+")
 
 
 def has_kk_surrogates(text: str) -> bool:
@@ -48,6 +50,7 @@ def clean(text: str | None, region: str | None = None) -> str:
     if not text:
         return ""
     t = unicodedata.normalize("NFC", text)
+    t = _INVISIBLE.sub("", t)
     t = fix_cp1251_kazakh(t, region)
     t = t.replace(" ", " ")
     t = _WS.sub(" ", t).strip()
@@ -56,6 +59,6 @@ def clean(text: str | None, region: str | None = None) -> str:
 
 def for_matching(text: str) -> str:
     """Форма для регулярок и классификатора: нижний регистр, ё→е, без растяжек."""
-    t = text.lower().replace("ё", "е")
+    t = _INVISIBLE.sub("", text).lower().replace("ё", "е")
     t = _REPEAT.sub(r"\1\1", t)
     return t

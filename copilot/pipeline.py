@@ -103,14 +103,19 @@ class Copilot:
         sig = extract(t.player_text, self.rules, t.rule_refs_raw, t.images, t.reported_nick)
         cat = self.category_model.predict(t, sig)
         priority = priority_rules(cat.category, sig)
+        pre_esc = drafts.mandatory_escalation_reasons(t.kind, cat.category, sig, t.player_text)
+        pre_mandatory = bool(pre_esc or cat.category in NEEDS_HUMAN_ALWAYS or priority == "p0")
 
         spam = dedup_mod.is_spam(t.player_text)
         dup_reason = None
         dup_match = None
         if use_dedup:
             dup_match = self.dedup.match_and_add(
-                reporter=t.reporter_hash or payload.get("reporter"), reported=t.reported_hash or t.reported_nick,
-                text=t.player_text, kind=t.kind, created_at=t.created_at, category=cat.category, ref=ref)
+                reporter=t.reporter_hash or payload.get("reporter"),
+                reported=t.reported_hash or t.reported_nick or sig.nickname,
+                text=t.player_text, kind=t.kind, created_at=t.created_at, category=cat.category, ref=ref,
+                mandatory_human=pre_mandatory, ticket_id=str(payload["ticket_id"]) if payload.get("ticket_id") else None,
+            )
             dup_reason = dup_match.reason if dup_match else None
 
         verdict, vconf = (None, 1.0)
@@ -152,6 +157,17 @@ class Copilot:
         if "admin_subject" in sig.topics:
             needs_human = True
             reasons.append("обращение на действия администратора: решает старшая администрация")
+        esc_reasons = drafts.mandatory_escalation_reasons(t.kind, cat.category, sig, t.player_text, intent=d.intent)
+        if esc_reasons:
+            needs_human = True
+            for r in esc_reasons:
+                if r not in reasons:
+                    reasons.append(r)
+        if dup_match and dup_match.original_mandatory_human:
+            needs_human = True
+            orig_msg = "исходное обращение в цепочке дублей требует проверки человеком"
+            if orig_msg not in reasons:
+                reasons.append(orig_msg)
         if confidence < 0.5 and not dup_reason:
             needs_human = True
             reasons.append(f"низкая уверенность классификации ({confidence})")

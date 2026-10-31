@@ -4,7 +4,7 @@
  "tickets_with_any_problem": 0,
  "problems": {},
  "problem_rate": 0.0,
- "needs_human_share": 0.833,
+ "needs_human_share": 0.875,
  "by_group": {},
  "groups_total": {
   "cat:complaint.admin": 4,

@@ -99,16 +99,15 @@ T = {
                          "видео, которое опровергает нарушение, подайте новую жалобу и приложите его ({cite_req}). Жалоба закрыта.",
         "hello": "Здравствуйте!",
         "cite": "п. {ref} {section}",
-        "approve": "Жалоба рассмотрена. По приложенным материалам видно нарушение {cite} ({title}){nick_part}. "
-                   "Наказание по правилам: {sanction}. Срок назначит администратор. Спасибо за активную позицию! Жалоба закрыта.",
-        "approve_nosanction": "Жалоба рассмотрена. По приложенным материалам видно нарушение {cite} ({title}){nick_part}. "
-                              "Наказание назначит администратор по правилам проекта. Спасибо за активную позицию! Жалоба закрыта.",
-        "approve_term": "Жалоба рассмотрена. По приложенным материалам видно нарушение: {term}{nick_part}. "
-                        "Наказание по правилам: {sanction}. Срок назначит администратор. Спасибо за активную позицию! Жалоба закрыта.",
+        "approve": "По приложенным материалам видно нарушение {cite} ({title}){nick_part}. "
+                   "Наказание по правилам: {sanction}. Срок назначит администратор.",
+        "approve_nosanction": "По приложенным материалам видно нарушение {cite} ({title}){nick_part}. "
+                              "Наказание назначит администратор по правилам проекта.",
+        "approve_term": "По приложенным материалам видно нарушение: {term}{nick_part}. "
+                        "Наказание по правилам: {sanction}. Срок назначит администратор.",
         "nick_part": ", нарушитель {nick}",
-        "need_evidence": "Спасибо за жалобу. Чтобы проверить нарушение{what}, нужна видеозапись с моментом нарушения, "
-                         "на которой виден ник игрока: жалоба должна содержать полные доказательства ({cite_req}). "
-                         "Видео загрузите на YouTube, imgur, Rutube, Яндекс Диск или Google Диск ({cite_platform}) и подайте новую жалобу.",
+        "need_evidence": "Для проверки нарушения{what} нужна видеозапись, на которой виден момент нарушения и ник игрока ({cite_req}). "
+                         "Загрузите видео на YouTube, imgur, Rutube, Яндекс Диск или Google Диск ({cite_platform}) и подайте новую жалобу.",
         "what": " ({title})",
         "no_description": "Жалоба не может быть рассмотрена: в ней нет точного и логичного описания произошедшего ({cite}). "
                           "Опишите, что случилось, где и когда, укажите ник нарушителя и приложите доказательства, затем подайте новую жалобу.",
@@ -123,8 +122,7 @@ T = {
                   "видео, подтверждающее вашу позицию ({cite_req}). Обжаловать наказание можно в течение 48 часов ({cite_time}).",
         "admin_complaint": "Жалоба на действия администратора принята: её проверяет старшая администрация. "
                            "Для рассмотрения нужны доказательства: видео или скриншоты с моментом нарушения ({cite_req}).",
-        "report_watch": "Администратор проверит ситуацию и проследит за игроком{pid_part}. Если есть видео нарушения, оформите жалобу "
-                        "в лаунчере: по жалобе с доказательствами нарушителя можно наказать.",
+        "report_watch": "Администратор проверит ситуацию и проследит за игроком{pid_part}. Если есть видео нарушения, оформите жалобу в лаунчере.",
         "pid_part": " [{pid}]",
         "report_need_id": "Укажите ID нарушителя и что он нарушает, администратор проследит. Если есть видео, "
                           "оформите жалобу в лаунчере.",
@@ -139,8 +137,8 @@ T = {
         "question_tech": "С техническими проблемами и вопросами по покупкам обращайтесь в техническую поддержку: {support}.",
         "question_complaint_howto": "Жалоба подаётся в лаунчере игры: укажите ник нарушителя, опишите ситуацию и приложите видео или скриншоты.",
         "clarify": "Уточните, пожалуйста, ваш вопрос или жалобу: что случилось?",
-        "help_ack": "Администратор на связи и посмотрит, что происходит. Опишите в репорте, что случилось, так помощь придёт быстрее.",
-        "event_tp": "Телепорт на мероприятие сейчас закрыт или мероприятие не проводится. Следите за объявлениями администрации в чате.",
+        "help_ack": "Администратор на связи. Опишите в репорте, что случилось, так помощь придёт быстрее.",
+        "event_tp": "Открыт ли телепорт на мероприятие, подтвердит администратор. Следите за объявлениями администрации в чате.",
         "offtopic_flood": "Репорт предназначен для обращений к администрации. За оффтоп и флуд в репорт может последовать мут репорта ({cite}).",
         "account": "Вопросы доступа к аккаунту, взлома и пропажи имущества администрация в игре не решает. Обратитесь в "
                    "техническую поддержку: {support}. Обращение также рассмотрит администратор. Напоминаем: по {cite} "
@@ -157,15 +155,14 @@ T = {
                          "жоққа шығаратын бейнежазбаңыз болса, оны тіркеп, жаңа шағым беріңіз ({cite_req}). Шағым жабылды.",
         "hello": "Сәлеметсіз бе!",
         "cite": "{section} {ref}-тармағы",
-        "approve": "Шағымыңыз қаралды. Тіркелген материалдардан {cite_gen} бұзылғаны көрінеді ({title}){nick_part}. "
-                   "Ереже бойынша жаза: {sanction}. Нақты мерзімді әкімші белгілейді. Белсенділігіңізге рахмет! Шағым жабылды.",
-        "approve_nosanction": "Шағымыңыз қаралды. Тіркелген материалдардан {cite_gen} бұзылғаны көрінеді ({title}){nick_part}. "
-                              "Жазаны әкімші жоба ережелеріне сәйкес белгілейді. Белсенділігіңізге рахмет! Шағым жабылды.",
-        "approve_term": "Шағымыңыз қаралды. Тіркелген материалдардан бұзушылық көрінеді: {term}{nick_part}. "
-                        "Ереже бойынша жаза: {sanction}. Нақты мерзімді әкімші белгілейді. Белсенділігіңізге рахмет! Шағым жабылды.",
+        "approve": "Тіркелген материалдардан {cite_gen} бұзылғаны көрінеді ({title}){nick_part}. "
+                   "Ереже бойынша жаза: {sanction}. Нақты мерзімді әкімші белгілейді.",
+        "approve_nosanction": "Тіркелген материалдардан {cite_gen} бұзылғаны көрінеді ({title}){nick_part}. "
+                              "Жазаны әкімші жоба ережелеріне сәйкес белгілейді.",
+        "approve_term": "Тіркелген материалдардан бұзушылық көрінеді: {term}{nick_part}. "
+                        "Ереже бойынша жаза: {sanction}. Нақты мерзімді әкімші белгілейді.",
         "nick_part": ", бұзушы: {nick}",
-        "need_evidence": "Шағымыңызға рахмет. Бұзушылықты{what} тексеру үшін бейнежазба қажет: онда бұзушылық сәті мен "
-                         "ойыншының никі анық көрінуі керек, өйткені шағымда толық дәлел болуы тиіс ({cite_req}). "
+        "need_evidence": "Бұзушылықты{what} тексеру үшін бейнежазба қажет: онда бұзушылық сәті мен ойыншының никі көрінуі керек ({cite_req}). "
                          "Бейнені YouTube, imgur, Rutube, Яндекс Диск немесе Google Диск арқылы жүктеп ({cite_platform}), жаңа шағым беріңіз.",
         "what": " ({title})",
         "no_description": "Шағым қаралмайды: онда не болғаны нақты әрі түсінікті жазылмаған ({cite}). "
@@ -181,8 +178,7 @@ T = {
                   "растайтын бейнежазбаны қосыңыз ({cite_req}). Жазаға 48 сағат ішінде шағымдануға болады ({cite_time}).",
         "admin_complaint": "Әкімшінің әрекетіне берілген шағым қабылданды: оны аға әкімшілік тексереді. "
                            "Қарау үшін дәлел қажет: бұзушылық сәті көрінетін бейне немесе скриншот ({cite_req}).",
-        "report_watch": "Әкімші жағдайды тексеріп, ойыншыны{pid_part} бақылайды. Бұзушылықтың бейнежазбасы болса, "
-                        "лаунчер арқылы шағым беріңіз: дәлелі бар шағым бойынша бұзушыны жазалауға болады.",
+        "report_watch": "Әкімші жағдайды тексеріп, ойыншыны{pid_part} бақылайды. Бұзушылықтың бейнежазбасы болса, лаунчер арқылы шағым беріңіз.",
         "pid_part": " [{pid}]",
         "report_need_id": "Бұзушының ID нөмірін және не бұзып жатқанын жазыңыз, әкімші бақылайды. Бейнежазба болса, "
                           "лаунчер арқылы шағым беріңіз.",
@@ -197,8 +193,8 @@ T = {
         "question_tech": "Техникалық мәселелер мен сатып алу сұрақтары бойынша техникалық қолдау қызметіне жазыңыз: {support}.",
         "question_complaint_howto": "Шағым ойын лаунчері арқылы беріледі: бұзушының никін көрсетіп, жағдайды сипаттаңыз және бейне не скриншот тіркеңіз.",
         "clarify": "Сұрағыңызды немесе шағымыңызды нақтылап жазыңызшы: не болды?",
-        "help_ack": "Әкімші байланыста, жағдайды қарап шығады. Не болғанын репортқа жазыңыз, сонда көмек тезірек келеді.",
-        "event_tp": "Іс-шараға телепорт қазір жабық немесе іс-шара өтпей жатыр. Чаттағы әкімшілік хабарландыруларын қадағалаңыз.",
+        "help_ack": "Әкімші байланыста. Не болғанын репортқа жазыңыз, сонда көмек тезірек келеді.",
+        "event_tp": "Іс-шараға телепорт ашық па, соны әкімші растайды. Чаттағы әкімшілік хабарландыруларын қадағалаңыз.",
         "offtopic_flood": "Репорт әкімшілікке жүгіну үшін арналған. Оффтоп пен флуд үшін репортқа шектеу қойылуы мүмкін ({cite}).",
         "account": "Аккаунтқа кіру, аккаунтты бұзу және мүліктің жоғалуы мәселелерін ойын ішіндегі әкімшілік шешпейді. "
                    "Техникалық қолдау қызметіне жазыңыз: {support}. Өтінішіңізді әкімші де қарайды. Еске саламыз: {cite} бойынша "
@@ -215,15 +211,15 @@ T = {
                          "Agar qoidabuzarlikni rad etuvchi videongiz bo‘lsa, uni ilova qilib, yangi shikoyat yuboring ({cite_req}). Shikoyat yopildi.",
         "hello": "Assalomu alaykum!",
         "cite": "{section} {ref}-bandi",
-        "approve": "Shikoyatingiz ko‘rib chiqildi. Ilova qilingan materiallarda {cite} buzilgani ko‘rinadi ({title}){nick_part}. "
-                   "Qoidalar bo‘yicha jazo: {sanction}. Aniq muddatni administrator belgilaydi. Faol pozitsiyangiz uchun rahmat! Shikoyat yopildi.",
-        "approve_nosanction": "Shikoyatingiz ko‘rib chiqildi. Ilova qilingan materiallarda {cite} buzilgani ko‘rinadi ({title}){nick_part}. "
-                              "Jazoni administrator loyiha qoidalariga muvofiq belgilaydi. Faol pozitsiyangiz uchun rahmat! Shikoyat yopildi.",
-        "approve_term": "Shikoyatingiz ko‘rib chiqildi. Ilova qilingan materiallarda qoidabuzarlik ko‘rinadi: {term}{nick_part}. "
-                        "Qoidalar bo‘yicha jazo: {sanction}. Aniq muddatni administrator belgilaydi. Faol pozitsiyangiz uchun rahmat! Shikoyat yopildi.",
+        "approve": "Ilova qilingan materiallarda {cite} buzilgani ko‘rinadi ({title}){nick_part}. "
+                   "Qoidalar bo‘yicha jazo: {sanction}. Aniq muddatni administrator belgilaydi.",
+        "approve_nosanction": "Ilova qilingan materiallarda {cite} buzilgani ko‘rinadi ({title}){nick_part}. "
+                              "Jazoni administrator loyiha qoidalariga muvofiq belgilaydi.",
+        "approve_term": "Ilova qilingan materiallarda qoidabuzarlik ko‘rinadi: {term}{nick_part}. "
+                        "Qoidalar bo‘yicha jazo: {sanction}. Aniq muddatni administrator belgilaydi.",
         "nick_part": ", qoidabuzar: {nick}",
-        "need_evidence": "Shikoyatingiz uchun rahmat. Qoidabuzarlikni{what} tekshirish uchun video dalil (videofiksatsiya) zarur: videoda "
-                         "qoidabuzarlik lahzasi va o‘yinchining niki aniq ko‘rinishi kerak, chunki shikoyatda to‘liq dalillar bo‘lishi shart ({cite_req}). "
+        "need_evidence": "Qoidabuzarlikni{what} tekshirish uchun video dalil (videofiksatsiya) zarur: videoda qoidabuzarlik lahzasi va "
+                         "o‘yinchining niki ko‘rinishi kerak ({cite_req}). "
                          "Videoni YouTube, imgur, Rutube, Yandex Disk yoki Google Disk orqali yuklang ({cite_platform}) va yangi shikoyat yuboring.",
         "what": " ({title})",
         "no_description": "Shikoyat ko‘rib chiqilmaydi: unda nima sodir bo‘lgani aniq va mantiqiy bayon qilinmagan ({cite}). "
@@ -239,8 +235,7 @@ T = {
                   "pozitsiyangizni tasdiqlovchi videoni qo‘shing ({cite_req}). Jazo ustidan 48 soat ichida shikoyat qilish mumkin ({cite_time}).",
         "admin_complaint": "Administrator harakatlari ustidan shikoyat qabul qilindi: uni katta ma’muriyat tekshiradi. "
                            "Ko‘rib chiqish uchun dalil kerak: qoidabuzarlik lahzasi ko‘rinadigan video yoki skrinshot ({cite_req}).",
-        "report_watch": "Administrator vaziyatni tekshirib, o‘yinchini{pid_part} kuzatadi. Agar qoidabuzarlik videosi bo‘lsa, "
-                        "launcher orqali shikoyat yozing: dalilli shikoyat bo‘yicha qoidabuzar jazolanishi mumkin.",
+        "report_watch": "Administrator vaziyatni tekshirib, o‘yinchini{pid_part} kuzatadi. Agar qoidabuzarlik videosi bo‘lsa, launcher orqali shikoyat yozing.",
         "pid_part": " [{pid}]",
         "report_need_id": "Qoidabuzarning ID raqamini va nimani buzayotganini yozing, administrator kuzatadi. Video bo‘lsa, "
                           "launcher orqali shikoyat yozing.",
@@ -255,8 +250,8 @@ T = {
         "question_tech": "Texnik muammolar va xaridlar bo‘yicha texnik yordamga murojaat qiling: {support}.",
         "question_complaint_howto": "Shikoyat o‘yin launcheri orqali yoziladi: qoidabuzarning nikini ko‘rsating, vaziyatni tasvirlang va video yoki skrinshot ilova qiling.",
         "clarify": "Iltimos, savolingiz yoki shikoyatingizni aniqroq yozing: nima bo‘ldi?",
-        "help_ack": "Administrator aloqada, vaziyatni ko‘rib chiqadi. Nima bo‘lganini reportga yozing, shunda yordam tezroq keladi.",
-        "event_tp": "Tadbirga teleport hozir yopiq yoki tadbir o‘tkazilmayapti. Chatdagi ma’muriyat e’lonlarini kuzatib boring.",
+        "help_ack": "Administrator aloqada. Nima bo‘lganini reportga yozing, shunda yordam tezroq keladi.",
+        "event_tp": "Tadbirga teleport ochiqligini administrator tasdiqlaydi. Chatdagi ma’muriyat e’lonlarini kuzatib boring.",
         "offtopic_flood": "Report ma’muriyatga murojaat qilish uchun mo‘ljallangan. Reportda offtop va flud uchun reportga cheklov qo‘yilishi mumkin ({cite}).",
         "account": "Akkauntga kirish, akkauntni buzib kirish va mol-mulk yo‘qolishi masalalarini o‘yin ichidagi ma’muriyat hal qilmaydi. "
                    "Texnik yordamga yozing: {support}. Murojaatingizni administrator ham ko‘rib chiqadi. Eslatma: {cite}ga ko‘ra "
@@ -310,7 +305,7 @@ T = {
         "question_complaint_howto": "Complaints are filed in the game launcher: give the offender's nickname, describe the situation and attach a video or screenshots.",
         "clarify": "Please clarify your question or complaint: what happened?",
         "help_ack": "An administrator is on it and will take a look. Describe what happened in the report so we can help faster.",
-        "event_tp": "Teleport to the event is closed right now or no event is running. Watch for administrator announcements in chat.",
+        "event_tp": "An administrator will confirm whether teleport to the event is open. Watch for administrator announcements in chat.",
         "offtopic_flood": "Reports are for contacting administrators. Off-topic messages and flooding may lead to a report mute ({cite}).",
         "account": "Account access, hacking and lost property cannot be resolved by in-game administrators. Please contact technical "
                    "support: {support}. An administrator will also review your request. Note: under {cite}, players are "
@@ -362,7 +357,7 @@ T = {
         "question_complaint_howto": "Las quejas se presentan en el launcher del juego: indica el apodo del infractor, describe la situación y adjunta video o capturas.",
         "clarify": "Por favor, aclara tu pregunta o queja: ¿qué pasó?",
         "help_ack": "Un administrador está atento y lo revisará. Describe en el reporte qué pasó para ayudarte más rápido.",
-        "event_tp": "El teletransporte al evento está cerrado ahora o no hay ningún evento en curso. Atento a los anuncios de la administración en el chat.",
+        "event_tp": "Un administrador confirmará si el teletransporte al evento está abierto. Atento a los anuncios de la administración en el chat.",
         "offtopic_flood": "Los reportes son para contactar con la administración. El offtopic y el flood pueden llevar a un silencio de reportes ({cite}).",
         "account": "Los problemas de acceso a la cuenta, hackeo y pérdida de bienes no los resuelve la administración del juego. Escribe al "
                    "soporte técnico: {support}. Un administrador también revisará tu solicitud. Según el {cite}, cada jugador es "
@@ -414,7 +409,7 @@ T = {
         "question_complaint_howto": "As denúncias são feitas no launcher do jogo: informe o apelido do infrator, descreva a situação e anexe vídeo ou capturas.",
         "clarify": "Por favor, explique melhor sua pergunta ou denúncia: o que aconteceu?",
         "help_ack": "Um administrador está acompanhando e vai verificar. Descreva no report o que aconteceu para ajudarmos mais rápido.",
-        "event_tp": "O teleporte para o evento está fechado agora ou não há evento em andamento. Acompanhe os anúncios da administração no chat.",
+        "event_tp": "Um administrador confirmará se o teleporte para o evento está aberto. Acompanhe os anúncios da administração no chat.",
         "offtopic_flood": "Os reports servem para falar com a administração. Offtopic e flood podem levar a um silenciamento de reports ({cite}).",
         "account": "Problemas de acesso à conta, invasão e perda de bens não são resolvidos pela administração do jogo. Fale com o suporte "
                    "técnico: {support}. Um administrador também vai analisar seu pedido. Pelo {cite}, cada jogador é "

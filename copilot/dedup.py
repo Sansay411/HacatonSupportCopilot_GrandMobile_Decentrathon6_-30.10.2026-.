@@ -17,6 +17,29 @@ from .textnorm import for_matching
 
 WINDOW = timedelta(hours=1)
 
+_NEG_TOKENS = re.compile(
+    r"\b(?:не|ни|нет|нету|без|никто|никого|никогда|not|no|don't|dont|емес|жоқ|emas|yo'q|yoq)\b",
+    re.I,
+)
+_PROBLEM_GROUPS: dict[str, re.Pattern] = {
+    "scam": re.compile(r"\bскам|\bscam|\bskam|обман|кинул|развел|развёл|мошен|украл|не вернул|не отдал|aldab|aldadi|алдап", re.I),
+    "threat": re.compile(r"угрож|угроз|найду теб|вычисл|\bдеанон|\bдокс|\bсват|реальн\w* жизн|\birl\b|tahdid|шын өмірде", re.I),
+    "insult": re.compile(r"\bоск|\bosk|оскорб|обзыва|обозвал|\bмат|родн|мамк|балағат|сөкт|haqorat|so'?k", re.I),
+    "cheat": re.compile(r"\bсофт|\bsoft|\bчит|\bchit|\bcheat|аим|\baim|\bвх\b|\bwh\b|спидхак|багоюз|телепорт", re.I),
+    "dm": re.compile(r"\bдм\b|\bdm\b|дмит|\bдб\b|\bdb\b|\bтк\b|\btk\b|\bск\b|\bsk\b|убил|убива|застрелил|стреля|таран|сбил|задавил|өлтір|o'?ldir", re.I),
+    "payment": re.compile(r"\bдонат|задонат|оплатил|платеж|платёж|списал|төлем|to'?lov|\bpaid\b|\bpayment", re.I),
+    "account": re.compile(r"взлом|угнал|увели|пароль|привязк|аккаунт.*бұз|hisob.*buz|vzlom", re.I),
+}
+
+
+def _problem_topics(text: str) -> set[str]:
+    m = for_matching(text)
+    return {name for name, rx in _PROBLEM_GROUPS.items() if rx.search(m)}
+
+
+def _has_negation(text: str) -> bool:
+    return bool(_NEG_TOKENS.search(for_matching(text)))
+
 
 def _utcnow() -> datetime:
     return datetime.now(timezone.utc).replace(tzinfo=None)
@@ -72,6 +95,7 @@ class DedupMatch:
     category_equal: bool
     delta_seconds: float
     window_seconds: int = int(WINDOW.total_seconds())
+    original_mandatory_human: bool = False
 
     def as_dict(self) -> dict:
         return {"reason": self.reason, "kind": self.kind, "original_ref": self.original_ref,
@@ -101,40 +125,70 @@ class DedupStore:
             del lst[0]
 
     def check_and_add(self, *, reporter: str | None, reported: str | None, text: str, kind: str,
-                      created_at: str | None, category: str, ref: str | None = None) -> str | None:
+                      created_at: str | None, category: str, ref: str | None = None,
+                      mandatory_human: bool = False) -> str | None:
         """Возвращает причину, если это дубль, и запоминает тикет."""
         m = self.match_and_add(reporter=reporter, reported=reported, text=text, kind=kind,
-                               created_at=created_at, category=category, ref=ref)
+                               created_at=created_at, category=category, ref=ref,
+                               mandatory_human=mandatory_human)
         return m.reason if m else None
 
     def match_and_add(self, *, reporter: str | None, reported: str | None, text: str, kind: str,
-                      created_at: str | None, category: str, ref: str | None = None) -> DedupMatch | None:
-        """То же, что check_and_add, но с подробностями совпадения. `ref` запоминается для ссылки на оригинал."""
+                      created_at: str | None, category: str, ref: str | None = None,
+                      mandatory_human: bool = False, ticket_id: str | None = None) -> DedupMatch | None:
+        """То же, что check_and_add, но с подробностями совпадения. `ref` запоминается для ссылки на оригинал.
+
+        `ticket_id` нужен для повторной отправки того же обращения (прогрев, повторный прогон, ретрай клиента):
+        тот же идентификатор с тем же текстом возвращает прежний результат и не считается дублем самого себя."""
         if not reporter:
             return None
         now = _ts(created_at) or _utcnow()
         sh = _shingles(text)
+        has_neg = _has_negation(text)
+        prob_topics = _problem_topics(text)
         best: tuple | None = None       # (время, совпадение): оригинал это самое позднее подходящее обращение
         with self._lock:
+            if ticket_id:
+                for it in self._by_reporter.get(reporter, ()):
+                    if it.get("tid") == ticket_id and it["kind"] == kind and it["sh"] == sh:
+                        return it.get("result")
             for it in reversed(self._by_reporter.get(reporter, ())):
                 if it["kind"] != kind or it["ts"] > now or now - it["ts"] > WINDOW:
                     continue
                 if best is not None and it["ts"] <= best[0]:
                     continue
+                # если в обоих обращениях явно указаны РАЗНЫЕ нарушители, это разные жалобы, а не дубль
+                if reported and it.get("reported") and reported != it.get("reported"):
+                    continue
                 inter = len(sh & it["sh"]) / max(1, len(sh | it["sh"]))
                 same_reported = bool(reported and it["reported"] == reported)
                 cat_eq = it["category"] == category
+                it_topics = it.get("topics") or set()
+                disjoint_problems = bool(prob_topics and it_topics and not (prob_topics & it_topics))
                 if same_reported:
+                    # один и тот же нарушитель, но явно разные виды нарушений («украл машину» vs «угрожает в реале»)
+                    if disjoint_problems and inter < 0.5:
+                        continue
                     reason, mk = REASON_SAME_REPORTED, "same_reported"
                 elif inter >= 0.7 or (cat_eq and inter >= 0.4):
+                    # утверждение нарушения и его отрицание («оскорбил» vs «не оскорбил») не склеиваем
+                    if has_neg != it.get("has_neg", False):
+                        continue
+                    if disjoint_problems and inter < 0.75:
+                        continue
                     reason, mk = REASON_SIMILAR_TEXT, "similar_text"
                 else:
                     continue
-                best = (it["ts"], DedupMatch(reason=reason, kind=mk, original_ref=it.get("ref"), same_reporter=True,
-                                             same_reported=same_reported, text_overlap=inter, category_equal=cat_eq,
-                                             delta_seconds=(now - it["ts"]).total_seconds()))
+                best = (it["ts"], DedupMatch(
+                    reason=reason, kind=mk, original_ref=it.get("ref"), same_reporter=True,
+                    same_reported=same_reported, text_overlap=inter, category_equal=cat_eq,
+                    delta_seconds=(now - it["ts"]).total_seconds(),
+                    original_mandatory_human=bool(it.get("mandatory_human", False)),
+                ))
+            inh_human = bool(mandatory_human or (best and best[1].original_mandatory_human))
             self._push({"reporter": reporter, "reported": reported, "ts": now, "sh": sh, "kind": kind,
-                        "category": category, "ref": ref})
+                        "category": category, "ref": ref, "has_neg": has_neg, "topics": prob_topics,
+                        "mandatory_human": inh_human, "tid": ticket_id, "result": best[1] if best else None})
         return best[1] if best else None
 
     def discard(self, ref: str) -> None:
@@ -152,8 +206,10 @@ class DedupStore:
             for r in rows:
                 if not r.get("reporter"):
                     continue
+                txt = r.get("text") or ""
                 self._push({"reporter": r["reporter"], "reported": r.get("reported"), "ts": _ts(r.get("ts")) or _utcnow(),
-                            "sh": _shingles(r.get("text") or ""), "kind": r["kind"], "category": r.get("category"),
-                            "ref": r.get("ref")})
+                            "sh": _shingles(txt), "kind": r["kind"], "category": r.get("category"),
+                            "ref": r.get("ref"), "has_neg": _has_negation(txt), "topics": _problem_topics(txt),
+                            "mandatory_human": bool(r.get("mandatory_human", False))})
                 n += 1
         return n

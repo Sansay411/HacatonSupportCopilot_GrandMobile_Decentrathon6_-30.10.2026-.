@@ -13,21 +13,38 @@ from dataclasses import dataclass, field
 from . import i18n, kb, sanctions
 from .rules import RuleBase, SECTIONS
 from .signals import TOPICS, Signals
-from .taxonomy import ref_category
+from .taxonomy import _FALSE_ACCOUNT, _HIJACK, ref_category
 from .textnorm import for_matching
 
 PROFANITY = re.compile(
     r"\b(х[уy]й|х[уy]е|х[уy]я|пизд|еба|ёба|ебл|ебу|бля|сука|суки|пидор|пидр|чмо|уеб|гандон|гондон|шлюх|мудак|долбо[её]б|"
     r"нахуй|нахер|хуесос|далбо|ебан)\w*", re.I)
-# признаки узких тем оскорбления: пропаганда (2.2) и расизм, ксенофобия, религия (2.4)
+# признаки узких тем оскорбления: пропаганда (2.2), расизм/религия (2.4) и угрозы в реальной жизни (2.6)
 _INSULT_TOPIC_CUES = {
-    "2.2": re.compile(r"пропаганд|18\+|порн|секс|наркот|лгбт|политик|суицид|нацизм|sex|porn"),
-    "2.4": re.compile(r"расиз|нац(?:ия|ии|ист|ионал)|религ|негр|нег#|xenoph|ислам|мусульман|христиан|еврей|хохл|чурк"),
+    "2.2": re.compile(r"пропаганд|18\+|порн|секс|наркот|лгбт|политик|суицид|нацизм|sex|porn", re.I),
+    "2.4": re.compile(r"расиз|нац(?:ия|ии|ист|ионал)|религ|негр|нег#|xenoph|ислам|мусульман|христиан|еврей|хохл|чурк", re.I),
+    "2.6": re.compile(r"угроз|ugroz|tahdid|найду теб|вычисл|\bдеанон|\bдокс|\bсват|реальн\w* жизн|\birl\b|шын өмірде|haqiqiy hayot", re.I),
+}
+# признаки узких пунктов complaint.other: если игрок написал длинный текст про другое и случайно указал чужой номер пункта
+_OTHER_TOPIC_CUES = {
+    "5.6": re.compile(r"секс|домога|изнасил|альтушк|\bsex|отыгровк\w* (?:насил|интим)|18\+|аморал", re.I),
+    "1.2": re.compile(r"(?:представля|выдает себя|выдаёт себя|говорит что|притворя)\w*|админ\w*|разработчик\w*", re.I),
 }
 _GZ_HINT = re.compile(r"\bзз\b|\bgz\b|\bгз\b|зел[её]н\w* зон|green|yashil zona|\bzz\b|больниц|bolnits|банк|автосалон|"
                       r"вокзал|стоянк|авторынк|автошкол|мэри|правительств|\bсми\b|bolnitsa", re.I)
 _GZ_CRIME = re.compile(r"вер[её]вк|мешок|похищ|связ(ал|ка|али)|arqon|qop", re.I)
-_VEHICLE = re.compile(r"машин|тачк|\bавто\b|транспорт|перевер|эвакуат|вытащ|в вод[уе]|речк|мото|байк|mashin|moshin|көлі", re.I)
+_VEHICLE = re.compile(r"машин|тачк|\bавто\b|транспорт|перевер|эвакуат|в вод[уе]|речк|мото|байк|mashin|moshin|көлі", re.I)
+_NO_VEHICLE = re.compile(
+    r"без\s+(?:машин\w*|тачк\w*|авто\b|транспорт\w*)"
+    r"|из\s+(?:тюрьм\w*|деморган\w*|дмг\b|кпз\b)",
+    re.I,
+)
+
+
+def _has_vehicle(t: str) -> bool:
+    return bool(_VEHICLE.search(t)) and not bool(_NO_VEHICLE.search(t))
+
+
 _SERVICE = re.compile(r"\bтп\b|телепорт|тепни|спавн дайте|дайте (денег|деньги|машин|вирт|лвл|уровень)|заправ|\bmp\b|\bмп\b|"
                       r"мероприяти|подкиньте|teleport", re.I)
 _RP_DISPUTE = re.compile(r"наручник|посадил|арест|\bкоп\b|мент|связал|заломал|задерж|kishan|qamad|не по рп|нон ?рп", re.I)
@@ -50,23 +67,47 @@ _DEFINITION_Q = re.compile(r"^\W*(?:(?:привет\w*|здравствуйте|
 # слова про наказание игрока и вопрос о нём: «почему бан?», «когда снимете мут», «за что варн»
 _PENALTY = r"(?:бан\w*|мут\w*|варн\w*|warn\w*|наказани\w*|деморган\w*|блокировк\w*)"
 _PENALTY_Q = re.compile(
-    rf"(?:почему|за ?что|когда|причин\w*|поясни\w*|объясни\w*|разъясни\w*)\W+(?:\w+\W+){{0,4}}?{_PENALTY}"
-    rf"|{_PENALTY}\W+(?:\w+\W+){{0,3}}?(?:почему|за ?что|когда|снимут|снимете|снят\w*|поясни\w*|объясни\w*)")
-_THIRD_PARTY = re.compile(r"\b(?:игрок\w*|нарушител\w*|ему|этому|его|ей|им)\b")
+    rf"(?:почему|за ?что|когда|(?<!без\s)причин\w*|поясни\w*|объясни\w*|разъясни\w*)\W+(?:\w+\W+){{0,4}}?{_PENALTY}"
+    rf"|{_PENALTY}\W+(?:\w+\W+){{0,3}}?(?:почему|за ?что|когда|снимут|снимете|снят\w*|поясни\w*|объясни\w*)",
+    re.I,
+)
+_DEMAND_PENALTY = re.compile(rf"\b(?:требую|выдать|выдайте|дайте|прошу\s+выдать|накажите)\W+(?:\w+\W+){{0,2}}?{_PENALTY}", re.I)
+_THIRD_PARTY = re.compile(r"\b(?:игрок\w*|нарушител\w*|ему|этому|его|ей|ее|её|им|их|он|она|они)\b")
 # просьба снять наказание и «я невиновен» на казахском, узбекском и английском (русские формы есть в signals.TOPICS['appeal'])
 _APPEAL_EXTRA = re.compile("|".join([
-    r"(?:бан|жаза|мут)\w*\s+(?:\w+\s+)?(?:алып\s*тас|шеш|кері\s*қайтар)", r"кінәлі\s+емес", r"қате\s+жаза",
-    r"(?:ban|jazo|mute|warn)\w*\s+(?:\w+\s+)?(?:yech|olib\s*tashla|bekor|qaytar)", r"aybdor\s+emas", r"noto['ʻ’‘]?g['ʻ’‘]?ri\s+(?:ban|jazo)",
-    r"\bunban\b", r"(?:lift|remove)\s+(?:the|my)\s+(?:ban|mute|penalty)", r"(?:ban|mute)\s+(?:was|is)\s+(?:unfair|wrong)",
-]))
-# администратор как объект обвинения в коррупции: это жалоба на администратора, а не обжалование наказания
+    r"(?:бан|жаза|мут|варн)\w*\s+(?:\w+\s+){0,2}?(?:алып\s*тас|шеш|кері\s*қайтар)", r"кінәлі\s+емес", r"қате\s+жаза",
+    r"ештеңе\s+істемедім", r"ешкімді\s+\w+мадым",
+    r"(?:ban|jazo|mute|warn)\w*\s+(?:\w+\s+){0,2}?(?:yech|olib\s*tashla|bekor|qaytar)", r"aybdor\s+emas",
+    r"hech\s+narsa\s+qilmadim", r"noto['ʻ’‘]?g['ʻ’‘]?ri\s+(?:ban|jazo|mute|warn)",
+    r"\bunban\b", r"(?:lift|remove|appeal)\s+(?:the|my)\s+(?:ban|mute|warn|penalty)", r"(?:ban|mute|warn|penalty)\s+(?:was|is)\s+(?:unfair|wrong)",
+    r"banned\s+by\s+mistake",
+    r"вытащ\w*\s+из\s+(?:тюрьм|деморган|дмг|кпз)",
+    r"посадил\w*\s+в\s+(?:тюрьм|деморган|дмг|кпз)\s+(?:просто\s+так|ни\s+за\s+что|без\s+причин)",
+]), re.I)
+# в report.help слово «снимите» часто относится к наручникам/мешку, поэтому апелляцией в report.help считаем только явное наказание
+_REPORT_HELP_APPEAL = re.compile(
+    r"(?:сним\w*|убер\w*|разбан\w*|вытащ\w*|выпуст\w*|освобод\w*)\W+(?:\w+\W+){0,3}?"
+    r"(?:бан\w*|мут\w*|варн\w*|warn\w*|наказани\w*|деморган\w*|дмг\b|тюрьм\w*|блокировк\w*)"
+    r"|(?:забанил\w*|замутил\w*|посадил\w*\s+в\s+(?:деморган|дмг|тюрьм)|ничего\s+не\s+(?:делал|нарушал))"
+    r"|\b(?:snimite|snimi|razban)\w*\s+(?:ban|mut|mute|varn|warn)",
+    re.I,
+)
+# администратор как объект обвинения в коррупции или блате: это жалоба на администратора, а не обжалование наказания
 _ADMIN_MISCONDUCT = re.compile(
-    r"(?:админ\w*|администратор\w*|хелпер\w*|модератор\w*|куратор\w*)\W+(?:[\w.]+\W+){0,2}?(?:берет|берут|брал\w*|взятк\w*|вымогает|вымогал\w*|торгует|продает)"
-    r"|взятк\w*|за деньги\W+(?:\w+\W+)?(?:разбан|снима|снять|сним)")
-# в репорте администратор назван нарушителем: «админ Ivan_Petrov12 телепортировал меня и ограбил»
+    r"(?:админ\w*|администратор\w*|хелпер\w*|модератор\w*|куратор\w*)\W+(?:[\w.]+\W+){0,2}?"
+    r"(?:берет|берут|брал\w*|взятк\w*|вымогает|вымогал\w*|торгует|продает|блатит|покрывает|банит\s+просто\s+так|сажает\s+просто\s+так)"
+    r"|взятк\w*|за деньги\W+(?:\w+\W+)?(?:разбан|снима|снять|сним)",
+    re.I,
+)
+# в репорте или жалобе администратор назван нарушителем: «админ Ivan_Petrov12 телепортировал меня и ограбил»
 _ADMIN_ACTED = re.compile(
-    r"(?:админ\w*|администратор\w*|хелпер\w*|модератор\w*)\W+(?:[\w]+_[\w]+\W+)?(?:телепортировал\w*|ограбил\w*|кикнул\w*|"
-    r"оскорбил\w*|нахамил\w*|убил\w*|обманул\w*|кинул\w*|вымогает|берет|использует|читит)")
+    r"(?:админ\w*|администратор\w*|хелпер\w*|модератор\w*|куратор\w*|әкімші\w*|admin\w*)\W+(?:[\w.]+\W+){0,3}?"
+    r"(?:телепортировал\w*|ограбил\w*|кикнул\w*|оскорбил\w*|нахамил\w*|убил\w*|обманул\w*|кинул\w*|вымогает|берет|"
+    r"использует|читит|блатит|покрывает|забрал\w*|выдал\w*\s+наказан\w*|жіберді|tiqdi|oskorbil\w*|blatit\w*)"
+    r"|\b(?:жалоба|шағым|shikoyat|zhaloba|jaloba)\s+(?:на\s+)?(?:админ\w*|администратор\w*|хелпер\w*|модератор\w*|куратор\w*|admin\w*)"
+    r"|\b(?:әкімші\w*|admin\w*|administrator\w*)\W+(?:[\w']+\W+){0,5}?(?:үстінен\s+шағым|ustidan\s+shikoyat)",
+    re.I,
+)
 _VIOLATION_TOPICS = ("insult", "cheat", "dm", "scam", "rmt_ads")
 # отрицание перед упоминанием нарушения: «не читер», «я его даже не убил», «без читов», «не использую читы»
 _NEGATOR = re.compile(
@@ -194,6 +235,43 @@ def violation_denial(t: str) -> str | None:
     return "first" if first_person else "other"
 
 
+def _has_penalty_question(t: str) -> bool:
+    return bool(_PENALTY_Q.search(t)) and not bool(_THIRD_PARTY.search(t)) and not bool(_DEMAND_PENALTY.search(t))
+
+
+def mandatory_escalation_reasons(kind: str, cat: str, sig: Signals, text: str, intent: str = "") -> list[str]:
+    """Инварианты обязательной эскалации P0: платежи, взлом/доступ к аккаунту, апелляции наказаний,
+    жалобы на администрацию и угрозы в реальной жизни никогда не закрываются без человека."""
+    t = for_matching(text)
+    reasons: list[str] = []
+    if cat == "report.payment" or intent == "payment" or "payment" in sig.topics:
+        reasons.append("обязательная эскалация: платёж или донат проверяет человек")
+    if cat == "report.account" or intent == "account" or (
+        "account" in sig.topics
+        and not _FALSE_ACCOUNT.search(t)
+        and (_HIJACK.search(t) if kind == "complaint" else not ("stuck" in sig.topics and not _HIJACK.search(t)))
+    ):
+        reasons.append("обязательная эскалация: доступ к аккаунту или взлом проверяет человек")
+    if (
+        cat == "complaint.admin"
+        or intent in ("appeal", "appeal_reject", "report_appeal", "admin_complaint")
+        or "admin_subject" in sig.topics
+        or _ADMIN_MISCONDUCT.search(t)
+        or _ADMIN_ACTED.search(t)
+    ):
+        reasons.append("обязательная эскалация: жалоба на администрацию или апелляция наказания")
+    elif (
+        ("appeal" in sig.topics and (kind != "report" or cat != "report.help" or _REPORT_HELP_APPEAL.search(t)))
+        or _APPEAL_EXTRA.search(t)
+        or _has_penalty_question(t)
+        or violation_denial(t) == "first"
+    ):
+        reasons.append("обязательная эскалация: обжалование наказания требует проверки человеком")
+    if "threat_irl" in sig.topics or intent == "threat":
+        reasons.append("обязательная эскалация: угроза в реальной жизни (p0)")
+    return reasons
+
+
 # ---------- выбор пунктов ----------
 def pick_violation(cat: str, sig: Signals, text: str, rb: RuleBase) -> tuple[str | None, str | None]:
     """Возвращает (пункт правил | None, RP-термин | None) для черновика с нарушением."""
@@ -203,10 +281,13 @@ def pick_violation(cat: str, sig: Signals, text: str, rb: RuleBase) -> tuple[str
         if rc == cat and rb.exists(r):
             if r == "GZ 1.1" and _GZ_CRIME.search(t):
                 return "GZ 1.2", None
-            # в форме часто выбирают 2.2 или 2.4 вместо 2.1; без признаков этой темы в тексте админы чаще всего ставили 2.1
-            # (train, одобренные жалобы: 2.2 без признаков темы 40 из 59 — 2.1, 10 — 2.2; 2.4: 6 из 9 — 2.1)
+            # в форме часто выбирают 2.2, 2.4 или 2.6 вместо 2.1; без признаков этой темы в тексте админы ставили 2.1
             if cat == "complaint.insult" and r in _INSULT_TOPIC_CUES and not _INSULT_TOPIC_CUES[r].search(t) and rb.exists("2.1"):
                 return "2.1", None
+            # в complaint.other при развёрнутом описании не подтверждаем узкий пункт (например 1.2 «представляясь администрацией»),
+            # если в самом тексте нет ни одного признака этой темы
+            if cat == "complaint.other" and r in _OTHER_TOPIC_CUES and sig.words >= 4 and not _OTHER_TOPIC_CUES[r].search(t):
+                continue
             return r, None
     if cat == "complaint.insult":
         if re.search(r"расиз|нац(ия|ии|ист|ионал)|религ|негр|нег#|xenoph", t):
@@ -302,6 +383,12 @@ def build(kind: str, cat: str, sig: Signals, text: str, lang: str, rb: RuleBase,
             # пункт, зашитый в сценарий, отсутствует в этой версии rules.json: номер в текст не попал
             reasons.append("пункты не найдены в rules.json, ссылка в тексте обезличена: " + ", ".join(missing))
             auto = False
+        esc = mandatory_escalation_reasons(kind, cat, sig, text, intent=intent)
+        if esc:
+            auto = False
+            for r in esc:
+                if r not in reasons:
+                    reasons.append(r)
         return Draft(lang=lang, text=full, cited=[c for c in cited if rb.exists(c)], intent=intent, auto_ok=auto,
                      reasons=reasons, proposes_penalty=penalty)
 
@@ -311,10 +398,13 @@ def build(kind: str, cat: str, sig: Signals, text: str, lang: str, rb: RuleBase,
     common = dict(support=i18n.SUPPORT_URL, discord=i18n.DISCORD_URL)
 
     if duplicate:
+        esc = mandatory_escalation_reasons(kind, cat, sig, text)
         c = "ЖБ 1.2.9" if kind == "complaint" else "3.1"
         if kind == "complaint":
-            return done("duplicate", _fmt(L["duplicate"], cite=ct(c)), [c], True, ["повтор обращения за последний час"])
-        return done("duplicate", _fmt(L["offtopic_flood"], cite=ct(c)), [c], True, ["повтор репорта за последний час"])
+            return done("duplicate", _fmt(L["duplicate"], cite=ct(c)), [c], not bool(esc),
+                        ["повтор обращения за последний час"] + esc)
+        return done("duplicate", _fmt(L["offtopic_flood"], cite=ct(c)), [c], not bool(esc),
+                    ["повтор репорта за последний час"] + esc)
 
     # ---------------- жалобы ----------------
     if kind == "complaint":
@@ -334,16 +424,21 @@ def build(kind: str, cat: str, sig: Signals, text: str, lang: str, rb: RuleBase,
 
         misconduct = bool(_ADMIN_MISCONDUCT.search(t))
         if cat == "complaint.admin":
-            if "appeal" in sig.topics and not misconduct:
+            if ("appeal" in sig.topics or _APPEAL_EXTRA.search(t)) and not misconduct:
                 return appeal_draft()
-            if _PENALTY_Q.search(t) and not misconduct and not _THIRD_PARTY.search(t):
+            if _has_penalty_question(t) and not misconduct:
                 return appeal_draft("игрок спрашивает о своём наказании")
             return done("admin_complaint", _fmt(L["admin_complaint"], cite_req=ct(req)), [req], False,
                         ["жалоба на администратора: решает старшая администрация"])
 
-        # игрок спрашивает о своём наказании или просит его снять (в том числе на kk/uz/en): это обжалование
-        if cat in ("complaint.invalid", "complaint.other") and not misconduct and (
-                _APPEAL_EXTRA.search(t) or (_PENALTY_Q.search(t) and not _THIRD_PARTY.search(t))):
+        if cat in ("complaint.invalid", "complaint.other") and (
+            misconduct or "admin_subject" in sig.topics or _ADMIN_ACTED.search(t)
+        ):
+            return done("admin_complaint", _fmt(L["admin_complaint"], cite_req=ct(req)), [req], False,
+                        ["жалоба на администратора: решает старшая администрация"])
+
+        # игрок спрашивает о своём наказании или просит его снять (в том числе на kk/uz/en, даже если назвал причину бана)
+        if not misconduct and (_APPEAL_EXTRA.search(t) or _has_penalty_question(t)):
             return appeal_draft("в тексте просьба снять наказание или вопрос о нём")
 
         # игрок отрицает нарушение: «я не оскорблял», «это не читер»; подтверждать или запрашивать доказательства нельзя
@@ -354,6 +449,15 @@ def build(kind: str, cat: str, sig: Signals, text: str, lang: str, rb: RuleBase,
             if denial == "other" and sig.words <= 12:
                 return done("clarify", L["clarify"], [], False,
                             ["в тексте нарушение отрицается («не читер», «не оскорблял»): нужно уточнение или решение человека"])
+
+        # платёж или взлом аккаунта, ошибочно поданные через раздел жалоб
+        if cat in ("complaint.invalid", "complaint.other"):
+            if "payment" in sig.topics:
+                return done("payment", _fmt(L["payment"], **common), [], False, ["платёж: всегда человек"])
+            if "account" in sig.topics and _HIJACK.search(t) and not _FALSE_ACCOUNT.search(t):
+                c = "1.4"
+                return done("account", _fmt(L["account"], cite=ct(c), **common), [c], False,
+                            ["аккаунт или имущество: всегда человек"])
 
         if cat == "complaint.invalid":
             if PROFANITY.search(t) and sig.words >= 2:
@@ -409,14 +513,25 @@ def build(kind: str, cat: str, sig: Signals, text: str, lang: str, rb: RuleBase,
     if "threat_irl" in sig.topics:
         c = "2.6"
         return done("threat", _fmt(L["threat"], cite=ct(c)), [c], False, ["угроза вне игры: p0, человек"])
+
+    misconduct = bool(_ADMIN_MISCONDUCT.search(t))
+    if misconduct or "admin_subject" in sig.topics or _ADMIN_ACTED.search(t):
+        req = "ЖБ 1.3.1"
+        return done("admin_complaint", _fmt(L["admin_complaint"], cite_req=ct(req)), [req], False,
+                    ["в репорте жалоба на действия администратора: решает старшая администрация"])
+
+    def report_appeal_draft() -> Draft:
+        c = "ЖБ 1.2.6"
+        return done("report_appeal", _fmt(L["report_appeal"], cite_time=ct(c)), [c], False,
+                    ["несогласие с наказанием: проверяет администратор"])
+
     def watch_draft(who: str | None) -> Draft:
         pid_part = _fmt(L["pid_part"], pid=who) if who else ""
         return done("report_watch", _fmt(L["report_watch"], pid_part=pid_part), [], False, ["нужно проследить за игроком в игре"])
 
     def question_flow() -> Draft:
-        if "appeal" in sig.topics:
-            c = "ЖБ 1.2.6"
-            return done("report_appeal", _fmt(L["report_appeal"], cite_time=ct(c)), [c], True, ["несогласие с наказанием"])
+        if "appeal" in sig.topics or _APPEAL_EXTRA.search(t) or _has_penalty_question(t) or violation_denial(t) == "first":
+            return report_appeal_draft()
         if _TECH.search(t):
             return done("question_tech", _fmt(L["question_tech"], **common), [], True, ["технический вопрос"])
         if _HOWTO_COMPLAINT.search(t):
@@ -424,7 +539,7 @@ def build(kind: str, cat: str, sig: Signals, text: str, lang: str, rb: RuleBase,
         if _COMPLAINT_STATUS.search(t):
             return done("help_ack", L["help_ack"], [], False,
                         ["вопрос о судьбе поданной жалобы: статус проверяет администратор"])
-        if _VEHICLE.search(t) and _STUCK_VEHICLE.search(t):
+        if _has_vehicle(t) and _STUCK_VEHICLE.search(t):
             return done("help_vehicle", L["help_vehicle"], [], True, ["транспорт: есть кнопка эвакуатора"])
         hit = kb.lookup(text, lang)
         if hit:
@@ -445,9 +560,8 @@ def build(kind: str, cat: str, sig: Signals, text: str, lang: str, rb: RuleBase,
                     ["вопрос по механике вне базы знаний: ответ проверяет человек"])
 
     if cat == "report.complaint":
-        if "appeal" in sig.topics:
-            c = "ЖБ 1.2.6"
-            return done("report_appeal", _fmt(L["report_appeal"], cite_time=ct(c)), [c], True, ["несогласие с наказанием"])
+        if "appeal" in sig.topics or _APPEAL_EXTRA.search(t) or _has_penalty_question(t) or violation_denial(t) == "first":
+            return report_appeal_draft()
         if (_DEFINITION_Q.match(t) or _COMPLAINT_STATUS.search(t)) and not sig.report_id and not nick:
             return question_flow()                  # «что значит ДМ», «проверьте мою жалобу»: это вопрос, а не жалоба
         if sig.report_id:
@@ -458,18 +572,18 @@ def build(kind: str, cat: str, sig: Signals, text: str, lang: str, rb: RuleBase,
             return watch_draft(nick)
         return done("report_need_id", L["report_need_id"], [], False, ["нужно проследить за игроком в игре"])
     if cat == "report.help":
-        if _ADMIN_ACTED.search(t):
-            req = "ЖБ 1.3.1"
-            return done("admin_complaint", _fmt(L["admin_complaint"], cite_req=ct(req)), [req], False,
-                        ["в репорте администратор назван нарушителем: решает старшая администрация"])
-        if _SERVICE.search(t) and not _VEHICLE.search(t):
+        if _REPORT_HELP_APPEAL.search(t) or _APPEAL_EXTRA.search(t) or _has_penalty_question(t) or violation_denial(t) == "first":
+            return report_appeal_draft()
+        if _SERVICE.search(t) and not _has_vehicle(t):
             c = "3.1"
             return done("help_service", _fmt(L["help_service"], cite=ct(c)), [c], True, ["просьба о телепорте или имуществе"])
-        if _VEHICLE.search(t):
+        if _has_vehicle(t):
             return done("help_vehicle", L["help_vehicle"], [], True, ["транспорт: есть кнопка эвакуатора"])
         return done("help_generic", L["help_generic"], [], False, ["нужна помощь администратора в игре"])
     if cat == "report.question":
         return question_flow()
+    if "appeal" in sig.topics or _APPEAL_EXTRA.search(t) or _has_penalty_question(t) or violation_denial(t) == "first":
+        return report_appeal_draft()
     # «+» в репорт: игроки так просят телепорт на мероприятие (админы отвечают «телепорт на МП закрыт»)
     if re.fullmatch(r"\s*\++\s*", text or ""):
         return done("event_tp", L["event_tp"], [], False,
@@ -479,7 +593,7 @@ def build(kind: str, cat: str, sig: Signals, text: str, lang: str, rb: RuleBase,
     if PROFANITY.search(t) or sig.topics & {"greeting_offtopic"} and not sig.topics & {"help_word"}:
         c = "3.1"
         return done("offtopic_flood", _fmt(L["offtopic_flood"], cite=ct(c)), [c], True, ["оффтоп"])
-    if _VEHICLE.search(t) and _STUCK_VEHICLE.search(t):
+    if _has_vehicle(t) and _STUCK_VEHICLE.search(t):
         return done("help_vehicle", L["help_vehicle"], [], True, ["транспорт: есть кнопка эвакуатора"])
     if "help_word" in sig.topics or _HELP_EXTRA.search(t):
         return done("help_ack", L["help_ack"], [], False,

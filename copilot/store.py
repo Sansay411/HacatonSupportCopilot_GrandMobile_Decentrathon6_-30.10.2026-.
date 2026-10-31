@@ -502,9 +502,10 @@ class Store:
         """Запросы и исходные категории последних обращений: из них после перезапуска восстанавливается дедупликация."""
         with self.read():
             rows = self._conn.execute(
-                "SELECT t.id, t.request_json, r.category FROM tickets t JOIN triage_results r ON r.ticket_id=t.id "
+                "SELECT t.id, t.request_json, t.eff_needs_human, r.category FROM tickets t JOIN triage_results r ON r.ticket_id=t.id "
                 "WHERE t.reporter_id IS NOT NULL AND t.reporter_id<>'' ORDER BY t.seq DESC LIMIT ?", (limit,)).fetchall()
-        return [{"ref": r["id"], "payload": _loads(r["request_json"], {}), "category": r["category"]} for r in reversed(rows)]
+        return [{"ref": r["id"], "payload": _loads(r["request_json"], {}), "category": r["category"],
+                 "mandatory_human": bool(r["eff_needs_human"])} for r in reversed(rows)]
 
     def count(self) -> int:
         with self.read():
@@ -523,7 +524,8 @@ class Store:
         """Применить решение одной транзакцией. Бросает Conflict, если ревизия обращения уже ушла вперёд."""
         _, stamp = self.now()
         with self.tx() as c:
-            row = c.execute("SELECT status, rev, eff_category, eff_priority, draft_rev FROM tickets WHERE id=?", (tid,)).fetchone()
+            row = c.execute("SELECT status, rev, eff_category, eff_priority, eff_needs_human, draft_rev FROM tickets WHERE id=?",
+                            (tid,)).fetchone()
             if row is None:
                 raise KeyError(tid)
             if row["rev"] != expected_rev:
@@ -538,9 +540,13 @@ class Store:
                            json.dumps(revision.get("verification"), ensure_ascii=False), actor, stamp))
             cat = final_category or row["eff_category"]
             pri = final_priority or row["eff_priority"]
+            eff_nh = int(row["eff_needs_human"])
+            if to_status == "escalated" or pri == "p0" or cat in ("report.account", "report.payment", "complaint.admin"):
+                eff_nh = 1
             closed_at = stamp if to_status == "closed" else None
-            c.execute("UPDATE tickets SET status=?, rev=rev+1, eff_category=?, eff_priority=?, draft_rev=?, updated_at=?, "
-                      "closed_at=? WHERE id=?", (to_status, cat, pri, draft_rev, stamp, closed_at, tid))
+            c.execute("UPDATE tickets SET status=?, rev=rev+1, eff_category=?, eff_priority=?, eff_needs_human=?, draft_rev=?, "
+                      "updated_at=?, closed_at=? WHERE id=?",
+                      (to_status, cat, pri, eff_nh, draft_rev, stamp, closed_at, tid))
             c.execute("INSERT INTO decisions(ticket_id,action,from_status,to_status,draft_rev,final_category,final_priority,"
                       "reason_code,comment,actor,ticket_rev_before,created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
                       (tid, action, row["status"], to_status, draft_rev if revision else None, final_category, final_priority,
