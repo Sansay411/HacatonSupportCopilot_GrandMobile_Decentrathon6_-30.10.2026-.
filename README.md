@@ -18,13 +18,22 @@
 
 scikit-learn · FastAPI · SQLite · только CPU · без внешних API
 
+<br>
+
+<a href="https://youtu.be/Epsk-K0D0dA"><img src="https://img.shields.io/badge/YouTube-СМОТРЕТЬ_ДЕМО_5:29-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Смотреть демо на YouTube"></a>
+
+<br><br>
+
+<a href="https://youtu.be/Epsk-K0D0dA"><img src="docs/demo/preview.gif" width="900" alt="Sentra в работе: разбор обращения, проверка текста, казахский тикет, дубль, рабочее место модератора"></a>
+
+<sub>Фрагменты работы приложения (25 секунд). Нажмите, чтобы открыть полный ролик со звуком.</sub>
+
 </div>
 
 <img src="docs/demo/hero.png" alt="0 выдуманных пунктов из 1224, p95 7 мс, $0 за обращение">
 
 <p align="center">
-  <a href="https://youtu.be/Epsk-K0D0dA"><b>▶ Смотреть демо на YouTube (5:29)</b></a>
-  &nbsp;·&nbsp; <a href="#принцип-работы">Принцип работы</a>
+  <a href="#принцип-работы">Принцип работы</a>
   &nbsp;·&nbsp; <a href="#запуск">Запуск</a>
   &nbsp;·&nbsp; <a href="REPORT.md">Отчёт</a>
 </p>
@@ -43,11 +52,11 @@ scikit-learn · FastAPI · SQLite · только CPU · без внешних A
 | **Человек** | Около 9 обращений из 10 помечены «нужен человек». Игроку ничего не отправляется без утверждения |
 | **Рабочее место** | Командный центр, очередь, правка и утверждение, эскалация, история решений, SQLite |
 
-<p align="center"><img src="docs/demo/preview.gif" width="860" alt="Фрагменты работы Sentra: разбор, проверка текста, казахский тикет, дубль"></p>
-
 ## Демо
 
-[![Демо Sentra на YouTube](docs/demo/poster.jpg)](https://youtu.be/Epsk-K0D0dA)
+<p align="center"><a href="https://youtu.be/Epsk-K0D0dA"><img src="docs/demo/poster.jpg" width="900" alt="Демо Sentra на YouTube"></a></p>
+
+<p align="center"><a href="https://youtu.be/Epsk-K0D0dA"><img src="https://img.shields.io/badge/YouTube-ОТКРЫТЬ_РОЛИК-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Открыть ролик на YouTube"></a></p>
 
 Ролик записан на настоящем приложении: скрипт нажимает кнопки и вводит текст в браузере, результат в кадре не подставлен. Показ ведёт команда LGTM. Файл лежит и в репозитории: [docs/demo/sentra-demo-ru.mp4](docs/demo/sentra-demo-ru.mp4) (1080p, 47 МБ), его можно скачать.
 
