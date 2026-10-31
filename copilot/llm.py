@@ -118,7 +118,8 @@ class LLMPolisher:
             return False
         if self.mode == "polish":
             return True
-        return d.lang in self.langs and len(t.player_text.split()) >= MIN_WORDS
+        # шаблон, который политика автоматизации и так отправляет без человека, не сомнителен: модель его не трогает
+        return (not d.auto_ok) and d.lang in self.langs and len(t.player_text.split()) >= MIN_WORDS
 
     def assist(self, d, t, sig, cat, rb):
         """Единая точка для конвейера: возвращает (черновик, вызывалась ли модель)."""

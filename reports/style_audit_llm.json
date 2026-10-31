@@ -7,21 +7,21 @@
   "by_code": {},
   "by_lang": {}
  },
- "needs_human_share_filter_on": 0.919,
+ "needs_human_share_filter_on": 0.916,
  "llm_stats": {
-  "calls": 24,
-  "ok": 23,
-  "fallback": 1,
+  "calls": 16,
+  "ok": 14,
+  "fallback": 2,
   "style_fixed": 0,
-  "tokens_in": 32782,
-  "tokens_out": 1476,
-  "cost_usd": 0.011605800000000001,
+  "tokens_in": 21002,
+  "tokens_out": 1003,
+  "cost_usd": 0.0075042,
   "rejected": {
-   "утверждение о порядках в игре, которого ": 1
+   "утверждение о порядках в игре, которого ": 2
   },
-  "latency_ms_p50": 1256.6,
-  "latency_ms_p95": 1517.6,
-  "cost_per_call_usd": 0.000484
+  "latency_ms_p50": 1158.6,
+  "latency_ms_p95": 1830.1,
+  "cost_per_call_usd": 0.000469
  },
- "tickets_llm_consulted": 24
+ "tickets_llm_consulted": 16
 }

@@ -10,7 +10,7 @@ from copilot.llm import LLMPolisher
 from copilot.ticket import from_dict
 
 TEMPLATE = "Здравствуйте! Уточните, пожалуйста, ваш вопрос или жалобу: что случилось?"
-DRAFT = Draft(lang="ru", text=TEMPLATE, cited=[], intent="clarify", auto_ok=True)
+DRAFT = Draft(lang="ru", text=TEMPLATE, cited=[], intent="clarify", auto_ok=False)
 PLAYER = "а можно оскорблять игроков в чате если они сами начали первыми"
 
 
@@ -68,7 +68,7 @@ def test_dash_from_model_is_removed_not_passed_on(rb):
 def test_bad_answers_fall_back_to_template(rb, bad):
     p = make(bad)
     out = run(p, rb)
-    assert out.text == TEMPLATE and out.auto_ok is True and p.stats["fallback"] == 1 and p.stats["ok"] == 0
+    assert out.text == TEMPLATE and out.auto_ok is False and p.stats["fallback"] == 1 and p.stats["ok"] == 0
     assert "отклонён проверкой" in out.reasons[-1]
 
 
@@ -113,6 +113,7 @@ def test_request_asks_for_json_and_passes_extra_body(rb):
 def test_wants_only_generic_intents_with_enough_text_in_allowed_languages():
     p = make("x")
     assert p.wants(DRAFT, ticket())
+    assert not p.wants(Draft(lang="ru", text=TEMPLATE, intent="clarify", auto_ok=True), ticket())   # и так уйдёт без человека
     assert not p.wants(DRAFT, ticket("плохо"))                                         # нечего разбирать
     assert not p.wants(Draft(lang="kk", text="t", intent="clarify"), ticket())         # kk и uz носителем не проверены
     assert not p.wants(Draft(lang="uz", text="t", intent="clarify"), ticket())
