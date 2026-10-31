@@ -47,9 +47,11 @@ scikit-learn · FastAPI · SQLite · только CPU · без внешних A
 
 ## Демо
 
-[![Кадр из ролика](docs/demo/poster.jpg)](docs/demo/sentra-demo-ru.mp4?raw=true)
+<video src="https://github.com/Sansay411/HacatonSupportCopilot_GrandMobile_Decentrathon6_-30.10.2026-./raw/main/docs/demo/sentra-demo-ru.mp4" poster="docs/demo/poster.jpg" controls muted width="100%"></video>
 
-Ролик записан на настоящем приложении: скрипт нажимает кнопки и вводит текст в браузере, результат в кадре не подставлен. Показ ведёт команда LGTM. Если плеер не открылся, скачайте `docs/demo/sentra-demo-ru.mp4` (47 МБ).
+[![Кадр из ролика](docs/demo/poster.jpg)](https://github.com/Sansay411/HacatonSupportCopilot_GrandMobile_Decentrathon6_-30.10.2026-./raw/main/docs/demo/sentra-demo-ru.mp4)
+
+Ролик записан на настоящем приложении: скрипт нажимает кнопки и вводит текст в браузере, результат в кадре не подставлен. Показ ведёт команда LGTM. Если плеер не открылся, нажмите на кадр или скачайте `docs/demo/sentra-demo-ru.mp4` (47 МБ): GitHub не всегда проигрывает большие файлы прямо в README.
 
 | Время | Что происходит |
 |---|---|
