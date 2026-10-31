@@ -1,7 +1,7 @@
 {
   "git_commit": "89974d7b0e95bdb461b89e386eef6e670c20e620",
   "git_branch": "feature/sentra-real-product",
-  "git_dirty": "?? .claude/\n?? experiments/",
+  "git_dirty": "?? experiments/",
   "python": "3.12.10",
   "rules_fingerprint": "80cd4f920f362832",
   "models_loaded": true,

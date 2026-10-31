@@ -20,11 +20,11 @@ scikit-learn · FastAPI · SQLite · только CPU · без внешних A
 
 <br>
 
-<a href="https://youtu.be/Epsk-K0D0dA"><img src="https://img.shields.io/badge/YouTube-СМОТРЕТЬ_ДЕМО_5:29-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Смотреть демо на YouTube"></a>
+<a href="https://youtu.be/ofDd4ZkLIUc"><img src="https://img.shields.io/badge/YouTube-СМОТРЕТЬ_ДЕМО_5:29-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Смотреть демо на YouTube"></a>
 
 <br><br>
 
-<a href="https://youtu.be/Epsk-K0D0dA"><img src="docs/demo/preview.gif" width="900" alt="Sentra в работе: разбор обращения, проверка текста, казахский тикет, дубль, рабочее место модератора"></a>
+<a href="https://youtu.be/ofDd4ZkLIUc"><img src="docs/demo/preview.gif" width="900" alt="Sentra в работе: разбор обращения, проверка текста, казахский тикет, дубль, рабочее место модератора"></a>
 
 <sub>Фрагменты работы приложения (25 секунд). Нажмите, чтобы открыть полный ролик со звуком.</sub>
 
@@ -54,11 +54,11 @@ scikit-learn · FastAPI · SQLite · только CPU · без внешних A
 
 ## Демо
 
-<p align="center"><a href="https://youtu.be/Epsk-K0D0dA"><img src="docs/demo/poster.jpg" width="900" alt="Демо Sentra на YouTube"></a></p>
+<p align="center"><a href="https://youtu.be/ofDd4ZkLIUc"><img src="docs/demo/poster.jpg" width="900" alt="Демо Sentra на YouTube"></a></p>
 
-<p align="center"><a href="https://youtu.be/Epsk-K0D0dA"><img src="https://img.shields.io/badge/YouTube-ОТКРЫТЬ_РОЛИК-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Открыть ролик на YouTube"></a></p>
+<p align="center"><a href="https://youtu.be/ofDd4ZkLIUc"><img src="https://img.shields.io/badge/YouTube-ОТКРЫТЬ_РОЛИК-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Открыть ролик на YouTube"></a></p>
 
-Ролик записан на настоящем приложении: скрипт нажимает кнопки и вводит текст в браузере, результат в кадре не подставлен. Показ ведёт команда LGTM. Файл лежит и в репозитории: [docs/demo/sentra-demo-ru.mp4](docs/demo/sentra-demo-ru.mp4) (1080p, 47 МБ), его можно скачать.
+Ролик записан на настоящем приложении: скрипт нажимает кнопки и вводит текст в браузере, результат в кадре не подставлен. Показ ведёт команда LGTM.
 
 | Время | Что происходит |
 |---|---|
@@ -71,10 +71,9 @@ scikit-learn · FastAPI · SQLite · только CPU · без внешних A
 | 4:10 | Слайды: идея, стек, результаты, границы версии |
 
 * Обращения в кадре придуманы для записи. Данные кейса в видео не попали, в репозиторий они не входят.
-* Голос синтезирован (ElevenLabs), текст написан командой: [demo_video/DEMO_VOICEOVER_V4.md](demo_video/DEMO_VOICEOVER_V4.md). Музыка: «Lo-Fi Chill», zephiramusic.
+* Голос синтезирован (ElevenLabs), текст написан командой. Музыка: «Lo-Fi Chill», zephiramusic.
 * В кадре три цитаты правил из выдачи Grand Mobile (`rules.json`).
 * Цифры в командном центре посчитаны по демо-базе из 17 обращений и не являются метрикой качества. Метрики качества ниже.
-* Скрипты записи и монтажа: [demo_video/](demo_video/).
 
 ## Принцип работы
 

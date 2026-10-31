@@ -1,4 +1,4 @@
-"""Регрессионные тесты по списку слабостей (demo_video/WEAKNESSES.md, пункты 1–5)."""
+"""Регрессионные тесты по списку слабостей."""
 from __future__ import annotations
 
 import shutil
