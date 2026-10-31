@@ -12,7 +12,7 @@ from pathlib import Path
 from scipy.sparse import csr_matrix, hstack
 
 from . import automation_policy, dedup as dedup_mod
-from . import drafts, guard, lang as lang_mod, verify
+from . import drafts, guard, lang as lang_mod, style, verify
 from .classifier import CategoryModel
 from .features import model_text
 from .rules import load as load_rules
@@ -131,8 +131,10 @@ class Copilot:
                          verdict, t.reported_nick or sig.nickname, duplicate=bool(dup_reason),
                          verdict_conf=vconf, cat_conf=cat.confidence)
 
-        if self.llm is not None and d.intent in self.llm.intents:
-            d = self.llm.polish(d, t, sig, cat.category, self.rules)
+        llm_called = False
+        if self.llm is not None:
+            d, llm_called = self.llm.assist(d, t, sig, cat.category, self.rules)
+        d = style.apply_draft(d)
 
         cited, guard_reasons = guard.check(d.text, d.cited, self.rules)
         # номер пункта прямо в тексте: тот, которого нет в rules.json или нет среди цитат, отправляет черновик человеку
@@ -178,7 +180,7 @@ class Copilot:
             "_meta": {"intent": d.intent, "verdict_pred": verdict, "category_source": cat.source,
                       "alternatives": [dict(a, cited=[c for c in a["cited"] if self.rules.exists(c)]) for a in d.alternatives],
                       "latency_ms": round((time.perf_counter() - t0) * 1000, 2),
-                      "llm": bool(self.llm and d.intent in getattr(self.llm, "intents", ())),
+                      "llm": llm_called,
                       "dedup": dup_match.as_dict() if dup_match else None,
                       "rules_fingerprint": self.rules_fingerprint},
         }

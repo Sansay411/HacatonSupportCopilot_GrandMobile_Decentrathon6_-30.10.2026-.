@@ -8,6 +8,10 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from support import FIXTURE_RULES, HAS_DATA, ROOT  # noqa: E402,F401
 
+# тесты не должны ходить во внешний LLM, даже если в окружении разработчика он включён
+for _k in ("COPILOT_LLM_PROVIDER", "COPILOT_LLM_BASE_URL", "COPILOT_LLM_API_KEY", "COPILOT_LLM_MODEL"):
+    os.environ.pop(_k, None)
+
 # тесты не должны писать в рабочую базу var/sentra.db: по умолчанию база во временной папке
 os.environ.setdefault("COPILOT_DB", str(Path(tempfile.mkdtemp(prefix="sentra-test-")) / "sentra.db"))
 
@@ -46,7 +50,7 @@ def boot(tmp_path, monkeypatch):
         monkeypatch.setenv("COPILOT_METRICS", str(ROOT / "reports/metrics.json") if metrics else str(tmp_path / "нет.json"))
         monkeypatch.setenv("COPILOT_TEMPLATES", str(templates or ROOT / "tests/fixtures/template_summary_synthetic.json"))
         monkeypatch.setenv("COPILOT_TEMPLATES_PRIVATE", str(tmp_path / "нет-private.json"))
-        for k in ("COPILOT_LLM_BASE_URL", "COPILOT_LLM_API_KEY", "COPILOT_LLM_MODEL"):
+        for k in ("COPILOT_LLM_PROVIDER", "COPILOT_LLM_BASE_URL", "COPILOT_LLM_API_KEY", "COPILOT_LLM_MODEL"):
             monkeypatch.delenv(k, raising=False)
         for old in started:      # прежний процесс «остановлен»
             if old.STORE is not None:
